@@ -1,0 +1,29 @@
+# binaries
+/bin/
+/dist/
+tau
+tau.exe
+
+# go
+*.test
+*.out
+coverage.html
+coverage.txt
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# temp build artifacts
+*.prof
+*.pgo
+default.pgo
+
+# config local
+.env
+.env.local
