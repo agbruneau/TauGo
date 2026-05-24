@@ -74,6 +74,9 @@ func Calibrate(corpus []CorpusEntry, _ int64, in Profile) Profile {
 
 	out := in
 	out.Thresholds = bestT
+	// Route Weights through CalibrateWeights so a V2 hook can intercept
+	// without changing Calibrate's signature (PRD §11.1, M5.2).
+	out.Weights = CalibrateWeights(corpus, 0, in.Weights)
 	return out
 }
 
