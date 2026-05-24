@@ -1,0 +1,3 @@
+{"id":"m-001","intent_description":"good 1","discovered_at":"2026-04-01T10:00:00Z","initiator":{"id":"a-1","human_in_loop":false,"organization":"o","delegation_depth":1},"target":{"id":"t","discovery_mode":"dynamic_mcp"},"source_topic":"agentic.bfsi","source_offset":1}
+{ malformed json: no quotes around keys, value=42 }
+{"id":"m-002","intent_description":"good 2","discovered_at":"2026-04-01T10:01:00Z","initiator":{"id":"a-2","human_in_loop":true,"organization":"o","delegation_depth":0},"target":{"id":"t","discovery_mode":"static"},"source_topic":"agentic.bfsi","source_offset":2}

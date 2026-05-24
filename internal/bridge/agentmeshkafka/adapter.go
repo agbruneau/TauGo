@@ -59,21 +59,3 @@ type Adapter interface {
 	// Close releases resources. Idempotent. Blocks until in-flight drain.
 	Close() error
 }
-
-// === STUB TEMPORAIRE — remplacé par sa vraie implémentation en M4.2 ===
-
-// FileAdapter is the M4.1 stub. Methods are intentionally empty to unblock
-// compilation of the package skeleton. The real JSONL implementation lands in M4.2.
-type FileAdapter struct{}
-
-// Stream returns immediately-closed channels (stub).
-func (f *FileAdapter) Stream(_ context.Context, _ []string) (exchanges <-chan AgentMeshExchange, errc <-chan error) {
-	ex := make(chan AgentMeshExchange)
-	errs := make(chan error)
-	close(ex)
-	close(errs)
-	return ex, errs
-}
-
-// Close is a no-op for the stub.
-func (f *FileAdapter) Close() error { return nil }
