@@ -106,8 +106,8 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 - `app.NewDispatcher()` charge `calibration.DefaultProfile()` par défaut → garde de péremption active sur chemin CLI *(v0.1.1, P0-02)*
 - **Erreurs typées** `DispatchError`, `RefusError`, `CalibrationError` + sentinels `errors.Is`-compatibles *(v0.1.1, ADR-0009)*
 - CLI `cmd/tau/` — `decide`, `calibrate`, `runMain(args, in, out, stderr) int` testable directement
-- CI 3 OS — `go test -race`, fuzz 30 s I1-I5, lint (24 linters), build reproductible byte-identique, **gate per-package ≥ 90 % `tau/*` et ≥ 80 % global** *(v0.1.1, T-012)*
-- 9 ADRs (0001-0009) + `docs/theory/` aligné monographie (renvois explicites chap. III.8)
+- Validation locale : `make test && make lint && make fuzz` ; `go test -race` (CGO Linux/macOS), fuzz 30 s I1-I5, lint (24 linters), build reproductible. **Objectifs locaux** (vérifiables via `make coverage`) : per-package ≥ 90 % `tau/*`, global ≥ 80 % *(initialement gate CI v0.1.1 ; CI retirée en v0.1.2, ADR-0010)*
+- 10 ADRs (0001-0010) + `docs/theory/` aligné monographie (renvois explicites chap. III.8)
 
 ### 3.2 Exclus de V1 (reportés)
 
@@ -289,7 +289,7 @@ type Attestation struct {
 |---|---|---|
 | C1 | La frontière agentique est réelle (4 conditions classiques toutes violées) | `FrontierCheck.Inside()` §4.3 |
 | C2 | D-AUTORITÉ = facteur limitant, non résolu (I3 = contrainte de conception) | `θ_auth_block` conservateur (≤ 0.85), refus ontologique §4.4 |
-| C3 | Modèle daté et révisable (horizon 2027-2030) | `Profile.DateRevision` ; CI échoue si `today > date_revision` sans MAJ |
+| C3 | Modèle daté et révisable (horizon 2027-2030) | `Profile.DateRevision` ; runtime `Refus` si `today > date_revision` sans MAJ (étape 3 dispatcher, `TestExpiredProfileRefuses` en local) |
 
 ### 7.2 Quatre anti-patrons d'usage interdits
 
@@ -297,10 +297,10 @@ type Attestation struct {
 |---|---|---|---|
 | 1 | **Usage prédictif** — `Predict*`, `Expected*`, `Forecast*` exportés | Le modèle est structurant, pas prédictif. Le substrat probabiliste interdit toute prédiction de comportement. | `TestNoPredictiveAPI` (réflexion sur méthodes exportées) ; PR rejetée |
 | 2 | **Usage hors frontière** — appliquer τ à une frontière non agentique | Sur-ingénierie injustifiée, signale au client un régime agentique alors qu'il est classique | `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* ; aucun drapeau « skip frontier check » toléré |
-| 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; CI échoue si périmé |
+| 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; runtime `Refus` si périmé (étape 3 dispatcher, `TestExpiredProfileRefuses` en local) |
 | 4 | **Usage clos** — tenir les 3 dimensions et 5 invariants pour exhaustifs | Hypothèse de complétude non acquise (chap. III.8.7) | `Decision.Trace.UnmodeledObservations []string` ; rapport mensuel `docs/empirical/unmodeled.md` |
 
-**Trois anti-patrons d'implémentation supplémentaires** *(opérationnels, gardés par CI depuis v0.1.1)* — détail dans [`CLAUDE.md` §Anti-patrons](CLAUDE.md) #5-#7 :
+**Trois anti-patrons d'implémentation supplémentaires** *(opérationnels, gardés par tests depuis v0.1.1 ; exécutés localement via `make test` depuis v0.1.2 — ADR-0010)* — détail dans [`CLAUDE.md` §Anti-patrons](CLAUDE.md) #5-#7 :
 
 | # | Anti-patron | Garde |
 |---|---|---|
@@ -688,7 +688,7 @@ type Client interface {
 }
 ```
 
-**Stub déterministe obligatoire** — `internal/bridge/llm/stub.go` fournit un mapping `intent → score` checked-in. Évite la dépendance LLM externe en CI ; garantit calibration reproductible.
+**Stub déterministe obligatoire** — `internal/bridge/llm/stub.go` fournit un mapping `intent → score` checked-in. Évite la dépendance LLM externe ; garantit calibration reproductible en local.
 
 **Garde** — aucun import de package LLM concret (`anthropic`, `openai`, …) dans `internal/tau/*` ou `internal/orchestration/*`. Injection en `internal/app/`. Vérifié par `arch_test.go`.
 
@@ -707,11 +707,12 @@ type Client interface {
 | **Aucun framework** | Pas de Bubble Tea V1, ni gRPC, ni cobra ; `flag` standard | Confirmé (§3.3) |
 | **LLM** | Injecté via interface §12.2 ; aucune dépendance concrète en `tau/*` | Confirmé |
 | **Lint** | `golangci-lint v1.64.8` épinglé, config calque FibGo (24 linters, `govet shadow`, complexité max 15/30) | Confirmé |
-| **Build reproductible** | `-trimpath`, `-buildvcs=true`, timestamp gelé `1778889600` (calque InteroperabiliteAgentique) | Confirmé |
+| **Build reproductible** | `-trimpath`, `-buildvcs=true` ; *cible `make build-reproducible` (timestamp gelé) retirée v0.1.2 — ADR-0010* | Confirmé |
 | **PGO** | Optionnel `make build-pgo`, profil checked-in après M3 | Probable |
 | **Cross-compile** | linux/{amd64,arm64}, darwin/{amd64,arm64}, windows/amd64 | Confirmé |
-| **Race detector** | `go test -race` sur 3 OS via CGO (Linux/macOS) | Confirmé |
-| **Fuzz** | `FuzzI1`-`FuzzI5` ; 30 s CI courte, 24 h nocturne | Confirmé |
+| **Race detector** | `go test -race` via CGO (Linux/macOS) ; sous Windows : `go test -short ./...` | Confirmé |
+| **Fuzz** | `FuzzI1`-`FuzzI5` ; `make fuzz` 30 s en local ; long via `go test -fuzz=. -fuzztime=24h ./internal/tau/invariants/` | Confirmé |
+| **Validation** | **Locale uniquement depuis v0.1.2 (ADR-0010)** — `make test && make lint && make fuzz`. Précédent : GitHub Actions matrix 3 OS (retiré) | Confirmé |
 
 ---
 
@@ -773,7 +774,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 |---|---|---|---|
 | **Unit** | Chaque fonction publique, sonde, score | `go test` standard | ≥ 80 % / package |
 | **Property-based** | Pureté, monotonie, idempotence | `gopter` (calque FibGo) | Toutes les propriétés algébriques déclarées |
-| **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en CI courte ; 24 h hebdomadaire |
+| **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en local (`make fuzz`) ; 24 h sur demande (`go test -fuzz=... -fuzztime=24h`) |
 | **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-golden/` | Immuable sans ADR |
 | **Architecture** | Étanchéité des couches *(§8.1)* | `internal/arch_test.go` | 100 % des règles |
 | **E2E** *(M4+)* | Via `AgentMeshKafka` | `test/e2e/` | ≥ 1 scénario par régime |
@@ -792,21 +793,23 @@ func FuzzI5_CompositionConjonctive(f *testing.F) // M(π) ≥ max(|Aᵢ|), M(π)
 
 Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30s ./internal/tau/invariants/`.
 
-### 15.3 Gates CI
+### 15.3 Gates locaux *(retrait CI v0.1.2, ADR-0010)*
 
-| Gate | Seuil | Action |
+Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}.yml`), ces gates deviennent des **objectifs vérifiables localement** avant tout commit. Une réintroduction de CI (option, V0.2+) les ré-automatiserait à coût quasi nul.
+
+| Gate | Seuil | Vérification locale |
 |---|---|---|
-| Couverture globale | ≥ 80 % | Bloque merge *(actif v0.1.1, T-012)* |
-| Couverture `tau/*` | ≥ 90 % | Bloque merge *(actif v0.1.1, T-012)* |
-| Race detector | 0 warning | Bloque merge |
-| Lint | 0 warning | Bloque merge |
-| Reproductibilité build | hash byte-identique entre 2 builds | Bloque merge |
-| Fuzz court (30 s sur I1-I5) | 0 panique, 0 crash | Bloque merge |
-| Profil ≥ 6 mois avant `date_revision` | — | Avertissement |
+| Couverture globale | ≥ 80 % | `make coverage` puis inspection du rapport HTML *(actif v0.1.1, T-012)* |
+| Couverture `tau/*` | ≥ 90 % | `make coverage` *(actif v0.1.1, T-012)* |
+| Race detector | 0 warning | `make test` (CGO requis ; Linux/macOS) |
+| Lint | 0 warning | `make lint` (24 linters) |
+| Reproductibilité build | hash byte-identique entre 2 builds | `go build` deux fois sous toolchain pinnée |
+| Fuzz court (30 s sur I1-I5) | 0 panique, 0 crash | `make fuzz` |
+| Profil ≥ 6 mois avant `date_revision` | — | Avertissement (cron externe ou check manuel ; cf. ADR-0010) |
 
 ### 15.4 Stub LLM déterministe
 
-`internal/bridge/llm/stub.go` implémente `Client` avec mapping `intent → score` checked-in. Permet CI sans dépendance LLM externe, calibration reproductible, tests d'invariants sans variance.
+`internal/bridge/llm/stub.go` implémente `Client` avec mapping `intent → score` checked-in. Permet l'exécution des tests sans dépendance LLM externe, calibration reproductible, tests d'invariants sans variance.
 
 **Garde** — tout `go test ./...` sans `TAUGO_LLM_BACKEND=real` utilise le stub. `TestDefaultLLMIsStub`.
 
@@ -818,7 +821,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 | Milestone | Contenu | Critère d'acceptation |
 |---|---|---|
-| **M0** | Squelette repo, CI 3 OS, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* passe |
+| **M0** | Squelette repo, CI 3 OS *(retirée v0.1.2, ADR-0010)*, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* passe |
 | **M1** | Dispatcher minimal, deux régimes, stub LLM | `tau decide --input fixture.json` rend une `Decision` instrumentée |
 | **M2** | Trois dimensions + score τ composite + gardes ontologique D-AUTORITÉ et I4 | Rapport décision avec scores/sondes/poids ; `TestRefusOntologiqueDAUTORITE` + `TestI4_IncoherenceDetectee` passent |
 | **M3** | Cinq invariants comme cibles fuzz | `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5 ; rapport `docs/empirical/fuzz-summary.md` |
@@ -826,8 +829,9 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 | **M5** | Calibration adaptative + persistance versionnée + détection de drift | `tau calibrate` reproductible byte-identique sur corpus fixé ; `TestCalibrationDeterministic` passe |
 | **M6** | Documentation alignée monographie + typographie française + release `v0.1.0` | Tag, `CHANGELOG.md`, `README.md`, `docs/theory/` complet avec renvois III.8 |
 | **v0.1.1-pre** | Refactor consolidation post-audit — 42 tâches T-001..T-040, 4 ADRs (0006-0009), packages `thresholds`/`errors`/`testutil` peuplés, Trace ventilée, anti-patron #6 désormais gardé, gate CI per-package actif | Commit `2cf560c`, couverture 92.1 %, 14 packages verts, AUDIT.md/AUDITPlan.md archivés |
+| **v0.1.2-pre** | Retrait complet outillage CI/CD (ADR-0010) — projet *pure-local*. Suppression `.github/workflows/{ci,coverage}.yml`, cibles Make CI-only retirées (`fuzz-long`, `e2e`, `e2e-calibration`, `empirical-i4`, `build-reproducible`), doc alignée (README, CLAUDE, PRD, CHANGELOG) | 2026-05-24 ; gates CI deviennent objectifs locaux (§15.3), veille I3 bascule en cron externe / check manuel |
 
-**Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · `.github/workflows/{ci,coverage}.yml` · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
+**Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · ~~`.github/workflows/{ci,coverage}.yml`~~ *(historique — retiré v0.1.2, ADR-0010)* · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
 
 **Estimation indicative** : 6-10 semaines à temps partiel. *À vérifier selon disponibilité réelle.* **Effectif** : M0-M6 livrés sur 2 jours (2026-05-23 → 2026-05-24) grâce aux agent teams. Refactor v0.1.1-pre livré le même jour.
 
@@ -841,18 +845,18 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 ## 17. Critères de succès V1
 
-*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.1-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0009 présents, anti-patrons §7.2 #1-7 tous gardés en CI, couverture globale 92.1 %, build reproductible).*
+*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.2-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0010 présents, anti-patrons §7.2 #1-7 tous gardés par tests locaux — exécutés via `make test` depuis le retrait CI v0.1.2, couverture globale 92.1 %, build reproductible).*
 
 | # | Critère | Vérification |
 |---|---|---|
 | 1 | Dispatch τ instrumenté sur cas BFSI réaliste anonymisé | `docs/empirical/case-study-bfsi.md` |
 | 2 | Cinq invariants exécutables, fuzz ≥ 30 s sans panique | `go test -fuzz=FuzzI*_* -fuzztime=30s ./internal/tau/invariants/` vert |
 | 3 | Trace empirique end-to-end via `AgentMeshKafka` | `test/e2e/agentmeshkafka_test.go` vert |
-| 4 | Build reproductible byte-identique en CI | Deux builds successifs même commit → même SHA256 |
-| 5 | Couverture ≥ 80 % global, ≥ 90 % sur `tau/*` | `coverage.yml` vert |
+| 4 | Build reproductible byte-identique | Deux builds successifs même commit → même SHA256 *(vérification locale ; CI retirée v0.1.2)* |
+| 5 | Couverture ≥ 80 % global, ≥ 90 % sur `tau/*` | `make coverage` (objectifs locaux ; gate CI retiré v0.1.2 — cf. §15.3) |
 | 6 | Chaque décision design dans `docs/` renvoie chap. III.8 | Lint manuel + grep |
 | 7 | Aucun emoji, aucune fabrication, aucune citation non sourçée | Audit textuel M6 |
-| 8 | Trois OS supportés (Linux/macOS/Windows) | CI matrix verte |
+| 8 | Trois OS supportés (Linux/macOS/Windows) | `go build` cross-compile vert (Makefile `build-all`) ; matrix CI historique retirée v0.1.2 |
 | 9 | Quatre anti-patrons gardés par tests *(§7.2)* | `TestNoPredictiveAPI`, `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)*, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` |
 | 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` |
 
@@ -865,12 +869,12 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 | 1 | `AgentMeshKafka` pas prêt comme validateur M4 | ~~Probable~~ **Résolu v0.1.0** | ~~Élevé~~ — | DTO neutre ADR-0005, FileAdapter livré M4 (Régime B contingence) ; KafkaAdapter réel V0.2 | Confirmé |
 | 2 | Invariants I1-I5 trop abstraits pour fuzz direct | Probable | Moyen | Reformulation exécutable §6 ; revue ciblée M3 ; raffinement après M4 | Probable |
 | 3 | Drift TauGo ↔ révisions monographie | Probable | Moyen | Tag version épinglé dans `CLAUDE.md` et chaque `Profile` ; revue à chaque release monographie | Probable |
-| 4 | Scope creep vers framework agentique | Probable | Élevé | §3.3 anti-objectifs ; revue mensuelle stricte ; lignes interdites en CI *(§14.4)* | Probable |
+| 4 | Scope creep vers framework agentique | Probable | Élevé | §3.3 anti-objectifs ; revue mensuelle stricte ; lignes interdites *(§14.4)* gardées par `arch_test.go`, exécuté localement (CI retirée v0.1.2) | Probable |
 | 5 | Interface LLM fuit l'abstraction probabiliste dans `tau/*` | À vérifier | Moyen | Interface étroite §12.2 ; stub déterministe ; `arch_test.go` interdit imports concrets | À vérifier |
 | 6 | `ruvector.db` impose couplage RAG prématuré | Probable | Faible | Exclu V1 §3.2 ; étude séparée | Probable |
 | 7 | Verrou D-AUTORITÉ mal calibré → faux refus en cascade | Hypothèse | Moyen | Calibration empirique M4 ; `θ_auth_block` initial conservateur (0.85) ; corpus cas-limites | Hypothèse |
 | 8 | Calibration sensible au modèle LLM injecté → profils non-portables | Probable | Moyen | `model_llm_fingerprint` dans profil §11.3 ; matrice de profils par modèle | Probable |
-| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde CI `TestI3_DateRevisionRespectee` ; alerte 30 j avant péremption ; **v0.1.1** : `app.NewDispatcher()` charge un profil par défaut donc la garde est active dès la CLI standard (P0-02) | Probable |
+| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde runtime `TestI3_DateRevisionRespectee` (locale, `make test`) ; **v0.1.1** : `app.NewDispatcher()` charge un profil par défaut donc la garde est active dès la CLI standard (P0-02) ; **v0.1.2** : alerte 30 j avant péremption qui passait par CI bascule en cron externe / check manuel (ADR-0010) | Probable |
 | 10 | Couplage `AgentMeshKafka` rend TauGo non-portable | Hypothèse | Faible | `bridge/agentmeshkafka/` isole ; interface `Adapter` minimale §12.1 | Hypothèse |
 
 ---
@@ -910,15 +914,17 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 - `agbruneau/FibGo` — **référence d'ingénierie** (commit épinglé à fixer M0)
 - `agbruneau/FibRust` — référence ergonomie type-safe (pertinent si extension Rust V3+)
 
-### 20.2 Prochaines étapes V0.2 (post-v0.1.1)
+### 20.2 Prochaines étapes V0.2 (post-v0.1.2)
 
 1. **Tag `v0.1.1`** — apposer après revue humaine du commit `2cf560c` (validation manuelle des 4 ADRs 0006-0009 + checklist Annexe D AUDITPlan archivé)
-2. **ADR-0010** — bridge TauGo ↔ `cia-runtime` (mécanisation Lean 4) ; protocole sérialisation JSON ou Protobuf ; modélisation `time.Time` POSIX ; décision `float64` vs `Rat` pour scores `[0,1]`
-3. **Dépôt compagnon `cia-runtime`** — mécanisation Lean 4 prioritaire sur `BoundsHold` (I5) et `IsIncoherent` (I4) : fonctions pures déjà fuzzées, candidates idéales
-4. **T-026 `Exchange.Context` typé** (déféré v0.1.1) — `ExchangeContext struct` + champ `Bag map[string]any` pour extensions ; lever magic strings P2-04
-5. **Hystérèse complète avec `LastRegime`** *(ADR-0007 cible V0.2)* — `sync.Map[x.ID → Regime]` + TTL
-6. **KafkaAdapter réel** — bascule Régime B → Régime A (contingence levée), corroboration empirique I4 sur trafic réel ≥ 1 000 traces
-7. **Calibration des poids par gradient** *(V2 `CalibrateWeights`)* — au-delà du grid search v0.1.0
+2. **Tag `v0.1.2`** — apposer après revue humaine du retrait CI/CD (ADR-0010)
+3. **ADR-0011** — bridge TauGo ↔ `cia-runtime` (mécanisation Lean 4) ; protocole sérialisation JSON ou Protobuf ; modélisation `time.Time` POSIX ; décision `float64` vs `Rat` pour scores `[0,1]` *(l'ADR-0010 a été allouée au retrait CI/CD)*
+4. **Dépôt compagnon `cia-runtime`** — mécanisation Lean 4 prioritaire sur `BoundsHold` (I5) et `IsIncoherent` (I4) : fonctions pures déjà fuzzées, candidates idéales
+5. **T-026 `Exchange.Context` typé** (déféré v0.1.1) — `ExchangeContext struct` + champ `Bag map[string]any` pour extensions ; lever magic strings P2-04
+6. **Hystérèse complète avec `LastRegime`** *(ADR-0007 cible V0.2)* — `sync.Map[x.ID → Regime]` + TTL
+7. **KafkaAdapter réel** — bascule Régime B → Régime A (contingence levée), corroboration empirique I4 sur trafic réel ≥ 1 000 traces
+8. **Calibration des poids par gradient** *(V2 `CalibrateWeights`)* — au-delà du grid search v0.1.0
+9. **Réintroduction CI minimale (option)** — si le projet grandit, restaurer un workflow GitHub Actions strict (`make test && make lint && make fuzz` + gate coverage), avec décision ADR explicite révoquant ADR-0010
 
 ### 20.3 Document vivant
 

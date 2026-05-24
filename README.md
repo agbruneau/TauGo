@@ -1,14 +1,12 @@
 # TauGo — Kernel exécutable Go de l'opérateur τ
 
-[![CI](https://github.com/agbruneau/taugo/actions/workflows/ci.yml/badge.svg)](https://github.com/agbruneau/taugo/actions/workflows/ci.yml)
-[![Coverage](https://github.com/agbruneau/taugo/actions/workflows/coverage.yml/badge.svg)](https://github.com/agbruneau/taugo/actions/workflows/coverage.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/agbruneau/taugo.svg)](https://pkg.go.dev/github.com/agbruneau/taugo)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Dashboard](https://img.shields.io/badge/dashboard-live-brightgreen.svg)](https://agbruneau.github.io/TauGo/)
 
 > **Dashboard interactif** — [`https://agbruneau.github.io/TauGo/`](https://agbruneau.github.io/TauGo/) · graphe de connaissance navigable (338 nœuds, 1000 arêtes, 10 couches, tour pédagogique 12 étapes) généré par `understand-anything`.
 
-> **État** — `v0.1.0` taggé · `v0.1.1-pre` livré *(refactor consolidation post-audit, 2026-05-24, commit `2cf560c`)*. Tag `v0.1.1` à apposer après revue humaine. Source du refactor (archivée) : [`docs/archive/audits/`](docs/archive/audits/) · index [`docs/archive/README.md`](docs/archive/README.md).
+> **État** — `v0.1.0` taggé · `v0.1.2-pre` livré *(retrait CI/CD complet — projet pure-local, ADR-0010, 2026-05-24)*. Précédent : `v0.1.1-pre` (refactor consolidation post-audit, commit `2cf560c`). Source des refactors (archivée) : [`docs/archive/audits/`](docs/archive/audits/) · index [`docs/archive/README.md`](docs/archive/README.md).
 
 ---
 
@@ -92,7 +90,7 @@ Calibration reproductible byte-identique :
                 --date-revision 2027-12-01
 ```
 
-Remarque : `-race` nécessite CGO (gcc). Les runners Linux/macOS CI l'activent ; sous Windows sans gcc local, utiliser `go test -short ./...`.
+Remarque : `-race` nécessite CGO (gcc) — disponible sur Linux/macOS ; sous Windows sans gcc local, utiliser `go test -short ./...`.
 
 ---
 
@@ -254,12 +252,16 @@ Voir `internal/app/` pour l'injection d'un client LLM réel (`TAUGO_LLM_BACKEND=
 ### D. Fuzz I1-I5 et tests E2E
 
 ```bash
-make fuzz                  # fuzz 30 s sur I1-I5 (CI)
-make fuzz-long             # fuzz 24 h (CI nocturne)
-make e2e                   # intégration FileAdapter → Dispatcher (tag 'integration')
-make e2e-calibration       # déterminisme byte-identique (tag 'e2e')
-make empirical-i4          # campagne empirique I4 sur 120 traces (tag 'empirical')
+make fuzz                                              # fuzz 30 s sur I1-I5
+go test -fuzz=. -fuzztime=24h ./internal/tau/invariants/  # fuzz long (manuel)
+go test -tags=integration ./test/e2e/...               # intégration FileAdapter → Dispatcher
+go test -tags=e2e ./test/e2e/... \
+  -run="TestCalibration|TestCalibrate|TestExpiredProfileRefuses"   # déterminisme byte-identique
+go test -tags=empirical ./internal/bridge/agentmeshkafka/... \
+  -run=^TestEmpiricalI4Campaign$$ -count=1             # campagne empirique I4 (120 traces)
 ```
+
+Les cibles `e2e`/`e2e-calibration`/`empirical-i4`/`fuzz-long`/`build-reproducible` du Makefile ont été retirées (ADR-0010 — retrait CI/CD). Les commandes `go test` ci-dessus restent valides en local.
 
 ---
 
@@ -282,20 +284,29 @@ Tous les milestones M0-M6 ont été livrés sous tag `v0.1.0` (2026-05-24).
 Consolidation post-audit orchestrée par Agent teams selon [`docs/archive/audits/2026-05-24-AUDITPlan-v0.1.1.md`](docs/archive/audits/2026-05-24-AUDITPlan-v0.1.1.md) — 42 tâches, 4 vagues parallèles, 72 fichiers modifiés (+4199/-347 LOC).
 
 **Highlights** :
-- **P0-01 fermé** : nouvelle garde `TestArchNoConcreteLLMInDomain` (anti-patron #6 désormais en CI).
+- **P0-01 fermé** : nouvelle garde `TestArchNoConcreteLLMInDomain` (anti-patron #6 désormais couvert par test, exécuté localement via `make test`).
 - **P0-02 fermé** : `app.NewDispatcher()` charge `calibration.DefaultProfile()` par défaut (garde péremption active sur chemin CLI).
 - **Trace ventilée** *(ADR-0008)* : `Trace.DSens / DAuthority / DInvariant` peuplés ; `EvaluateI3`/`EvaluateI4` lisent les scores ventilés.
 - **Profile.Weights injecté** au runtime à l'étape 6 du dispatcher.
 - **Packages ajoutés** : `internal/thresholds` (ADR-0006), `internal/errors` peuplé (ADR-0009), `internal/testutil.BuildExchange`.
 - **4 ADRs nouvelles** : 0006 thresholds transverses · 0007 hystérèse V1 · 0008 Trace ventilée · 0009 erreurs typées.
-- **Gate CI per-package** activé : `internal/tau/*` ≥ 90 %, global ≥ 80 %.
+- **Gate per-package** documenté comme objectif local : `internal/tau/*` ≥ 90 %, global ≥ 80 % *(initialement activé en CI v0.1.1 ; CI retirée en v0.1.2, ADR-0010 — le gate reste un objectif vérifiable par `make coverage`)*.
 - **Couverture globale** : 92.1 % *(était 90.9 %)*.
 - **Anti-patrons §7.2** : 7/7 gardés *(était 6/7)*.
 - **Purge agressive** : 10 `cov*.out`, 2 `*.exe`, 6 plans M0-M6 archivés, `ruvector.db` désindexé, 3 packages morts supprimés (`config`, `metrics`, `testutil/doc.go`).
 
 Détail complet : [`CHANGELOG.md`](CHANGELOG.md) section v0.1.1-pre.
 
-**V0.2+ envisagé** : KafkaAdapter réel (bascule Régime A), calibration des poids par gradient (V2 `CalibrateWeights`), fenêtre glissante drift, TUI Bubble Tea (`tau-stack`), mécanisation Lean 4 (`cia-runtime`, ADR-0010 à créer), hystérèse complète avec `LastRegime` (cf. ADR-0007).
+### Refactor v0.1.2-pre *(2026-05-24)*
+
+Retrait complet de l'outillage CI/CD — projet *pure-local*. Décision ADR-0010.
+
+- Suppression `.github/workflows/{ci,coverage}.yml` + dossier `.github/`.
+- Retrait cibles Make CI-only : `fuzz-long`, `e2e`, `e2e-calibration`, `empirical-i4`, `build-reproducible` (la commande `go test -tags=...` reste utilisable, cf. §5.D).
+- Alignement documentation : README, CLAUDE.md, PRD.md, CHANGELOG. Gate per-package devient *objectif local vérifiable*, pas un gate automatisé.
+- Veille I3 : l'alerte 30 jours préalable à péremption (qui passait par CI) bascule en check manuel/cron externe.
+
+**V0.2+ envisagé** : KafkaAdapter réel (bascule Régime A), calibration des poids par gradient (V2 `CalibrateWeights`), fenêtre glissante drift, TUI Bubble Tea (`tau-stack`), mécanisation Lean 4 (`cia-runtime`, ADR-0011 à créer — l'ADR-0010 a été allouée au retrait CI/CD), hystérèse complète avec `LastRegime` (cf. ADR-0007), réintroduction d'une CI minimale (option) si le projet grandit.
 
 ---
 
@@ -349,6 +360,7 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 - [`docs/adr/0007-hysteresis-v1-simplifiee.md`](docs/adr/0007-hysteresis-v1-simplifiee.md) — hystérèse V1 simplifiée, cible V0.2 *(v0.1.1)*
 - [`docs/adr/0008-trace-ventilee-scores-dimensions.md`](docs/adr/0008-trace-ventilee-scores-dimensions.md) — `Trace.DSens/DAuthority/DInvariant` *(v0.1.1)*
 - [`docs/adr/0009-types-erreurs-typees.md`](docs/adr/0009-types-erreurs-typees.md) — `DispatchError`/`RefusError`/`CalibrationError` *(v0.1.1)*
+- [`docs/adr/0010-retrait-ci-cd-pure-local.md`](docs/adr/0010-retrait-ci-cd-pure-local.md) — retrait outillage CI/CD, projet pure-local *(v0.1.2)*
 
 ### Empirique
 
@@ -371,12 +383,12 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 |---|---|---|
 | Go | 1.25+ (toolchain 1.26.x) | Aligné FibGo ; `go.mod` authoritative |
 | golangci-lint | v1.64.8 | Épinglé ; 24 linters ; calque FibGo |
-| Fuzz | natif Go (`testing.F`) | I1-I5 ; 30 s CI, 24 h nocturne |
-| Build reproductible | `-trimpath -ldflags="-buildid= -X main.buildTimestamp=..."` | Byte-identique à timestamp gelé |
+| Fuzz | natif Go (`testing.F`) | I1-I5 ; `make fuzz` 30 s en local |
+| Build reproductible | `-trimpath -buildvcs=true` | Byte-identique sous toolchain pinnée |
 | Cross-compile | linux × {amd64,arm64}, darwin × {amd64,arm64}, windows × amd64 | `make build-all` |
-| CI | GitHub Actions — 3 OS (ubuntu, windows, macos) | `make test && make lint && make fuzz` + **gate per-package ≥ 90 % `tau/*`** |
-| Race detector | CGO requis | Actif Linux/macOS CI ; Windows couvert via runner GH |
-| Couverture | global ≥ 80 %, per-package `tau/*` ≥ 90 % | gate CI `coverage.yml` *(actif v0.1.1)* |
+| Validation | `make test && make lint && make fuzz` | **Locale uniquement** depuis v0.1.2 (ADR-0010) |
+| Race detector | CGO requis | Disponible Linux/macOS ; sous Windows utiliser `go test -short ./...` |
+| Couverture | objectifs internes `tau/*` ≥ 90 %, global ≥ 80 % | `make coverage` — gates locaux, non gated automatisé |
 
 ---
 
@@ -385,7 +397,7 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 Conformément au PRD §16 :
 
 - **Mensuelle (scope)** : revue des limites V1 contre nouvelles traces empiriques ; mise à jour de `docs/empirical/unmodeled.md`.
-- **Trimestrielle (I3)** : veille sur l'invariant I3 (asymétrie d'autorité — Searle 1995). Le profil porte `DateRevision` ; un profil périmé entraîne `Refus` automatique (anti-patron #3, étape 3 dispatcher). Alerte CI à 30 jours avant péremption. **v0.1.1** : `app.NewDispatcher()` charge un profil par défaut, activant la garde même sans calibration explicite.
+- **Trimestrielle (I3)** : veille sur l'invariant I3 (asymétrie d'autorité — Searle 1995). Le profil porte `DateRevision` ; un profil périmé entraîne `Refus` automatique (anti-patron #3, étape 3 dispatcher). **v0.1.1** : `app.NewDispatcher()` charge un profil par défaut, activant la garde même sans calibration explicite. **v0.1.2** : retrait de l'alerte CI 30 jours préalable (ADR-0010) — la veille passe par un check manuel ou un cron externe (voir [ADR-0010](docs/adr/0010-retrait-ci-cd-pure-local.md)).
 
 ---
 

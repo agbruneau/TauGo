@@ -1,6 +1,5 @@
-.PHONY: all build test test-short coverage benchmark lint fuzz fuzz-long \
-        calibrate build-reproducible build-pgo build-all clean \
-        e2e e2e-calibration empirical-i4
+.PHONY: all build test test-short coverage benchmark lint fuzz \
+        calibrate build-pgo build-all clean
 
 GO ?= go
 BIN := tau
@@ -10,11 +9,6 @@ all: lint test build
 
 build:
 	$(GO) build -trimpath -buildvcs=true -o $(BIN) $(PKG)
-
-build-reproducible:
-	$(GO) build -trimpath -buildvcs=true \
-		-ldflags="-buildid= -X main.buildTimestamp=1778889600" \
-		-o $(BIN) $(PKG)
 
 build-pgo:
 	$(GO) build -trimpath -pgo=default.pgo -o $(BIN) $(PKG)
@@ -45,25 +39,9 @@ lint:
 fuzz:
 	$(GO) test -fuzz=. -fuzztime=30s ./internal/tau/invariants/
 
-fuzz-long:
-	$(GO) test -fuzz=. -fuzztime=24h ./internal/tau/invariants/
-
 calibrate:
 	$(GO) run $(PKG) calibrate $(ARGS)
 
 clean:
 	rm -f $(BIN) coverage.txt coverage.html
 	rm -rf dist/
-
-# E2E integration tests (build tag 'integration'). Intended for Linux/macOS CI
-# where CGO is available; -race is safe to drop on Windows without CGO.
-e2e:
-	$(GO) test -v -race -tags=integration ./test/e2e/...
-
-# E2E calibration tests (build tag 'e2e'). Pins PRD §17 criterion #10.
-e2e-calibration:
-	$(GO) test -v -tags=e2e ./test/e2e/... -run="TestCalibration|TestCalibrate|TestExpiredProfileRefuses"
-
-# Empirical I4 campaign harness (build tag 'empirical', lands in M4.6).
-empirical-i4:
-	$(GO) test -v -tags=empirical ./internal/bridge/agentmeshkafka/... -run=^TestEmpiricalI4Campaign$$ -count=1

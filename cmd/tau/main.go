@@ -14,7 +14,7 @@ import (
 
 var (
 	buildTimestamp = "dev" //nolint:gochecknoglobals // build-time variable set via -ldflags; cannot be const
-	version        = "0.1.1-pre"
+	version        = "0.1.2-pre"
 )
 
 func main() {

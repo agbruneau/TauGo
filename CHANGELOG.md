@@ -2,6 +2,51 @@
 
 Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Versionnage Sémantique](https://semver.org/lang/fr/).
 
+## [Non publié] — v0.1.2-pre · retrait complet CI/CD (projet pure-local)
+
+**Décision structurelle** orchestrée selon [ADR-0010](docs/adr/0010-retrait-ci-cd-pure-local.md). Le projet devient *pure-local* : validation entièrement déléguée au poste développeur (`make test && make lint && make fuzz`), plus aucun gate automatisé bloquant.
+
+### Supprimé
+
+- **GitHub Actions** — `.github/workflows/ci.yml` (143 l., matrice 3 OS × Go 1.25, `go test -race` via CGO, lint, build, cross-compile, fuzz smoke) et `.github/workflows/coverage.yml` (86 l., gate per-package `tau/*` ≥ 90 %, global ≥ 80 %). Dossier `.github/` retiré entièrement.
+- **Cibles `Makefile` CI-only** : `fuzz-long` (24 h nocturne), `e2e` (tag `integration`), `e2e-calibration` (tag `e2e`), `empirical-i4` (tag `empirical`), `build-reproducible` (timestamp gelé `1778889600`). Le code de test reste inchangé — seules les cibles d'orchestration sont retirées. Commandes `go test -tags=...` documentées dans `README.md` §5.D, `CLAUDE.md` § Commandes essentielles, `PRD.md` §15.3 comme équivalents directs.
+- **Badges README** `[![CI]]` et `[![Coverage]]`.
+- **Section gates automatisés** — `PRD.md` §15.3 « Gates CI » renommée « Gates locaux », gates conservés comme **objectifs vérifiables** via `make coverage`, plus comme blocage de merge.
+- **Alerte 30 jours avant péremption I3** (passait par CI à fréquence quotidienne) — bascule en cron externe ou check manuel. Risque PRD §18 #9 mitigé par : (a) garde runtime `TestExpiredProfileRefuses` qui bloque toute décision si profil périmé ; (b) `app.NewDispatcher()` qui charge un profil par défaut activant la garde sur chemin CLI (P0-02 fermé v0.1.1).
+
+### Modifié (alignement documentaire)
+
+- **`README.md`** — section 5.D (exemples fuzz/e2e via `go test` direct), §6 (refactor v0.1.2 documenté), §9 (stack technique : rangée « Validation » remplaçant « CI »), §10 (cadence revue I3 actualisée), section ADRs (ajout 0010).
+- **`CLAUDE.md`** — §Projet (« Validation » remplace « CI »), § Commandes essentielles (retrait cibles CI-only + remplacements `go test`), directive §10 (« Validation locale obligatoire »), directive §8 (veille I3 sans CI), pattern d'exécution §Agent teams (`tests CI verts` → `make test && make lint && make fuzz verts en local`), §Références (ADR-0010 ajoutée, ADR-0011 réservée pour HGL), footer V0.5.
+- **`PRD.md`** — §3.1 (livrable « Validation locale »), §3.2 (ADR-0010 réallouée → ADR-0011 pour HGL), §6.1 C3 / §7.2 anti-patron #3 / §15.2 fuzz / §15.3 Gates locaux / §16 M0+v0.1.2-pre row / Livrables M0 minimaux (workflows barrés) / §17 critères #4/#5/#8 + intro / §18 risques #4/#9 / §20.2 prochaines étapes (#2 tag v0.1.2, #3 ADR-0011, #9 réintroduction CI minimale option V0.2+).
+- **`Makefile`** — cibles `.PHONY` réduites, retrait `fuzz-long`/`e2e`/`e2e-calibration`/`empirical-i4`/`build-reproducible`, suppression commentaires « CI » associés.
+- **`cmd/tau/main.go`** : `version = "0.1.1-pre"` → `"0.1.2-pre"`.
+
+### Ajouté
+
+- **ADR-0010** [`docs/adr/0010-retrait-ci-cd-pure-local.md`](docs/adr/0010-retrait-ci-cd-pure-local.md) — décision, périmètre supprimé/conservé, conséquences positives/négatives acceptées, réversibilité, alternatives considérées (CI minimale / autre orchestrateur / pre-commit hooks V0.2), critères de retournement (≥ 2 contributeurs / bug atteignant main / externalisation), vérifications post-décision.
+
+### Conservé (intentionnellement)
+
+- Tous les **tests** (`make test`, `make test-short`, fuzz I1-I5 30 s, e2e, empirical) — code inchangé.
+- **Gates de qualité** comme objectifs locaux vérifiables : `tau/*` ≥ 90 %, global ≥ 80 % via `make coverage` (rapport HTML).
+- **Anti-patrons §7.2 #1-7** — toujours gardés par tests (`TestNoPredictiveAPI`, `TestFrontierCheck_Inside_*`, `TestExpiredProfileRefuses`, `TestUnmodeledObservationsReported`, `TestArchNoConcreteLLMInDomain`, `gochecknoglobals`).
+- **Étanchéité Clean Architecture** — `internal/arch_test.go` (7 règles), exécutée par `make test`.
+- **Build reproductible** sous toolchain pinnée (`-trimpath -buildvcs=true`) ; seule la cible `make build-reproducible` à timestamp gelé `1778889600` est retirée (était CI-spécifique).
+
+### Vérification (état HEAD)
+
+- `go build ./...` : à valider en local avant push
+- `go test -short ./...` : à valider en local avant push
+- `go vet ./...` : à valider en local avant push
+- Aucune référence orpheline « gate CI », « workflow », « coverage.yml », « CI matrix verte » dans `README.md` / `CLAUDE.md` / `PRD.md` (audit `grep` manuel)
+
+### Réversibilité
+
+Le retrait est réversible à coût quasi nul — les workflows sont récupérables via l'historique git (`git show v0.1.1-pre:.github/workflows/ci.yml`). Réintroduction documentée comme option V0.2+ (`PRD.md` §20.2 #9), conditionnée à : ≥ 2 contributeurs actifs / premier bug atteignant `main` qui aurait été bloqué par CI / externalisation du projet.
+
+---
+
 ## [Non publié] — v0.1.1-pre · refactor consolidation post-audit
 
 **Refactor agressif complet** orchestré par Agent teams selon `AUDITPlan.md` (42 tâches T-001..T-040, 4 vagues parallèles). Source : `AUDIT.md` 2026-05-24, base commit `5a68c12`.
