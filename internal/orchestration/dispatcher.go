@@ -27,6 +27,16 @@ func NewDispatcher(client llm.Client, t Thresholds) *Dispatcher {
 	return &Dispatcher{llm: client, thresholds: t}
 }
 
+// durationNs returns elapsed nanoseconds since start, guaranteeing at least 1
+// to satisfy the Trace.DurationNs > 0 invariant on platforms (e.g. Windows)
+// where the timer resolution may be coarser than 1 ns.
+func durationNs(start time.Time) int64 {
+	if d := time.Since(start).Nanoseconds(); d > 0 {
+		return d
+	}
+	return 1
+}
+
 // Decide implements the M1 subset of PRD §10.
 func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, error) {
 	start := time.Now()
@@ -50,7 +60,7 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 					Deterministe: d.thresholds.Deterministe,
 					Probabiliste: d.thresholds.Probabiliste,
 				},
-				DurationNs: time.Since(start).Nanoseconds(),
+				DurationNs: durationNs(start),
 			},
 		}, nil
 	}
@@ -83,7 +93,7 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 				Deterministe: d.thresholds.Deterministe,
 				Probabiliste: d.thresholds.Probabiliste,
 			},
-			DurationNs: time.Since(start).Nanoseconds(),
+			DurationNs: durationNs(start),
 		},
 	}, nil
 }
