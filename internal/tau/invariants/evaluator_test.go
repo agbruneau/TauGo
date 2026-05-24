@@ -40,6 +40,27 @@ func TestStatuses_Summary_OrderedAndShort(t *testing.T) {
 	}
 }
 
+func TestStatus_String(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		status invariants.Status
+		want   string
+	}{
+		{invariants.StatusUnknown, "unknown"},
+		{invariants.Held, "held"},
+		{invariants.Violated, "violated"},
+		{invariants.NotApplicable, "not_applicable"},
+	}
+	for _, tc := range cases {
+		t.Run(tc.want, func(t *testing.T) {
+			t.Parallel()
+			if got := tc.status.String(); got != tc.want {
+				t.Errorf("Status(%d).String() = %q, want %q", tc.status, got, tc.want)
+			}
+		})
+	}
+}
+
 func TestEvaluateInvariants_NoPanicOnZeroExchange(t *testing.T) {
 	t.Parallel()
 	// Calque FibGo: invariant cassé = panic ; ici, le sentinel interne

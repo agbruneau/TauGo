@@ -23,6 +23,8 @@ var archRules = []rule{
 	}},
 	{from: "github.com/agbruneau/taugo/internal/tau/invariants", deny: []string{
 		"github.com/agbruneau/taugo/internal/tau/dimensions",
+		"github.com/agbruneau/taugo/internal/orchestration",
+		"github.com/agbruneau/taugo/internal/bridge",
 	}},
 	{from: "github.com/agbruneau/taugo/internal/bridge/llm", deny: []string{
 		"github.com/agbruneau/taugo/internal/tau",
