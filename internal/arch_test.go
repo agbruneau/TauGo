@@ -24,7 +24,10 @@ var archRules = []rule{
 	{from: "github.com/agbruneau/taugo/internal/tau/invariants", deny: []string{
 		"github.com/agbruneau/taugo/internal/tau/dimensions",
 	}},
-	{from: "github.com/agbruneau/taugo/internal/bridge", deny: []string{
+	{from: "github.com/agbruneau/taugo/internal/bridge/llm", deny: []string{
+		"github.com/agbruneau/taugo/internal/tau",
+	}},
+	{from: "github.com/agbruneau/taugo/internal/bridge/agentmeshkafka", deny: []string{
 		"github.com/agbruneau/taugo/internal/tau",
 	}},
 }
