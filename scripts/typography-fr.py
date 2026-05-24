@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""typography-fr.py — Applique la typographie française canonique aux fichiers Markdown.
+"""typography-fr.py -- Applique la typographie francaise canonique aux fichiers Markdown.
 
-Règles appliquées (idempotentes) :
-  1. U+00A0 avant : ; ? ! » (si précédé d'un caractère non-espace/non-NBSP)
-  2. U+00A0 après « (si suivi d'un caractère non-espace/non-NBSP)
-  3. Guillemets droits "…" → « … » dans la prose narrative uniquement
+Regles appliquees (idempotentes) :
+  1. U+00A0 avant : ; ? ! >> (si precede d'un espace ordinaire)
+  2. U+00A0 apres << (si suivi d'un caractere non-espace)
+  3. Guillemets droits "..." -> << ... >> dans la prose narrative uniquement
 
-Exclusions (jamais touchées) :
-  - Blocs triple-backtick (```…```)
-  - Spans inline (`…`)
-  - Liens Markdown et URLs (](...) et https?://…)
+Exclusions (jamais touchees) :
+  - Blocs triple-backtick
+  - Spans inline (`...`)
+  - Liens Markdown et URLs (](...) et https?://...)
   - Fichiers non-Markdown (.go, .json, .yml, etc.)
   - docs/superpowers/plans/*.md (immuables)
 
@@ -24,44 +24,28 @@ import argparse
 
 NBSP = " "
 
-# Patterns pour les ponctuation haute
-# Ajoute NBSP avant : ; ? ! » si précédé d'un non-espace (inclut NBSP déjà présent → idempotent)
-RE_NBSP_BEFORE = re.compile(r"(?<=[^\s])([:;?!»])")
-
-# Ajoute NBSP après « si suivi d'un non-espace
-RE_NBSP_AFTER_GUILLEMET_OPEN = re.compile(r"«(?=[^\s])")
-
-# Guillemets droits "…" → « … » — seulement si les deux guillemets sont sur la même ligne
+# Guillemets droits "..." -> guillemets francais
 # Capture : " + contenu sans guillemet ni backtick + "
 RE_STRAIGHT_QUOTES = re.compile(r'"([^"`\n]{1,200}?)"')
 
 
 def apply_typography_to_segment(text: str) -> str:
-    """Applique les règles typographiques à un segment de texte sans code inline."""
-    # Règle 1 : NBSP avant ponctuation haute
-    # Remplace espace normal (ou espace déjà précédé de rien) avant ponct par NBSP
-    # D'abord : espace ordinaire + ponct → NBSP + ponct
-    text = re.sub(r" ([:;?!»])", NBSP + r"\1", text)
-    # Ensuite : ponct directement après un non-espace (sans espace du tout) → ajouter NBSP
-    # Ex: "mot:" → "mot :" avec NBSP. On évite de toucher :// (URLs) et :: (Go)
-    # Ne touche pas les :: consécutifs, ni ://
-    text = re.sub(r"(?<=[^\s :])(:)(?![:/ ])", NBSP + r"\1", text)
-    text = re.sub(r"(?<=[^\s ])(;)(?![ ])", NBSP + r"\1", text)
-    text = re.sub(r"(?<=[^\s ])(\?)(?![ ])", NBSP + r"\1", text)
-    text = re.sub(r"(?<=[^\s ])(!)(?![ ])", NBSP + r"\1", text)
-    text = re.sub(r"(?<=[^\s ])(»)(?![ ])", NBSP + r"\1", text)
+    """Applique les regles typographiques a un segment de texte sans code inline."""
+    # Regle 1 : remplace espace ordinaire avant : ; ? ! >> par NBSP.
+    # On ne touche QUE les cas avec espace ordinaire (0x20) avant la ponctuation --
+    # jamais les separateurs techniques word:word (pas d'espace avant).
+    text = re.sub(" ([:;?!»])", NBSP + r"\1", text)
 
-    # Règle 2 : NBSP après «
-    text = re.sub(r"«(?=[^\s ])", "«" + NBSP, text)
+    # Regle 2 : NBSP apres << si suivi directement d'un non-espace
+    text = re.sub("«(?=[^  ])", "«" + NBSP, text)
 
-    # Règle 3 : guillemets droits → guillemets français
-    # Seulement si ce n'est pas déjà des guillemets français
+    # Regle 3 : guillemets droits -> guillemets francais (prose uniquement)
     def replace_quotes(m: re.Match) -> str:
         inner = m.group(1)
-        # Éviter de transformer si l'inner contient déjà des guillemets français
+        # Ne pas transformer si contient deja des guillemets francais ou est vide
         if "«" in inner or "»" in inner:
             return m.group(0)
-        return f"«{NBSP}{inner}{NBSP}»"
+        return "«" + NBSP + inner + NBSP + "»"
 
     text = RE_STRAIGHT_QUOTES.sub(replace_quotes, text)
 
@@ -69,17 +53,14 @@ def apply_typography_to_segment(text: str) -> str:
 
 
 def process_line_outside_code(line: str) -> str:
-    """Traite une ligne hors bloc de code, en préservant les spans inline et URLs."""
-    # Découper la ligne en segments : spans inline (`…`) et reste
-    # Stratégie : extraire les backtick-spans et URLs, les préserver, traiter le reste
-
-    # Tokeniser : alterner prose et spans-à-préserver
-    # Préserve : `…`, [text](url), https?://\S+, <url>
+    """Traite une ligne hors bloc de code, en preservant les spans inline et URLs."""
+    # Tokeniser : alterner prose et segments-a-preserver
+    # Preserve : `...`, [text](url), https?://\S+, <url>
     PRESERVE_RE = re.compile(
-        r"(`[^`]*`)"              # inline code
-        r"|(\[(?:[^\[\]]|\[[^\[\]]*\])*\]\([^)]*\))"  # liens Markdown [t](u)
-        r"|(https?://\S+)"        # URLs nues
-        r"|(<https?://[^>]+>)"    # URLs chevrons
+        r"(`[^`]*`)"                                     # inline code
+        r"|(\[(?:[^\[\]]|\[[^\[\]]*\])*\]\([^)]*\))"    # liens Markdown [t](u)
+        r"|(https?://\S+)"                               # URLs nues
+        r"|(<https?://[^>]+>)"                           # URLs chevrons
     )
 
     parts = []
@@ -103,7 +84,7 @@ def process_line_outside_code(line: str) -> str:
 
 
 def process_file(path: pathlib.Path, dry_run: bool = False) -> int:
-    """Traite un fichier Markdown. Retourne le nombre de lignes modifiées."""
+    """Traite un fichier Markdown. Retourne le nombre de lignes modifiees."""
     original = path.read_text(encoding="utf-8")
     lines = original.splitlines(keepends=True)
 
@@ -114,7 +95,7 @@ def process_file(path: pathlib.Path, dry_run: bool = False) -> int:
     for line in lines:
         stripped = line.rstrip("\n\r")
 
-        # Détection bascule triple-backtick (début ou fin de bloc)
+        # Detection bascule triple-backtick (debut ou fin de bloc)
         if stripped.startswith("```"):
             in_code_block = not in_code_block
             new_lines.append(line)
@@ -143,11 +124,9 @@ def process_file(path: pathlib.Path, dry_run: bool = False) -> int:
 
 def collect_targets(root: pathlib.Path) -> list[pathlib.Path]:
     """Collecte tous les fichiers Markdown cibles."""
-    EXCLUDE_DIRS = {"docs/superpowers/plans", "docs\\superpowers\\plans"}
     targets = []
     for p in root.rglob("*.md"):
-        rel = p.relative_to(root)
-        rel_str = str(rel)
+        rel_str = str(p.relative_to(root))
         # Exclure docs/superpowers/plans/
         if "superpowers" in rel_str and "plans" in rel_str:
             continue
@@ -156,8 +135,10 @@ def collect_targets(root: pathlib.Path) -> list[pathlib.Path]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Applique la typographie française aux Markdown.")
-    parser.add_argument("root", nargs="?", default=".", help="Racine du projet (défaut: .)")
+    parser = argparse.ArgumentParser(
+        description="Applique la typographie francaise aux Markdown."
+    )
+    parser.add_argument("root", nargs="?", default=".", help="Racine du projet (defaut: .)")
     parser.add_argument("--dry-run", action="store_true", help="Affiche sans modifier")
     args = parser.parse_args()
 
@@ -175,7 +156,8 @@ def main() -> None:
             prefix = "[DRY] " if args.dry_run else "      "
             print(f"{prefix}{path.relative_to(root)}  ({changed} lignes)")
 
-    print(f"\n{'Dry-run' if args.dry_run else 'Applied'}: {total_files} fichiers, {total_lines} lignes modifiées.")
+    verb = "Dry-run" if args.dry_run else "Applied"
+    print(f"\n{verb}: {total_files} fichiers, {total_lines} lignes modifiees.")
 
 
 if __name__ == "__main__":
