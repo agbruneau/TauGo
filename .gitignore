@@ -3,6 +3,8 @@
 /dist/
 /tau
 /tau.exe
+/generate-corpus
+/generate-corpus.exe
 
 # go
 *.test
