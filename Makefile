@@ -1,5 +1,6 @@
 .PHONY: all build test test-short coverage benchmark lint fuzz fuzz-long \
-        calibrate build-reproducible build-pgo build-all clean
+        calibrate build-reproducible build-pgo build-all clean \
+        e2e empirical-i4
 
 GO ?= go
 BIN := tau
@@ -53,3 +54,12 @@ calibrate:
 clean:
 	rm -f $(BIN) coverage.txt coverage.html
 	rm -rf dist/
+
+# E2E integration tests (build tag 'integration'). Intended for Linux/macOS CI
+# where CGO is available; -race is safe to drop on Windows without CGO.
+e2e:
+	$(GO) test -v -race -tags=integration ./test/e2e/...
+
+# Empirical I4 campaign harness (build tag 'empirical', lands in M4.6).
+empirical-i4:
+	$(GO) test -v -tags=empirical ./internal/bridge/agentmeshkafka/... -run=^TestEmpiricalI4Campaign$$ -count=1
