@@ -1,6 +1,6 @@
 .PHONY: all build test test-short coverage benchmark lint fuzz fuzz-long \
         calibrate build-reproducible build-pgo build-all clean \
-        e2e empirical-i4
+        e2e e2e-calibration empirical-i4
 
 GO ?= go
 BIN := tau
@@ -59,6 +59,10 @@ clean:
 # where CGO is available; -race is safe to drop on Windows without CGO.
 e2e:
 	$(GO) test -v -race -tags=integration ./test/e2e/...
+
+# E2E calibration tests (build tag 'e2e'). Pins PRD §17 criterion #10.
+e2e-calibration:
+	$(GO) test -v -tags=e2e ./test/e2e/... -run="TestCalibration|TestCalibrate|TestExpiredProfileRefuses"
 
 # Empirical I4 campaign harness (build tag 'empirical', lands in M4.6).
 empirical-i4:
