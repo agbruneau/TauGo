@@ -36,13 +36,32 @@ type Attestation struct {
 	AssertedAt time.Time
 }
 
+// TraceThresholds is the immutable snapshot of the thresholds in effect
+// at the time of the decision. Mirrors orchestration.Thresholds; kept here
+// to avoid a tau -> orchestration import (forbidden by arch_test).
+type TraceThresholds struct {
+	Deterministe float64
+	Probabiliste float64
+}
+
+// Trace is the immutable instrumentation of a Decision.
+// Once Decision is returned, the Trace must not be mutated.
+type Trace struct {
+	ExchangeID            string
+	TauScore              float64         // composite tau score (M1: stub LLM score; M2: 3-dim weighted)
+	Frontier              FrontierCheck   // state of the 4 classical conditions
+	Thresholds            TraceThresholds // snapshot at decision time
+	UnmodeledObservations []string        // PRD §7.2 #4 — observations not modeled
+	DurationNs            int64
+}
+
 // Decision is the full output of Kernel.Decide. Always traced.
 type Decision struct {
 	Regime         Regime
 	Diagnostic     string // non-empty iff Regime == Refus
 	ProfileVersion string
 	DateRevision   time.Time
-	// Trace field intentionally omitted in M0; added in M1.
+	Trace          Trace
 }
 
 // Kernel is the public face of the τ operator. Single entry point: Decide.
