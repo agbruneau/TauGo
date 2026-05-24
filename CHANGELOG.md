@@ -4,6 +4,36 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.0.5-alpha] — 2026-05-24
+
+M4 : pont théorie ↔ empirie. Branche contingence active (PRD §18 risque #1 réalisé — AgentMeshKafka inexistant local/GitHub). DTO neutre + adaptateur fichier + convertisseur en couche `app/` + générateur de corpus synthétique reproductible byte-identique + harness empirique I4 + 3 rapports.
+
+### Ajouté
+
+- `internal/bridge/agentmeshkafka/adapter.go` : DTO neutre `AgentMeshExchange` (champs miroir de `tau.Exchange` sans import croisé), interface `Adapter` étroite (`Stream`, `Close` — ISP 2 méthodes).
+- `internal/bridge/agentmeshkafka/file_adapter.go` : `FileAdapter` JSONL — lit ligne par ligne, résilient sur lignes malformées, `Close()` idempotent (`sync.Once`), respecte `ctx.Done()`.
+- `internal/bridge/agentmeshkafka/testdata/{golden-3,golden-3-malformed}.jsonl` : corpus initial 3 lignes (nominal/sans attestation/contexte riche + variante malformée).
+- `internal/bridge/agentmeshkafka/classifier.go` + tests : `I4Class` (6 classes : `i4_coherent_accepted`, `i4_incoherent_refused`, `i4_false_positive`, `i4_false_negative`, `other_refusal`, `unmodeled`), `EmpiricalDecision` neutre, `ClassifyI4`, `EmpiricalI4Summary` (sensitivity/specificity).
+- `internal/bridge/agentmeshkafka/empirical_i4_test.go` (build tag `empirical`) : `TestEmpiricalI4Campaign` ingère 120 traces, écrit `testdata/empirical-i4-results.json`. Package externe `agentmeshkafka_test` autorise import croisé tau+app.
+- `internal/app/agentmesh.go` : pivot unique bridge ↔ tau — `ToTauExchange` (pure totale) + `StreamAsTauExchanges` (wrapper streaming avec propagation d'erreurs et fermeture propre).
+- `cmd/generate-corpus/` : CLI reproductible byte-identique (seed RNG explicite, sha256 frozen `a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee` pinné dans `TestGenerateCorpus_FrozenHash_Seed42_120_Balanced`). 3 profils : `balanced`, `i4-heavy`, `refus-heavy`. Corpus checked-in : `synthetic-corpus-120-seed42-balanced.jsonl`.
+- `test/e2e/agentmeshkafka_test.go` (build tag `integration`) : `TestE2E_AgentMeshKafka_FullPipeline` + variante `_NoTopicFilter` + `_MalformedCorpus`. 3 tests, full pipeline FileAdapter → StreamAsTauExchanges → Dispatcher.Decide.
+- `internal/arch_test.go` : règle `bridge/agentmeshkafka` étendue (deny `tau`, `orchestration`, `app`) ; `TestBridgeNoTauImport` AST-walk sur tous `bridge/*` (exclut `_test.go`).
+- `Makefile` : cibles `e2e` (tag integration) et `empirical-i4` (tag empirical).
+- `docs/adr/0005-agentmeshkafka-dto.md` : décision DTO neutre + révision PRD §12.1 marquée pour M6.
+- `docs/empirical/I4-report.md` (151 l.) : rapport campagne — 120 décisions classifiées, statut I4 **Hypothèse inchangée** (le générateur synthétique n'injecte pas les clés `Context` qui pilotent D-INVARIANT au-dessus du seuil ; la garde I4 n'a jamais été sollicitée).
+- `docs/empirical/unmodeled.md` (108 l.) : 3 observations initiales (OBS-001 Context absent, OBS-002 frontière agrégée, OBS-003 AgentMeshKafka indisponible — risque #1 PRD §18 réalisé).
+- `docs/empirical/I4-regime.md` (53 l.) : note d'audit — Régime B (contingence) sélectionné, conditions de bascule vers A documentées.
+- `docs/superpowers/plans/2026-05-24-M4-agentmeshkafka-bridge.md` : sous-plan détaillé M4 (2134 l., 11 tâches).
+
+### Notes
+
+- **Découverte architecturale M4.1** : la signature PRD §12.1 `Stream(...) (<-chan tau.Exchange, ...)` viole `arch_test.go` (deny `bridge → tau`). Décision ADR-0005 : DTO neutre `AgentMeshExchange` dans `bridge/` + converter `ToTauExchange` dans `app/`. PRD §12.1 marqué pour révision M6.
+- **Régime B activé** : `agbruneau/AgentMeshKafka` n'existe ni local ni sur GitHub (audit M4.0). Campagne empirique sur corpus synthétique reproductible. Bascule vers Régime A reportée à un éventuel M4-bis.
+- **I4 inconclusif** : 84 `i4_coherent_accepted`, 36 `other_refusal`, 0 TP, 0 FN, 0 FP. Sensitivity = `-1` (dénominateur nul), Specificity = `1.0`. Cause racine documentée OBS-001 : le générateur ne peuple pas `Context.event_registry` ni `Context.idempotency_key_mode` → D-INVARIANT plafonne à 0.25 < `θ_inv = 0.50`.
+- **Revue intégrée M4** : APPROVE_WITH_CONCERNS. 4 observations non-bloquantes (NB1-NB4) reportées à M4-bis ou M5 ; aucun bloquant code.
+- Race detector indisponible sur Windows local (couvert par CI Linux/macOS). Le harness empirique court ~5s sur 120 traces.
+
 ## [0.0.4-alpha] — 2026-05-24
 
 M3 : cinq invariants I1-I5 encodés et fuzzés, étape 8 dispatcher (`EvaluateInvariants → Trace.UnmodeledObservations`), gardes anti-patrons #1/#3/#4 par test. Smoke fuzz 5 s vert sur 5 cibles. Couverture `tau/invariants` 91.2 %.
