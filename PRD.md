@@ -1,10 +1,11 @@
 # PRD — TauGo
 
 **Projet** : TauGo — kernel exécutable Go de l'opérateur τ et validateur empirique des invariants I1-I5
-**Auteur** : André-Guy Bruneau, M.Sc. **·** **Date** : 2026-05-23 **·** **Statut** : V0.2 (refactorisé)
+**Auteur** : André-Guy Bruneau, M.Sc. **·** **Date** : 2026-05-24 **·** **Statut** : V0.3 (alignement post-refactor v0.1.1-pre)
+**État livré** : tag `v0.1.0` (M0-M6 clos 2026-05-24) + refactor consolidation `v0.1.1-pre` (commit `2cf560c`, 42 tâches T-001..T-040, 4 ADRs ajoutées 0006-0009). Tag `v0.1.1` à apposer après revue humaine.
 **Référence canonique** : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8 (monographie : opérateur τ, dimensions D-SENS/D-AUTORITÉ/D-INVARIANT, invariants I1-I5)
 **Référence d'ingénierie** : `agbruneau/FibGo` (Clean Architecture, calibration adaptative, fuzz, déterminisme byte-identique)
-**Référence empirique** : `agbruneau/AgentMeshKafka` (substrat de validation, traces réelles)
+**Référence empirique** : `agbruneau/AgentMeshKafka` (substrat de validation, traces réelles ; DTO neutre `app/agentmesh.go`, ADR-0005)
 
 ---
 
@@ -95,24 +96,27 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 
 ## 3. Périmètre V1
 
-### 3.1 Inclus
+### 3.1 Inclus *(état v0.1.1-pre — Confirmé)*
 
-- Bibliothèque Go `internal/tau/` — dispatcher, frontière, opérateur τ formalisé
-- Trois dimensions calculables, sondes nommées, métriques `[0,1]`
-- Cinq invariants I1-I5 sous forme de cibles fuzz `FuzzI*`
-- Calibration adaptative — pattern FibGo : hystérèse, `atomic.Int64`, profils versionnés, invalidation par drift
-- Adaptateur `AgentMeshKafka` — validateur empirique end-to-end
-- CLI minimale `cmd/tau/` — dispatch, dump de trace, rapport d'invariants, export de profil
-- CI — `go test -race`, fuzz court, lint, build reproductible byte-identique, cross-compile
-- `docs/theory/` aligné monographie (renvois explicites chap. III.8)
+- Bibliothèque Go `internal/tau/` — dispatcher, frontière (méthode `Exchange.FrontierCheck()`), opérateur τ formalisé
+- Trois dimensions calculables, sondes nommées, métriques `[0,1]`, **scores ventilés** exposés dans `Trace.{DSens, DAuthority, DInvariant}` *(v0.1.1, ADR-0008)*
+- Cinq invariants I1-I5 sous forme de cibles fuzz `FuzzI*` (débits 1.1 M à 9.5 M exec/s, 0 crash)
+- Calibration adaptative — pattern FibGo : `atomic.Int64`, profils versionnés byte-identique, invalidation par drift ; **`Profile.Weights` appliqués au runtime** *(v0.1.1, T-017)*
+- Adaptateur `AgentMeshKafka` (FileAdapter livré M4, KafkaAdapter en V0.2) — validateur empirique end-to-end avec DTO neutre *(ADR-0005)*
+- `app.NewDispatcher()` charge `calibration.DefaultProfile()` par défaut → garde de péremption active sur chemin CLI *(v0.1.1, P0-02)*
+- **Erreurs typées** `DispatchError`, `RefusError`, `CalibrationError` + sentinels `errors.Is`-compatibles *(v0.1.1, ADR-0009)*
+- CLI `cmd/tau/` — `decide`, `calibrate`, `runMain(args, in, out, stderr) int` testable directement
+- CI 3 OS — `go test -race`, fuzz 30 s I1-I5, lint (24 linters), build reproductible byte-identique, **gate per-package ≥ 90 % `tau/*` et ≥ 80 % global** *(v0.1.1, T-012)*
+- 9 ADRs (0001-0009) + `docs/theory/` aligné monographie (renvois explicites chap. III.8)
 
 ### 3.2 Exclus de V1 (reportés)
 
-- **V2 — `cia-runtime`** : mécanisation Lean 4 des invariants *(renvoi HGL — `RechercheFondamentale.md`)*
+- **V0.2 — `cia-runtime`** : mécanisation Lean 4 des invariants *(renvoi HGL — `RechercheFondamentale.md`)*. ADR-0010 à créer ; candidats prioritaires : `BoundsHold` (I5), `IsIncoherent` (I4) — fonctions pures déjà fuzzées
+- **V0.2 — hystérèse complète avec `LastRegime`** *(ADR-0007)* — V1 simplifie à `Deterministe` par défaut dans la bande
 - **V3 — `tau-stack`** : TUI Bubble Tea, replay de traces, calibration en charge, dashboard
 - Couche RAG sur `ruvector.db` — étude séparée
 - Service réseau (gRPC/HTTP) — V1 = lib + CLI uniquement
-- Métrique de pile composée M(π) opérante *(chap. III.8.6.3)* — V1 expose l'API, V2 calcule
+- Métrique de pile composée M(π) opérante *(chap. III.8.6.3)* — **livré dès v0.1.0** (`BoundsHold` calculatoire, dépassement de l'engagement V2 initial)
 
 ### 3.3 Anti-objectifs (anti-platform discipline)
 
@@ -253,7 +257,7 @@ type Attestation struct {
 | **I2** | Le résidu migrant est **non vide et non recâblable hors ligne** sans détruire l'agentivité | Confirmé par construction | Pour tout `x` dans la frontière, `Residu(x) := { g | t_fix(g) ≈ t_int } ≠ ∅` ; tout `Recablage(x)` qui vide le résidu doit faire perdre ≥ 1 condition de frontière | `FuzzI2_Irreductibilite` |
 | **I3** | Trois dimensions **orthogonales en valeur, asymétriques en maturité** ; D-AUTORITÉ = fait institutionnel sans support à 2026-05-16 | Probable, daté 2026-05-16 | `D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus`. Clause de péremption : `date_revision ≤ 2027-01-01` dans le profil | `FuzzI3_AsymetrieAutorite` |
 | **I4** | D-INVARIANT contraint par D-SENS : `i ≈ pendant ⟹ s ≈ pendant` ; combinaisons incohérentes **observables** | Hypothèse, empiriquement testable | `D-INVARIANT(x) ≥ θ_inv ∧ D-SENS(x) < θ_sens ⇒ Refus(diag: "I4")` | `FuzzI4_CoherenceContrainte` |
-| **I5** | Pile hérite de la **conjonction** des angles morts ; pas de réconciliation transversale sauf hors pile | Probable | Pour pile `π = [C₁,…,Cₙ]`, `M(π) = |⋃Aᵢ|` satisfait `M(π) ≥ max(|Aᵢ|)` et `M(π) ≤ Σ|Aᵢ|`. V1 expose l'API d'agrégation ; V2 calcule | `FuzzI5_CompositionConjonctive` |
+| **I5** | Pile hérite de la **conjonction** des angles morts ; pas de réconciliation transversale sauf hors pile | Probable | Pour pile `π = [C₁,…,Cₙ]`, `M(π) = |⋃Aᵢ|` satisfait `M(π) ≥ max(|Aᵢ|)` et `M(π) ≤ Σ|Aᵢ|`. **v0.1.0 calcule** (`Aggregate`, `BoundsHold` — optim 1 passe v0.1.1, -46 % ns/op). Dépassement de l'engagement initial « V2 calcule » | `FuzzI5_CompositionConjonctive` |
 
 ### 6.2 Conditions de réfutation observables
 
@@ -296,6 +300,14 @@ type Attestation struct {
 | 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; CI échoue si périmé |
 | 4 | **Usage clos** — tenir les 3 dimensions et 5 invariants pour exhaustifs | Hypothèse de complétude non acquise (chap. III.8.7) | `Decision.Trace.UnmodeledObservations []string` ; rapport mensuel `docs/empirical/unmodeled.md` |
 
+**Trois anti-patrons d'implémentation supplémentaires** *(opérationnels, gardés par CI depuis v0.1.1)* — détail dans [`CLAUDE.md` §Anti-patrons](CLAUDE.md) #5-#7 :
+
+| # | Anti-patron | Garde |
+|---|---|---|
+| 5 | Fabrication dans `docs/` (citation, chiffre, API, DOI, date inventés) | Audit textuel + revue PR ; §14.1 « Zéro fabrication » |
+| 6 | Import LLM concret (`anthropic`, `openai`, …) dans `internal/tau/*` ou `internal/orchestration/*` | **`TestArchNoConcreteLLMInDomain`** *(v0.1.1, walk AST sur 12 substrings interdites)* |
+| 7 | Globaux mutables non synchronisés dans `internal/tau/*` | `gochecknoglobals` + revue PR ; *(v0.1.1 : `I3PerimptionLimite` converti en getter)* |
+
 ### 7.3 Refus — décision de premier rang
 
 | Cas | Diagnostic | Renvoi |
@@ -331,7 +343,7 @@ internal/
   bridge/
     agentmeshkafka/              # validateur empirique
     llm/                         # interface client LLM injecté + stub déterministe
-  {config, errors, metrics, testutil}/
+  {errors, testutil, thresholds}/        # config et metrics supprimés v0.1.1 ; thresholds ajouté (ADR-0006)
 docs/
   theory/                        # renvois III.8.* (03-tau, 04-dimensions, 05-invariants, 06-conditions, 07-anti-patrons)
   algorithms/                    # dispatch, calibration, drift
@@ -573,7 +585,7 @@ Toute décision produit une `Trace` non-mutable couvrant : scores avec sondes e
 | `Weights.D*` (composite) | `[0,1]`, somme = 1 | `(0.4, 0.3, 0.3)` | Pondération `τ_score` |
 | `Weights.*Probes` | par sonde, somme par dimension = 1 | §5 | Pondération interne |
 
-*Statut : hypothèse — initialisations à corroborer sur traces AgentMeshKafka M4.*
+*Statut : hypothèse — initialisations à corroborer sur traces AgentMeshKafka M4. **v0.1.1** : `Profile.Weights` désormais lus par le dispatcher à l'étape 6 (T-017) ; toute calibration produit donc des poids effectivement appliqués au runtime.*
 
 ### 11.2 Pattern atomic (calque FibGo `bigfft/fft.go`)
 
@@ -689,7 +701,7 @@ type Client interface {
 | Composant | Choix | Statut |
 |---|---|---|
 | **Go** | 1.25.0+ (toolchain 1.26.x), aligné FibGo | Confirmé |
-| **Module** | `github.com/agbruneau/taugo` | À vérifier (username GitHub à confirmer M0) |
+| **Module** | `github.com/agbruneau/taugo` | Confirmé `go.mod` |
 | **Licence** | Apache-2.0 | Confirmé |
 | **Dépendances** | `golang.org/x/sync/errgroup`, stdlib `log/slog`, `math/big` *(si scoring l'exige)* | Probable |
 | **Aucun framework** | Pas de Bubble Tea V1, ni gRPC, ni cobra ; `flag` standard | Confirmé (§3.3) |
@@ -784,8 +796,8 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 | Gate | Seuil | Action |
 |---|---|---|
-| Couverture globale | ≥ 80 % | Bloque merge |
-| Couverture `tau/*` | ≥ 90 % | Bloque merge |
+| Couverture globale | ≥ 80 % | Bloque merge *(actif v0.1.1, T-012)* |
+| Couverture `tau/*` | ≥ 90 % | Bloque merge *(actif v0.1.1, T-012)* |
 | Race detector | 0 warning | Bloque merge |
 | Lint | 0 warning | Bloque merge |
 | Reproductibilité build | hash byte-identique entre 2 builds | Bloque merge |
@@ -813,10 +825,11 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 | **M4** | Adaptateur `AgentMeshKafka` + campagne empirique I4 | Trace end-to-end ; rapport `docs/empirical/I4-report.md` avec ≥ 100 traces analysées |
 | **M5** | Calibration adaptative + persistance versionnée + détection de drift | `tau calibrate` reproductible byte-identique sur corpus fixé ; `TestCalibrationDeterministic` passe |
 | **M6** | Documentation alignée monographie + typographie française + release `v0.1.0` | Tag, `CHANGELOG.md`, `README.md`, `docs/theory/` complet avec renvois III.8 |
+| **v0.1.1-pre** | Refactor consolidation post-audit — 42 tâches T-001..T-040, 4 ADRs (0006-0009), packages `thresholds`/`errors`/`testutil` peuplés, Trace ventilée, anti-patron #6 désormais gardé, gate CI per-package actif | Commit `2cf560c`, couverture 92.1 %, 14 packages verts, AUDIT.md/AUDITPlan.md archivés |
 
 **Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · `.github/workflows/{ci,coverage}.yml` · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
 
-**Estimation indicative** : 6-10 semaines à temps partiel. *À vérifier selon disponibilité réelle.*
+**Estimation indicative** : 6-10 semaines à temps partiel. *À vérifier selon disponibilité réelle.* **Effectif** : M0-M6 livrés sur 2 jours (2026-05-23 → 2026-05-24) grâce aux agent teams. Refactor v0.1.1-pre livré le même jour.
 
 **Cadence de revue** :
 
@@ -828,7 +841,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 ## 17. Critères de succès V1
 
-*Checklist falsifiable — chaque item vérifiable par un test ou un artefact.*
+*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.1-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0009 présents, anti-patrons §7.2 #1-7 tous gardés en CI, couverture globale 92.1 %, build reproductible).*
 
 | # | Critère | Vérification |
 |---|---|---|
@@ -849,7 +862,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 | # | Risque | Probabilité | Impact | Mitigation | Marqueur |
 |---|---|---|---|---|---|
-| 1 | `AgentMeshKafka` pas prêt comme validateur M4 | Probable | Élevé | Stabiliser AgentMeshKafka avant M4 ; mock intermédiaire ; M4 reportable 2-3 sem sans bloquer M5 | Probable |
+| 1 | `AgentMeshKafka` pas prêt comme validateur M4 | ~~Probable~~ **Résolu v0.1.0** | ~~Élevé~~ — | DTO neutre ADR-0005, FileAdapter livré M4 (Régime B contingence) ; KafkaAdapter réel V0.2 | Confirmé |
 | 2 | Invariants I1-I5 trop abstraits pour fuzz direct | Probable | Moyen | Reformulation exécutable §6 ; revue ciblée M3 ; raffinement après M4 | Probable |
 | 3 | Drift TauGo ↔ révisions monographie | Probable | Moyen | Tag version épinglé dans `CLAUDE.md` et chaque `Profile` ; revue à chaque release monographie | Probable |
 | 4 | Scope creep vers framework agentique | Probable | Élevé | §3.3 anti-objectifs ; revue mensuelle stricte ; lignes interdites en CI *(§14.4)* | Probable |
@@ -857,7 +870,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 | 6 | `ruvector.db` impose couplage RAG prématuré | Probable | Faible | Exclu V1 §3.2 ; étude séparée | Probable |
 | 7 | Verrou D-AUTORITÉ mal calibré → faux refus en cascade | Hypothèse | Moyen | Calibration empirique M4 ; `θ_auth_block` initial conservateur (0.85) ; corpus cas-limites | Hypothèse |
 | 8 | Calibration sensible au modèle LLM injecté → profils non-portables | Probable | Moyen | `model_llm_fingerprint` dans profil §11.3 ; matrice de profils par modèle | Probable |
-| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde CI `TestI3_DateRevisionRespectee` ; alerte 30 j avant péremption | Probable |
+| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde CI `TestI3_DateRevisionRespectee` ; alerte 30 j avant péremption ; **v0.1.1** : `app.NewDispatcher()` charge un profil par défaut donc la garde est active dès la CLI standard (P0-02) | Probable |
 | 10 | Couplage `AgentMeshKafka` rend TauGo non-portable | Hypothèse | Faible | `bridge/agentmeshkafka/` isole ; interface `Adapter` minimale §12.1 | Hypothèse |
 
 ---
@@ -897,15 +910,15 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 - `agbruneau/FibGo` — **référence d'ingénierie** (commit épinglé à fixer M0)
 - `agbruneau/FibRust` — référence ergonomie type-safe (pertinent si extension Rust V3+)
 
-### 20.2 Prochaines étapes Claude Code (M0)
+### 20.2 Prochaines étapes V0.2 (post-v0.1.1)
 
-1. Lire ce `PRD.md` intégralement et confirmer la compréhension du périmètre V1
-2. Confirmer la fidélité des invariants I1-I5 reformulés §6 contre `Monographie.md` lignes ~5723-5737
-3. Rédiger / réviser `CLAUDE.md` héritant des conventions FibGo *(structure)* et InteroperabiliteAgentique *(rédaction)*
-4. Générer le squelette Clean Architecture *(M0 livrables, §16)*
-5. Configurer la CI : `golangci-lint`, `go test -race`, fuzz court, build reproductible byte-identique sur 3 OS
-6. Premier commit signé sur `main`, premier tag `v0.0.1-alpha`
-7. Ouvrir issue M1 : dispatcher minimal deux régimes avec stub LLM déterministe
+1. **Tag `v0.1.1`** — apposer après revue humaine du commit `2cf560c` (validation manuelle des 4 ADRs 0006-0009 + checklist Annexe D AUDITPlan archivé)
+2. **ADR-0010** — bridge TauGo ↔ `cia-runtime` (mécanisation Lean 4) ; protocole sérialisation JSON ou Protobuf ; modélisation `time.Time` POSIX ; décision `float64` vs `Rat` pour scores `[0,1]`
+3. **Dépôt compagnon `cia-runtime`** — mécanisation Lean 4 prioritaire sur `BoundsHold` (I5) et `IsIncoherent` (I4) : fonctions pures déjà fuzzées, candidates idéales
+4. **T-026 `Exchange.Context` typé** (déféré v0.1.1) — `ExchangeContext struct` + champ `Bag map[string]any` pour extensions ; lever magic strings P2-04
+5. **Hystérèse complète avec `LastRegime`** *(ADR-0007 cible V0.2)* — `sync.Map[x.ID → Regime]` + TTL
+6. **KafkaAdapter réel** — bascule Régime B → Régime A (contingence levée), corroboration empirique I4 sur trafic réel ≥ 1 000 traces
+7. **Calibration des poids par gradient** *(V2 `CalibrateWeights`)* — au-delà du grid search v0.1.0
 
 ### 20.3 Document vivant
 
@@ -915,4 +928,4 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 ---
 
-*Fin du PRD V0.2 (refactorisé) — 2026-05-23. V0.1 = commit précédent ; V0 = commit `b771dd1`.*
+*Fin du PRD V0.3 — 2026-05-24. V0.2 = 2026-05-23 (refactorisé) ; V0.1 = commit précédent ; V0 = commit `b771dd1`. Alignement post-refactor v0.1.1-pre (commit `2cf560c`).*
