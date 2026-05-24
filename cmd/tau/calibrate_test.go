@@ -220,3 +220,17 @@ func TestLoadCorpus_InvalidJSON(t *testing.T) {
 		t.Fatal("expected error for invalid JSON, got nil")
 	}
 }
+
+func TestRunCalibrate_OutputDirNotFound_Exit1(t *testing.T) {
+	t.Parallel()
+	corpus := writeTempCorpus(t, 2)
+	// Provide an output path in a directory that does not exist.
+	code := runCalibrate([]string{
+		"--corpus", corpus,
+		"--output", filepath.Join(t.TempDir(), "nonexistent-dir", "profile.json"),
+		"--date-revision", "2026-11-23",
+	})
+	if code != 1 {
+		t.Fatalf("runCalibrate returned %d, want 1 (output write error)", code)
+	}
+}

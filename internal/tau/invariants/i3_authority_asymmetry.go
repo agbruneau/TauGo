@@ -6,21 +6,23 @@ import (
 	"github.com/agbruneau/taugo/internal/tau"
 )
 
-// I3PerimptionLimite is the latest acceptable DateRevision per PRD §6.1 I3.
-// Beyond this date the institutional-fact landscape is presumed to have
-// shifted; the profile must be renewed or τ refuses by the expiry clause.
-// Dated 2026-05-24; next review 2027-01-01. Status: Probable.
-var I3PerimptionLimite = time.Date(2027, 1, 1, 0, 0, 0, 0, time.UTC) //nolint:gochecknoglobals // read-only sentinel, written once at init; see PRD §6.1 I3 veille trimestrielle
+// I3PerimptionLimite returns the cut-off date beyond which any calibration
+// profile is considered expired and triggers Refus (anti-pattern #3, PRD §7.2).
+// The value is fixed at compile time; modifying it requires an ADR.
+// Status: Probable. Dated 2026-05-24; next review 2027-01-01.
+func I3PerimptionLimite() time.Time {
+	return time.Date(2027, 1, 1, 0, 0, 0, 0, time.UTC)
+}
 
 // diagI3OntologicalRefus is the exact diagnostic string emitted by the
 // dispatcher (orchestration/dispatcher.go step 2) when the ontological
 // D-AUTORITÉ guard fires.
-const diagI3OntologicalRefus = "I3 — verrou ontologique D-AUTORITÉ"
+const diagI3OntologicalRefus = tau.DiagVerrouOntologique
 
 // diagI3ExpiryRefus is the diagnostic string expected when the dispatcher
 // fires the profile-expiry refus (step 3, landed in M3). It is matched
 // when checking whether the expiry guard was properly enforced.
-const diagI3ExpiryRefus = "profil périmé — veille requise"
+const diagI3ExpiryRefus = tau.DiagPeremptionProfile
 
 // IsProfileExpired reports whether dec.DateRevision is in the past relative
 // to now. A zero DateRevision is treated as never-expired (no revision date
@@ -66,13 +68,18 @@ func EvaluateI3WithClock(x tau.Exchange, dec tau.Decision, now time.Time) Status
 		return NotApplicable
 
 	case tau.Probabiliste:
-		// (2) Ontological bypass heuristic: composite tau_score is used as a
-		// proxy for D-AUTORITÉ since ventilated scores are not yet in Trace
-		// (deferred to M5). A score >= AuthBlock without attestation indicates
-		// the gate should have fired.
+		// (2) Ontological bypass check: read D-AUTORITÉ score directly from the
+		// ventilated Trace field (ADR-0008). Falls back to the TauScore proxy
+		// only when DAuthority is not yet populated (nil — e.g. stub traces in
+		// older test fixtures). A score >= AuthBlock without attestation means
+		// the ontological gate should have fired and was bypassed.
+		authValue := dec.Trace.TauScore // fallback proxy
+		if dec.Trace.DAuthority != nil {
+			authValue = dec.Trace.DAuthority.Value
+		}
 		if x.AttestationInstitutionnelle == nil &&
 			dec.Trace.Thresholds.AuthBlock > 0 &&
-			dec.Trace.TauScore >= dec.Trace.Thresholds.AuthBlock {
+			authValue >= dec.Trace.Thresholds.AuthBlock {
 			return Violated
 		}
 		return Held
@@ -92,7 +99,8 @@ func EvaluateI3WithClock(x tau.Exchange, dec tau.Decision, now time.Time) Status
 //
 // PRD §6.1 I3: D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus.
 // Status: Probable, dated 2026-05-16. Quarterly review tracked in PRD §16.
-// Ventilated D-AUTORITÉ score deferred to M5 (Trace.Scores not yet exposed).
+// Reads ventilated trace.DAuthority since v0.1.1 (ADR-0008); falls back to
+// composite TauScore proxy if the ventilated score is nil for backward-compat.
 func EvaluateI3(x tau.Exchange, dec tau.Decision) Status {
 	return EvaluateI3WithClock(x, dec, time.Now())
 }

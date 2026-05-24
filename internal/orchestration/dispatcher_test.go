@@ -7,6 +7,7 @@ import (
 
 	"github.com/agbruneau/taugo/internal/orchestration"
 	"github.com/agbruneau/taugo/internal/tau"
+	"github.com/agbruneau/taugo/internal/testutil"
 )
 
 type fakeLLM struct{ score float64 }
@@ -108,7 +109,9 @@ func TestDispatcher_Decide_Probabiliste(t *testing.T) {
 		Probabiliste: 0.65,
 		AuthBlock:    0.85,
 	})
-	dec, err := d.Decide(context.Background(), newExchangeInsideFrontier("t-prob"))
+	// Migration PoC (T-019): use testutil.BuildExchange instead of newExchangeInsideFrontier.
+	x := testutil.BuildExchange(testutil.WithID("t-prob"))
+	dec, err := d.Decide(context.Background(), x)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

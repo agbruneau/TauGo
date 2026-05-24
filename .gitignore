@@ -5,6 +5,12 @@
 /tau.exe
 /generate-corpus
 /generate-corpus.exe
+*.exe
+
+# database artifacts (T-004 AUDITPlan)
+*.db
+*.sqlite
+*.sqlite3
 
 # go
 *.test
@@ -16,6 +22,7 @@ cov*.html
 
 # Python helper script artifacts
 scripts/__pycache__/
+__pycache__/
 
 # IDE
 .idea/

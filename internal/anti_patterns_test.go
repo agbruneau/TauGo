@@ -100,9 +100,9 @@ func TestI3_DateRevisionRespectee(t *testing.T) {
 	if !p.DateRevision.After(now) {
 		t.Fatalf("Profile.DateRevision %v is not after now %v", p.DateRevision, now)
 	}
-	if p.DateRevision.After(invariants.I3PerimptionLimite) {
+	if p.DateRevision.After(invariants.I3PerimptionLimite()) {
 		t.Fatalf("Profile.DateRevision %v is beyond I3 péremption limit %v",
-			p.DateRevision, invariants.I3PerimptionLimite)
+			p.DateRevision, invariants.I3PerimptionLimite())
 	}
 }
 

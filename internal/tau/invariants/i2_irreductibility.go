@@ -46,13 +46,7 @@ func Residu(x tau.Exchange) []ResidualMagnitude {
 // If Inside() remains true after removing the full residue, I2 is violated —
 // the residue would not have been necessary to maintain the frontier.
 func Recablage(x tau.Exchange, removed []string) tau.FrontierCheck {
-	dynamic := x.Target.DiscoveryMode != tau.Static
-	f := tau.FrontierCheck{
-		UniversOuvert:       dynamic,
-		CompositionVariable: dynamic,
-		PairProbabiliste:    !x.Initiator.HumanInLoop,
-		CoutNonBorne:        x.Initiator.DelegationDepth > 0,
-	}
+	f := x.FrontierCheck()
 	for _, name := range removed {
 		switch ResidualMagnitude(name) {
 		case MagTargetResolution, MagSupportNegotiation:

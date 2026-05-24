@@ -7,6 +7,7 @@ import (
 
 	"github.com/agbruneau/taugo/internal/tau"
 	"github.com/agbruneau/taugo/internal/tau/dimensions"
+	"github.com/agbruneau/taugo/internal/testutil"
 )
 
 func authorityWeights() dimensions.AuthorityWeights {
@@ -74,7 +75,15 @@ func TestDAuthority_Bounded(t *testing.T) {
 func TestDAuthority_ShortChainLowerThanLong(t *testing.T) {
 	t.Parallel()
 	w := authorityWeights()
-	short, err := dimensions.ScoreDAuthority(context.Background(), newShortChainExchange(), w)
+	// Migration PoC (T-019): use testutil.BuildExchange for the short-chain case.
+	shortX := testutil.BuildExchange(
+		testutil.WithID("x-short-chain"),
+		testutil.WithHumanInLoop(true),
+		testutil.WithDelegationDepth(0),
+		testutil.WithDiscoveryMode(tau.Static),
+		testutil.WithContractURI("https://internal/api"),
+	)
+	short, err := dimensions.ScoreDAuthority(context.Background(), shortX, w)
 	if err != nil {
 		t.Fatalf("short: %v", err)
 	}

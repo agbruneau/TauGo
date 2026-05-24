@@ -3,6 +3,73 @@ package tau
 
 import "testing"
 
+// TestExchange_FrontierCheck_Reproduit verifies that Exchange.FrontierCheck()
+// correctly derives the four classical conditions from the Exchange fields,
+// covering the four rule branches documented in operator.go.
+func TestExchange_FrontierCheck_Reproduit(t *testing.T) {
+	t.Parallel()
+	cases := []struct {
+		name        string
+		x           Exchange
+		wantInside  bool
+		wantUnivers bool
+		wantCompo   bool
+		wantPair    bool
+		wantCout    bool
+	}{
+		{
+			name: "all_dynamic_noHuman_depth1",
+			x: Exchange{
+				Target:    Capability{DiscoveryMode: DynamicMCP},
+				Initiator: Principal{HumanInLoop: false, DelegationDepth: 1},
+			},
+			wantInside: true, wantUnivers: true, wantCompo: true, wantPair: true, wantCout: true,
+		},
+		{
+			name: "static_noHuman_depth1_notInside",
+			x: Exchange{
+				Target:    Capability{DiscoveryMode: Static},
+				Initiator: Principal{HumanInLoop: false, DelegationDepth: 1},
+			},
+			wantInside: false, wantUnivers: false, wantCompo: false, wantPair: true, wantCout: true,
+		},
+		{
+			name: "dynamic_humanInLoop_depth0_notInside",
+			x: Exchange{
+				Target:    Capability{DiscoveryMode: DynamicA2A},
+				Initiator: Principal{HumanInLoop: true, DelegationDepth: 0},
+			},
+			wantInside: false, wantUnivers: true, wantCompo: true, wantPair: false, wantCout: false,
+		},
+		{
+			name:       "zero_value_notInside",
+			x:          Exchange{},
+			wantInside: false, wantUnivers: false, wantCompo: false, wantPair: true, wantCout: false,
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			f := tc.x.FrontierCheck()
+			if f.UniversOuvert != tc.wantUnivers {
+				t.Errorf("UniversOuvert = %v, want %v", f.UniversOuvert, tc.wantUnivers)
+			}
+			if f.CompositionVariable != tc.wantCompo {
+				t.Errorf("CompositionVariable = %v, want %v", f.CompositionVariable, tc.wantCompo)
+			}
+			if f.PairProbabiliste != tc.wantPair {
+				t.Errorf("PairProbabiliste = %v, want %v", f.PairProbabiliste, tc.wantPair)
+			}
+			if f.CoutNonBorne != tc.wantCout {
+				t.Errorf("CoutNonBorne = %v, want %v", f.CoutNonBorne, tc.wantCout)
+			}
+			if f.Inside() != tc.wantInside {
+				t.Errorf("Inside() = %v, want %v", f.Inside(), tc.wantInside)
+			}
+		})
+	}
+}
+
 func TestFrontierCheck_Inside_AllConditionsViolated(t *testing.T) {
 	t.Parallel()
 	f := FrontierCheck{

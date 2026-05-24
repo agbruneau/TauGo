@@ -3,6 +3,7 @@ package main_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -10,18 +11,41 @@ import (
 	"testing"
 )
 
-// buildCLI compiles the cmd/tau binary into a temp file and returns its path.
-func buildCLI(t *testing.T) string {
-	t.Helper()
-	bin := filepath.Join(t.TempDir(), "tau")
+// cliBinaryPath holds the path of the binary built once by TestMain.
+var cliBinaryPath string
+
+// TestMain builds the cmd/tau binary once for the whole test run.
+// All TestEndToEnd_* tests reuse cliBinaryPath instead of rebuilding.
+func TestMain(m *testing.M) {
+	code := buildAndRun(m)
+	os.Exit(code)
+}
+
+// buildAndRun isole la séquence build + Run pour que les defer s'exécutent
+// avant l'os.Exit (gocritic exitAfterDefer).
+func buildAndRun(m *testing.M) int {
+	dir, err := os.MkdirTemp("", "tau-cli-")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "TestMain: MkdirTemp:", err)
+		return 2
+	}
+	defer os.RemoveAll(dir)
+
+	cliBinaryPath = filepath.Join(dir, "tau"+exeSuffix())
+	cmd := exec.Command("go", "build", "-o", cliBinaryPath, "github.com/agbruneau/taugo/cmd/tau")
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Fprintln(os.Stderr, "TestMain: go build:", err)
+		return 2
+	}
+	return m.Run()
+}
+
+func exeSuffix() string {
 	if runtime.GOOS == "windows" {
-		bin += ".exe"
+		return ".exe"
 	}
-	cmd := exec.Command("go", "build", "-o", bin, "github.com/agbruneau/taugo/cmd/tau")
-	if out, err := cmd.CombinedOutput(); err != nil {
-		t.Fatalf("go build failed: %v\n%s", err, out)
-	}
-	return bin
+	return ""
 }
 
 // runDecide pipes input on stdin and decodes the JSON Decision from stdout.
@@ -42,12 +66,12 @@ func runDecide(t *testing.T, bin, input string) map[string]any {
 	return dec
 }
 
-// Regime constants (mirror of tau.Regime iota; kept here to avoid the
-// black-box main_test importing internal/tau, which would couple the
-// E2E test to the internal package layout).
+// Regime constants (string representation from tau.Regime.String(), PascalCase).
+// Kept here to avoid the black-box main_test importing internal/tau, which
+// would couple the E2E test to the internal package layout.
 const (
-	regimeDeterministe = 1.0
-	regimeProbabiliste = 2.0
+	regimeDeterministe = "Deterministe"
+	regimeProbabiliste = "Probabiliste"
 )
 
 // TestEndToEnd_DecideDeterministe — composite tau_score falls in the
@@ -57,12 +81,11 @@ const (
 // is in [0.35, 0.65) => Deterministe (M2 hysteresis default).
 func TestEndToEnd_DecideDeterministe(t *testing.T) {
 	t.Parallel()
-	bin := buildCLI(t)
 	input := `{"id":"t1","intent_description":"creative generation","initiator":{"id":"agent","organization":"org-a","delegation_depth":1},"target":{"id":"svc","discovery_mode":1,"contract_uri":"https://api.example.com/v1"}}`
-	dec := runDecide(t, bin, input)
-	r, _ := dec["regime"].(float64)
+	dec := runDecide(t, cliBinaryPath, input)
+	r, _ := dec["regime"].(string)
 	if r != regimeDeterministe {
-		t.Fatalf("regime = %v, want %v (Deterministe). Full decision: %v", r, regimeDeterministe, dec)
+		t.Fatalf("regime = %q, want %q (Deterministe). Full decision: %v", r, regimeDeterministe, dec)
 	}
 	trace, _ := dec["trace"].(map[string]any)
 	if id, _ := trace["exchange_id"].(string); id != "t1" {
@@ -75,12 +98,11 @@ func TestEndToEnd_DecideDeterministe(t *testing.T) {
 // hashes (FNV-1a 32-bit) to 0.807 (S_reasoner_intent), keeping D-SENS high.
 func TestEndToEnd_DecideProbabiliste(t *testing.T) {
 	t.Parallel()
-	bin := buildCLI(t)
 	input := `{"id":"t2","intent_description":"hello world","initiator":{"id":"agent","organization":"org-a","delegation_depth":1},"target":{"id":"svc","discovery_mode":1}}`
-	dec := runDecide(t, bin, input)
-	r, _ := dec["regime"].(float64)
+	dec := runDecide(t, cliBinaryPath, input)
+	r, _ := dec["regime"].(string)
 	if r != regimeProbabiliste {
-		t.Fatalf("regime = %v, want %v (Probabiliste). Full decision: %v", r, regimeProbabiliste, dec)
+		t.Fatalf("regime = %q, want %q (Probabiliste). Full decision: %v", r, regimeProbabiliste, dec)
 	}
 }
 
@@ -90,7 +112,6 @@ func TestEndToEnd_DecideProbabiliste(t *testing.T) {
 // (PRD §17 criterion #10).
 func TestEndToEnd_Calibrate_ProducesValidProfile(t *testing.T) {
 	t.Parallel()
-	bin := buildCLI(t)
 
 	// Locate mini-corpus relative to module root via __FILE__.
 	_, thisFile, _, _ := runtime.Caller(0)
@@ -101,8 +122,8 @@ func TestEndToEnd_Calibrate_ProducesValidProfile(t *testing.T) {
 	out1 := filepath.Join(tmp, "p1.json")
 	out2 := filepath.Join(tmp, "p2.json")
 
-	runCalibrateCLI(t, bin, corpus, out1)
-	runCalibrateCLI(t, bin, corpus, out2)
+	runCalibrateCLI(t, cliBinaryPath, corpus, out1)
+	runCalibrateCLI(t, cliBinaryPath, corpus, out2)
 
 	// Assert non-empty and valid JSON with expected keys.
 	data, err := os.ReadFile(out1)

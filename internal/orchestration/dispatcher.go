@@ -19,6 +19,9 @@ var defaultDimensionWeights = struct{ DSens, DAuthority, DInvariant float64 }{ /
 	DInvariant: 0.3,
 }
 
+// Compile-time assertion that Dispatcher satisfies the tau.Kernel interface.
+var _ tau.Kernel = (*Dispatcher)(nil)
+
 // Dispatcher implements the PRD §10 tau pseudo-algorithm:
 // steps 1 (frontier), 2 (ontological guard D-AUTORITE), 3 (profile expiry),
 // 4 (dimension scores), 5 (I4 coherence guard), 6 (weighted composite),
@@ -33,6 +36,11 @@ type Dispatcher struct {
 // NewDispatcher constructs a Dispatcher with the given LLM client and thresholds.
 // Step 3 (profile expiry) is disabled — use NewDispatcherWithProfile to enable it.
 // Panics on ordering invariant violation (calque FibGo: invariant casse = panic interne).
+//
+// SECURITY NOTE: This constructor disables the profile-expiry guard
+// (PRD §7.3 case 4, anti-pattern #3). Reserved for internal tests only.
+// Production code MUST use NewDispatcherWithProfile, or the app.NewDispatcher
+// wrapper which injects a default profile automatically.
 func NewDispatcher(client llm.Client, t Thresholds) *Dispatcher {
 	if !t.Ordered() {
 		panic("orchestration: thresholds out of order (Deterministe > Probabiliste)")
@@ -57,6 +65,20 @@ func (d *Dispatcher) WithClock(c func() time.Time) *Dispatcher {
 	return d
 }
 
+// dimensionWeights returns the composite dimension weights in effect for this
+// dispatch. When a Profile with non-zero Weights is injected (T-017), its
+// values override the package-level defaults.
+func (d *Dispatcher) dimensionWeights() struct{ DSens, DAuthority, DInvariant float64 } {
+	if d.profile != nil && (d.profile.Weights.DSens+d.profile.Weights.DAuthority+d.profile.Weights.DInvariant) > 0 {
+		return struct{ DSens, DAuthority, DInvariant float64 }{
+			DSens:      d.profile.Weights.DSens,
+			DAuthority: d.profile.Weights.DAuthority,
+			DInvariant: d.profile.Weights.DInvariant,
+		}
+	}
+	return defaultDimensionWeights
+}
+
 // durationNs returns elapsed nanoseconds since start, guaranteeing at least 1
 // to satisfy the Trace.DurationNs > 0 invariant on platforms (e.g. Windows)
 // where the timer resolution may be coarser than 1 ns.
@@ -68,7 +90,7 @@ func durationNs(start time.Time) int64 {
 }
 
 // refusDecision builds a Refus Decision with a minimal trace. Used by the
-// early-exit guards in Decide (steps 1, 2, 3, 5) to keep each guard concise.
+// early-exit guards in Decide (steps 1, 3) where no scores are available yet.
 func refusDecision(x tau.Exchange, diag string, f tau.FrontierCheck, tt tau.TraceThresholds, ns int64) tau.Decision {
 	return tau.Decision{
 		Regime:     tau.Refus,
@@ -78,6 +100,25 @@ func refusDecision(x tau.Exchange, diag string, f tau.FrontierCheck, tt tau.Trac
 			Frontier:   f,
 			Thresholds: tt,
 			DurationNs: ns,
+		},
+	}
+}
+
+// refusDecisionWithScores builds a Refus Decision carrying available ventilated
+// scores. Used by step 2 (DAuthority known) and step 5 (all three scores known).
+func refusDecisionWithScores(x tau.Exchange, diag string, f tau.FrontierCheck, tt tau.TraceThresholds, ns int64,
+	auth, sens, inv *tau.Score) tau.Decision {
+	return tau.Decision{
+		Regime:     tau.Refus,
+		Diagnostic: diag,
+		Trace: tau.Trace{
+			ExchangeID: x.ID,
+			Frontier:   f,
+			Thresholds: tt,
+			DurationNs: ns,
+			DAuthority: auth,
+			DSens:      sens,
+			DInvariant: inv,
 		},
 	}
 }
@@ -95,18 +136,21 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 	}
 
 	// Step 1 — Frontier check (M2 heuristic from DiscoveryMode and HumanInLoop).
-	frontier := frontierFromExchange(x)
+	frontier := x.FrontierCheck()
 	if !frontier.Inside() {
-		return refusDecision(x, "hors frontière τ", frontier, tt, durationNs(start)), nil
+		return refusDecision(x, tau.DiagFrontiereFranchie, frontier, tt, durationNs(start)), nil
 	}
 
 	// Step 2 — Ontological guard D-AUTORITE (PRD §4.4, I3).
+	// Score is computed before the guard to populate Trace.DAuthority on Refus.
 	authScore, err := dimensions.ScoreDAuthority(ctx, x, dimensions.DefaultAuthorityWeights())
 	if err != nil {
 		return tau.Decision{}, err
 	}
+	authPtr := &tau.Score{Value: authScore.Value, Probes: authScore.Probes, Weights: authScore.Weights, ComputedAt: authScore.ComputedAt}
 	if authScore.Value >= d.thresholds.AuthBlock && x.AttestationInstitutionnelle == nil {
-		return refusDecision(x, "I3 — verrou ontologique D-AUTORITÉ", frontier, tt, durationNs(start)), nil
+		return refusDecisionWithScores(x, tau.DiagVerrouOntologique, frontier, tt, durationNs(start),
+			authPtr, nil, nil), nil
 	}
 
 	// Step 3 — Profile expiry guard (PRD §10, §7.1 C3, anti-pattern #3).
@@ -115,7 +159,7 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 	// calibration.CheckDrift uses !Before (>=), firing one day earlier as an
 	// early warning. This asymmetry is deliberate; see drift.go CheckDrift.
 	if d.profile != nil && !d.profile.DateRevision.IsZero() && d.now().After(d.profile.DateRevision) {
-		return refusDecision(x, "profil périmé — veille requise", frontier, tt, durationNs(start)), nil
+		return refusDecision(x, tau.DiagPeremptionProfile, frontier, tt, durationNs(start)), nil
 	}
 
 	// Step 4 — Dimension scores (D-SENS and D-INVARIANT; D-AUTORITE already computed).
@@ -127,16 +171,18 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 	if err != nil {
 		return tau.Decision{}, err
 	}
+	sensPtr := &tau.Score{Value: sensScore.Value, Probes: sensScore.Probes, Weights: sensScore.Weights, ComputedAt: sensScore.ComputedAt}
+	invPtr := &tau.Score{Value: invScore.Value, Probes: invScore.Probes, Weights: invScore.Weights, ComputedAt: invScore.ComputedAt}
 
 	// Step 5 — I4 coherence guard (PRD §6.1): low D-SENS with high D-INVARIANT.
 	if invScore.Value >= d.thresholds.InvCoherence && sensScore.Value < d.thresholds.SensCoherence {
-		return refusDecision(x, "I4 — combinaison incohérente détectée", frontier, tt, durationNs(start)), nil
+		return refusDecisionWithScores(x, tau.DiagIncoherenceI4, frontier, tt, durationNs(start),
+			authPtr, sensPtr, invPtr), nil
 	}
 
-	// Step 6 — Weighted composite tau_score.
-	tauScore := defaultDimensionWeights.DSens*sensScore.Value +
-		defaultDimensionWeights.DAuthority*authScore.Value +
-		defaultDimensionWeights.DInvariant*invScore.Value
+	// Step 6 — Weighted composite tau_score (Profile.Weights injected if available, T-017).
+	w := d.dimensionWeights()
+	tauScore := w.DSens*sensScore.Value + w.DAuthority*authScore.Value + w.DInvariant*invScore.Value
 
 	// Step 7 — Hysteresis decision (M2 default: Deterministe in the band).
 	regime := tau.Deterministe
@@ -145,15 +191,26 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 	}
 
 	decision := tau.Decision{
-		Regime:         regime,
-		ProfileVersion: "M3-default",
+		Regime: regime,
 		Trace: tau.Trace{
 			ExchangeID: x.ID,
 			TauScore:   tauScore,
 			Frontier:   frontier,
 			Thresholds: tt,
 			DurationNs: durationNs(start),
+			DAuthority: authPtr,
+			DSens:      sensPtr,
+			DInvariant: invPtr,
 		},
+	}
+	if d.profile != nil {
+		decision.ProfileVersion = d.profile.Version
+		decision.DateRevision = d.profile.DateRevision
+	} else {
+		// Profile non injecté : valeur sentinel pour tests internes uniquement.
+		// La trap péremption est gardée par TestApp_NewDispatcher_ChargeProfilParDefaut.
+		decision.ProfileVersion = "M3-default-no-profile"
+		decision.DateRevision = time.Time{}
 	}
 
 	// Step 8 — Invariant evaluation (observability only; Regime and Diagnostic unchanged).
@@ -165,20 +222,4 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 		)
 	}
 	return decision, nil
-}
-
-// frontierFromExchange derives a FrontierCheck from the Exchange fields.
-// This is a placeholder heuristic until M5 empirical calibration.
-// Rules (all placeholder, documented as such):
-//   - Target.DiscoveryMode != Static  => UniversOuvert=true, CompositionVariable=true
-//   - !Initiator.HumanInLoop          => PairProbabiliste=true
-//   - Initiator.DelegationDepth > 0   => CoutNonBorne=true
-func frontierFromExchange(x tau.Exchange) tau.FrontierCheck {
-	dynamic := x.Target.DiscoveryMode != tau.Static
-	return tau.FrontierCheck{
-		UniversOuvert:       dynamic,
-		CompositionVariable: dynamic,
-		PairProbabiliste:    !x.Initiator.HumanInLoop,
-		CoutNonBorne:        x.Initiator.DelegationDepth > 0,
-	}
 }

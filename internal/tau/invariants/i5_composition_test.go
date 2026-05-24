@@ -107,3 +107,35 @@ func TestEvaluateI5_HeldInV1Pipeline(t *testing.T) {
 		t.Fatalf("EvaluateI5 in V1 pipeline = %v, want Held (no stack in Trace yet)", got)
 	}
 }
+
+// makeLargePile builds a Pile with layerCount layers × entriesPerLayer entries
+// for benchmark purposes.
+func makeLargePile(layerCount, entriesPerLayer int) invariants.Pile {
+	p := make(invariants.Pile, layerCount)
+	for i := range p {
+		layer := make(invariants.AngleMort, entriesPerLayer)
+		for j := range layer {
+			layer[j] = string(rune('a'+((i*entriesPerLayer+j)%26))) + string(rune('0'+(j%10)))
+		}
+		p[i] = layer
+	}
+	return p
+}
+
+// BenchmarkI5_Aggregate measures Aggregate on a 10×50 pile (500 entries total).
+func BenchmarkI5_Aggregate(b *testing.B) {
+	p := makeLargePile(10, 50)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = invariants.Aggregate(p)
+	}
+}
+
+// BenchmarkI5_BoundsHold measures BoundsHold (includes Aggregate) on the same pile.
+func BenchmarkI5_BoundsHold(b *testing.B) {
+	p := makeLargePile(10, 50)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = invariants.BoundsHold(p)
+	}
+}

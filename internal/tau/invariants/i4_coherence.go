@@ -18,24 +18,32 @@ func IsIncoherent(sensValue, invValue, sensCoherence, invCoherence float64) bool
 
 // EvaluateI4 returns the I4 verdict for (x, decision).
 //
-// Encoding V1: I4 reasons over the Decision's regime and diagnostic rather
-// than recomputing dimension scores (importing tau/dimensions is forbidden
-// per arch_test.go). Ventilated scores deferred to M5.
+// Encoding V2 (ADR-0008): when Trace carries ventilated scores (DSens,
+// DInvariant non-nil), I4 can detect a silent bypass — a Deterministe or
+// Probabiliste regime with an incoherent (sens, inv) pair that should have
+// triggered a step-5 Refus. Without ventilated scores, verdict falls back to
+// the V1 regime/diagnostic heuristic.
 //
 //   - Refus("I4 — combinaison incohérente détectée"): Held — the dispatcher's
 //     step-5 guard fired correctly.
 //   - Other Refus diagnostics: NotApplicable — I4 was not the deciding factor.
-//   - Deterministe / Probabiliste: Held by default (V1 cannot verify the
-//     (s, i) pair without ventilated scores; verdict carries status Hypothèse).
-//
-// FuzzI4_CoherenceContrainte drives IsIncoherent directly on synthetic (s, i, θ)
-// tuples without requiring dispatcher reproduction.
+//   - Deterministe / Probabiliste with ventilated scores: check for silent bypass.
+//   - Deterministe / Probabiliste without ventilated scores: Held by default (V1).
 func EvaluateI4(_ tau.Exchange, dec tau.Decision) Status {
 	if dec.Regime == tau.Refus {
-		if dec.Diagnostic == "I4 — combinaison incohérente détectée" {
+		if dec.Diagnostic == tau.DiagIncoherenceI4 {
 			return Held
 		}
 		return NotApplicable
 	}
+
+	// V2: detect silent bypass when ventilated scores are available.
+	if dec.Trace.DSens != nil && dec.Trace.DInvariant != nil {
+		th := dec.Trace.Thresholds
+		if IsIncoherent(dec.Trace.DSens.Value, dec.Trace.DInvariant.Value, th.SensCoherence, th.InvCoherence) {
+			return Violated
+		}
+	}
+
 	return Held
 }

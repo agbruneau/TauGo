@@ -1,6 +1,10 @@
 package calibration
 
-import "time"
+import (
+	"time"
+
+	"github.com/agbruneau/taugo/internal/thresholds"
+)
 
 // Weights holds the composite and per-probe weights for the three dimensions.
 // DSens + DAuthority + DInvariant must sum to 1.0.
@@ -14,16 +18,9 @@ type Weights struct {
 	InvariantProbes map[string]float64 `json:"invariant_probes,omitempty"`
 }
 
-// Thresholds holds the full set of calibrated decision thresholds.
-// Mirrors orchestration.Thresholds; separate to avoid calibration -> orchestration import.
-type Thresholds struct {
-	Deterministe  float64 `json:"deterministe"`
-	Probabiliste  float64 `json:"probabiliste"`
-	AuthBlock     float64 `json:"auth_block"`
-	SensCoherence float64 `json:"sens_coherence"`
-	InvCoherence  float64 `json:"inv_coherence"`
-	HysteresisGap float64 `json:"hysteresis_gap"`
-}
+// Thresholds is the canonical decision threshold type, aliased from internal/thresholds.
+// ADR-0006 (Types valeur transverses) — accepté 2026-05-24.
+type Thresholds = thresholds.Thresholds
 
 // Profile is the versioned, opposable calibration record for the tau operator.
 // Every Profile carries fingerprints of the environment in which it was produced;

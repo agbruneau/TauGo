@@ -101,10 +101,10 @@ type EmpiricalI4Stats struct {
 	I4FalseNegative     int `json:"i4_false_negative"`
 	OtherRefusal        int `json:"other_refusal"`
 	Unmodeled           int `json:"unmodeled"`
-	// Sensitivity = TP / (TP + FN). -1 if denominator is zero.
-	Sensitivity float64 `json:"sensitivity"`
-	// Specificity = TN / (TN + FP). -1 if denominator is zero.
-	Specificity float64 `json:"specificity"`
+	// Sensitivity = TP / (TP + FN). nil if denominator is zero.
+	Sensitivity *float64 `json:"sensitivity,omitempty"`
+	// Specificity = TN / (TN + FP). nil if denominator is zero.
+	Specificity *float64 `json:"specificity,omitempty"`
 }
 
 // EmpiricalI4Summary aggregates a slice of EmpiricalDecision records into
@@ -138,14 +138,12 @@ func EmpiricalI4Summary(decisions []EmpiricalDecision) EmpiricalI4Stats {
 	fp := float64(s.I4FalsePositive)
 
 	if tp+fn > 0 {
-		s.Sensitivity = tp / (tp + fn)
-	} else {
-		s.Sensitivity = -1
+		v := tp / (tp + fn)
+		s.Sensitivity = &v
 	}
 	if tn+fp > 0 {
-		s.Specificity = tn / (tn + fp)
-	} else {
-		s.Specificity = -1
+		v := tn / (tn + fp)
+		s.Specificity = &v
 	}
 	return s
 }

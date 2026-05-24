@@ -38,6 +38,27 @@ var archRules = []rule{
 		"github.com/agbruneau/taugo/internal/orchestration",
 		"github.com/agbruneau/taugo/internal/app",
 	}},
+	// AUDIT V-A2: calibration must not depend on tau/*, orchestration, or bridge/*.
+	// These packages are higher-level; pulling them into calibration would invert
+	// the dependency direction and violate Clean Architecture layer ordering.
+	{from: "github.com/agbruneau/taugo/internal/calibration", deny: []string{
+		"github.com/agbruneau/taugo/internal/tau",
+		"github.com/agbruneau/taugo/internal/orchestration",
+		"github.com/agbruneau/taugo/internal/bridge",
+	}},
+	// ADR-0006: internal/thresholds is a leaf value-type package with no taugo deps.
+	// It must not import any other taugo internal package to preserve the transverse layer.
+	{from: "github.com/agbruneau/taugo/internal/thresholds", deny: []string{
+		"github.com/agbruneau/taugo/internal/tau",
+		"github.com/agbruneau/taugo/internal/orchestration",
+		"github.com/agbruneau/taugo/internal/calibration",
+		"github.com/agbruneau/taugo/internal/bridge",
+		"github.com/agbruneau/taugo/internal/app",
+		"github.com/agbruneau/taugo/internal/errors",
+		"github.com/agbruneau/taugo/internal/metrics",
+		"github.com/agbruneau/taugo/internal/config",
+		"github.com/agbruneau/taugo/internal/testutil",
+	}},
 }
 
 func TestArchitectureLayering(t *testing.T) {
@@ -109,5 +130,73 @@ func TestBridgeNoTauImport(t *testing.T) {
 	})
 	if err != nil {
 		t.Fatalf("WalkDir failed: %v", err)
+	}
+}
+
+// TestArchNoConcreteLLMInDomain walks every non-test .go file under
+// internal/tau/ (including sub-packages) and internal/orchestration/,
+// and fails if any file imports a concrete LLM provider SDK.
+// Anti-pattern PRD §7.2 #6: concrete LLM SDK forbidden in the domain layer.
+func TestArchNoConcreteLLMInDomain(t *testing.T) {
+	t.Parallel()
+
+	// Substrings whose presence in an import path signals a concrete LLM dependency.
+	forbiddenSubstrings := []string{
+		"anthropic",
+		"openai",
+		"mistralai",
+		"mistral-go",
+		"cohere",
+		"google.golang.org/genai",
+		"huggingface",
+		"ollama",
+		"replicate",
+		"together",
+		"anyscale",
+		"groq",
+	}
+
+	intPkg, err := build.Default.Import("github.com/agbruneau/taugo/internal/calibration", ".", build.FindOnly)
+	if err != nil {
+		t.Skipf("module root not resolvable: %v", err)
+	}
+	internalRoot := filepath.Dir(intPkg.Dir)
+
+	domainDirs := []string{
+		filepath.Join(internalRoot, "tau"),
+		filepath.Join(internalRoot, "orchestration"),
+	}
+
+	fset := token.NewFileSet()
+	for _, domainDir := range domainDirs {
+		if _, statErr := os.Stat(domainDir); os.IsNotExist(statErr) {
+			continue
+		}
+		walkErr := filepath.WalkDir(domainDir, func(path string, d os.DirEntry, wErr error) error {
+			if wErr != nil {
+				return wErr
+			}
+			if d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+				return nil
+			}
+			f, parseErr := parser.ParseFile(fset, path, nil, parser.ImportsOnly)
+			if parseErr != nil {
+				t.Errorf("parse error %s: %v", path, parseErr)
+				return nil
+			}
+			rel, _ := filepath.Rel(internalRoot, path)
+			for _, imp := range f.Imports {
+				raw := strings.ToLower(strings.Trim(imp.Path.Value, `"`))
+				for _, forbidden := range forbiddenSubstrings {
+					if strings.Contains(raw, forbidden) {
+						t.Errorf("anti-pattern PRD §7.2 #6 — concrete LLM SDK forbidden in domain layer: %s imports %s", rel, raw)
+					}
+				}
+			}
+			return nil
+		})
+		if walkErr != nil {
+			t.Fatalf("WalkDir(%s) failed: %v", domainDir, walkErr)
+		}
 	}
 }

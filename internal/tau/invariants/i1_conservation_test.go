@@ -6,6 +6,7 @@ import (
 
 	"github.com/agbruneau/taugo/internal/tau"
 	"github.com/agbruneau/taugo/internal/tau/invariants"
+	"github.com/agbruneau/taugo/internal/testutil"
 )
 
 func makeExchange(id, intent string) tau.Exchange {
@@ -48,7 +49,15 @@ func TestConserve_BrokenWhenExchangeIDDrifts(t *testing.T) {
 
 func TestEvaluateI1_HeldOnNonRefus(t *testing.T) {
 	t.Parallel()
-	x := makeExchange("e-i1", "compute")
+	// Migration PoC (T-019): use testutil.BuildExchange instead of makeExchange.
+	x := testutil.BuildExchange(
+		testutil.WithID("e-i1"),
+		testutil.WithIntentDescription("compute"),
+		testutil.WithDiscoveryMode(tau.Static),
+		testutil.WithContractURI("https://api/v1"),
+		testutil.WithHumanInLoop(true),
+		testutil.WithDelegationDepth(0),
+	)
 	dec := tau.Decision{
 		Regime: tau.Probabiliste,
 		Trace:  tau.Trace{ExchangeID: "e-i1", TauScore: 0.8},

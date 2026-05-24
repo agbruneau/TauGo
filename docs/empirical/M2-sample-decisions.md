@@ -391,7 +391,7 @@ Garde I4 : D-INV(1.000) >= InvCoherence(0.50) ∧ D-SENS(0.881) >= SensCoherenc
 
 ---
 
-*Renvoi PRD : §5 (dimensions), §4.4 (asymétrie ontologique), §6.1 (I4), §10 (pseudo-algo), §11 (seuils). Plan M2 : `docs/superpowers/plans/2026-05-23-M2-dimensions-gardes.md`. Theorie : `docs/theory/04-dimensions.md`.*
+*Renvoi PRD : §5 (dimensions), §4.4 (asymétrie ontologique), §6.1 (I4), §10 (pseudo-algo), §11 (seuils). Plan M2 : `docs/archive/plans-m0-m6/2026-05-23-M2-dimensions-gardes.md`. Theorie : `docs/theory/04-dimensions.md`.*
 
 **Version binaire** : `v0.0.3-alpha` (build go1.24+, stub:v0).
 **Daté** : 2026-05-23.

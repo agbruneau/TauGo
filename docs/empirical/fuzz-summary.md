@@ -215,4 +215,4 @@ La couverture de branche apportée par les cinq fichiers `seed01` n'a pas été 
 
 ---
 
-*Rapport V1 — 2026-05-24. Référence : PRD §15.2, plan `docs/superpowers/plans/2026-05-24-M3-invariants-fuzz.md` tâche M3.10. Rédacteur : `ruflo-core:researcher`. Prochaine révision : après tag `v0.0.4-alpha` et run CI 30 s (M3.11).*
+*Rapport V1 — 2026-05-24. Référence : PRD §15.2, plan `docs/archive/plans-m0-m6/2026-05-24-M3-invariants-fuzz.md` tâche M3.10. Rédacteur : `ruflo-core:researcher`. Prochaine révision : après tag `v0.0.4-alpha` et run CI 30 s (M3.11).*

@@ -4,39 +4,32 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/json"
+	"errors"
 	"os"
 	"reflect"
 	"strings"
 	"testing"
 
 	"github.com/agbruneau/taugo/internal/calibration"
+	taugoerrors "github.com/agbruneau/taugo/internal/errors"
 )
 
 // loadMiniCorpus reads testdata/mini-corpus.jsonl and returns all entries.
+// Uses LoadCorpus so that migration (ExpectedRegime → LabeledRegime) est appliquée.
 func loadMiniCorpus(t *testing.T) []calibration.CorpusEntry {
 	t.Helper()
-	f, err := os.Open("testdata/mini-corpus.jsonl")
+	entries, err := calibration.LoadCorpus("testdata/mini-corpus.jsonl")
 	if err != nil {
-		t.Fatalf("open mini-corpus: %v", err)
+		t.Fatalf("LoadCorpus mini-corpus: %v", err)
 	}
-	defer f.Close()
-	dec := json.NewDecoder(f)
-	out := make([]calibration.CorpusEntry, 0, 32)
-	for dec.More() {
-		var e calibration.CorpusEntry
-		if err := dec.Decode(&e); err != nil {
-			t.Fatalf("decode corpus entry: %v", err)
-		}
-		out = append(out, e)
-	}
-	return out
+	return entries
 }
 
 // countAgreementHelper replicates the agreement count for assertions.
 func countAgreementHelper(corpus []calibration.CorpusEntry, t calibration.Thresholds) int {
 	n := 0
 	for _, e := range corpus {
-		if simulateHelper(e, t) == e.ExpectedRegime {
+		if simulateHelper(e, t) == e.LabeledRegime {
 			n++
 		}
 	}
@@ -189,5 +182,94 @@ func TestUnmarshalCanonical_InvalidInput(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "UnmarshalCanonical") {
 		t.Fatalf("error should mention UnmarshalCanonical, got: %v", err)
+	}
+}
+
+// ---------------------------------------------------------------------------
+// T-028 — Validate() sur CorpusEntry
+// ---------------------------------------------------------------------------
+
+func TestCorpus_ValidateExpectedRegime_RejetteValeurInvalide(t *testing.T) {
+	t.Parallel()
+	// Écrit un corpus JSONL avec un LabeledRegime invalide.
+	dir := t.TempDir()
+	path := dir + "/invalid.jsonl"
+	line := `{"id":"x01","sens_score":0.5,"authority_score":0.3,"invariant_score":0.4,"labeled_regime":"invalid"}` + "\n"
+	if err := os.WriteFile(path, []byte(line), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	_, err := calibration.LoadCorpus(path)
+	if err == nil {
+		t.Fatal("LoadCorpus doit rejeter une entrée avec LabeledRegime invalide")
+	}
+	var calErr *taugoerrors.CalibrationError
+	if !errors.As(err, &calErr) {
+		t.Fatalf("erreur attendue *CalibrationError, obtenu: %T — %v", err, err)
+	}
+}
+
+func TestCorpus_ValidateExpectedRegime_AccepteLes4ValeursValides(t *testing.T) {
+	t.Parallel()
+	valides := []string{"deterministe", "probabiliste", "refus_authority", "refus_i4"}
+	for _, regime := range valides {
+		t.Run(regime, func(t *testing.T) {
+			t.Parallel()
+			dir := t.TempDir()
+			path := dir + "/corpus.jsonl"
+			line := `{"id":"v01","sens_score":0.5,"authority_score":0.3,"invariant_score":0.4,"labeled_regime":"` + regime + `"}` + "\n"
+			if err := os.WriteFile(path, []byte(line), 0o600); err != nil {
+				t.Fatal(err)
+			}
+			entries, err := calibration.LoadCorpus(path)
+			if err != nil {
+				t.Fatalf("LoadCorpus doit accepter regime=%q, erreur: %v", regime, err)
+			}
+			if len(entries) != 1 || entries[0].LabeledRegime != regime {
+				t.Fatalf("entrée chargée incorrecte: %+v", entries)
+			}
+		})
+	}
+}
+
+// ---------------------------------------------------------------------------
+// T-033 — Rétro-compat ExpectedRegime → LabeledRegime
+// ---------------------------------------------------------------------------
+
+func TestCorpus_LabeledRegime_PreferreSurExpectedRegime(t *testing.T) {
+	t.Parallel()
+	// Les deux champs présents : LabeledRegime doit être utilisé.
+	dir := t.TempDir()
+	path := dir + "/both.jsonl"
+	line := `{"id":"b01","sens_score":0.5,"authority_score":0.3,"invariant_score":0.4,"labeled_regime":"deterministe","expected_regime":"probabiliste"}` + "\n"
+	if err := os.WriteFile(path, []byte(line), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	entries, err := calibration.LoadCorpus(path)
+	if err != nil {
+		t.Fatalf("LoadCorpus: %v", err)
+	}
+	if entries[0].LabeledRegime != "deterministe" {
+		t.Errorf("LabeledRegime doit valoir %q, obtenu %q", "deterministe", entries[0].LabeledRegime)
+	}
+}
+
+func TestCorpus_ExpectedRegime_MigreVersLabeledRegime(t *testing.T) {
+	t.Parallel()
+	// Corpus legacy : seulement expected_regime. Après load, LabeledRegime == ExpectedRegime.
+	dir := t.TempDir()
+	path := dir + "/legacy.jsonl"
+	line := `{"id":"l01","sens_score":0.5,"authority_score":0.3,"invariant_score":0.4,"expected_regime":"refus_i4"}` + "\n"
+	if err := os.WriteFile(path, []byte(line), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	entries, err := calibration.LoadCorpus(path)
+	if err != nil {
+		t.Fatalf("LoadCorpus legacy: %v", err)
+	}
+	if entries[0].LabeledRegime != "refus_i4" {
+		t.Errorf("LabeledRegime doit valoir %q après migration, obtenu %q", "refus_i4", entries[0].LabeledRegime)
+	}
+	if entries[0].LabeledRegime != entries[0].ExpectedRegime {
+		t.Errorf("LabeledRegime (%q) != ExpectedRegime (%q) après migration", entries[0].LabeledRegime, entries[0].ExpectedRegime)
 	}
 }

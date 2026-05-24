@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -24,15 +25,15 @@ import (
 // empiricalI4Report is the JSON structure written to testdata/empirical-i4-results.json.
 // Fields are ordered alphabetically to ensure stable JSON output.
 type empiricalI4Report struct {
-	CorpusPath              string                            `json:"corpus_path"`
-	CorpusSHA256            string                            `json:"corpus_sha256"`
+	CorpusPath                string                          `json:"corpus_path"`
+	CorpusSHA256              string                          `json:"corpus_sha256"`
 	ObservationsNonModelisees []string                        `json:"observations_non_modelisees,omitempty"`
-	ProfileVersion          string                            `json:"profile_version"`
-	Sensitivity             float64                           `json:"sensitivity"`
-	Specificity             float64                           `json:"specificity"`
-	Stats                   agentmeshkafka.EmpiricalI4Stats   `json:"stats"`
-	Timestamp               string                            `json:"timestamp"`
-	TotalDecisions          int                               `json:"total_decisions"`
+	ProfileVersion            string                          `json:"profile_version"`
+	Sensitivity               float64                         `json:"sensitivity"`
+	Specificity               float64                         `json:"specificity"`
+	Stats                     agentmeshkafka.EmpiricalI4Stats `json:"stats"`
+	Timestamp                 string                          `json:"timestamp"`
+	TotalDecisions            int                             `json:"total_decisions"`
 }
 
 // TestEmpiricalI4Campaign ingests the 120-line synthetic corpus, dispatches
@@ -114,20 +115,20 @@ func TestEmpiricalI4Campaign(t *testing.T) {
 	}
 
 	// Report sensitivity: below 0.7 is informational, not fatal.
-	if stats.Sensitivity >= 0 && stats.Sensitivity < 0.7 {
-		t.Logf("NOTICE: sensitivity = %.4f (< 0.70); current D-INV probes may not yet capture I4 pattern — expected finding for M4.7", stats.Sensitivity)
+	if stats.Sensitivity != nil && *stats.Sensitivity < 0.7 {
+		t.Logf("NOTICE: sensitivity = %.4f (< 0.70); current D-INV probes may not yet capture I4 pattern — expected finding for M4.7", *stats.Sensitivity)
 	}
 
 	// Write JSON report.
 	report := empiricalI4Report{
-		Timestamp:               time.Now().UTC().Format(time.RFC3339),
-		ProfileVersion:          "M3-default",
-		CorpusPath:              corpusPath,
-		CorpusSHA256:            corpusSHA,
-		TotalDecisions:          stats.Total,
-		Stats:                   stats,
-		Sensitivity:             stats.Sensitivity,
-		Specificity:             stats.Specificity,
+		Timestamp:                 time.Now().UTC().Format(time.RFC3339),
+		ProfileVersion:            "M3-default",
+		CorpusPath:                corpusPath,
+		CorpusSHA256:              corpusSHA,
+		TotalDecisions:            stats.Total,
+		Stats:                     stats,
+		Sensitivity:               derefOrNeg1(stats.Sensitivity),
+		Specificity:               derefOrNeg1(stats.Specificity),
 		ObservationsNonModelisees: unmodeled,
 	}
 
@@ -146,26 +147,15 @@ func toEmpiricalDecision(ctx context.Context, x tau.Exchange, dec tau.Decision, 
 	sensScore, _ := dimensions.ScoreDSens(ctx, x, dimensions.DefaultSensWeights(), nil)
 	invScore, _ := dimensions.ScoreDInvariant(ctx, x, dimensions.DefaultInvariantWeights())
 	return agentmeshkafka.EmpiricalDecision{
-		RegimeStr:             regimeString(dec.Regime),
+		// classifier.go expects lowercase regime strings; Regime.String() returns
+		// PascalCase, so we normalize here. TODO T-033: align classifier.go with PascalCase.
+		RegimeStr:             strings.ToLower(dec.Regime.String()),
 		Diagnostic:            dec.Diagnostic,
 		DSensValue:            sensScore.Value,
 		DInvariantValue:       invScore.Value,
 		SensCoherence:         th.SensCoherence,
 		InvCoherence:          th.InvCoherence,
 		UnmodeledObservations: dec.Trace.UnmodeledObservations,
-	}
-}
-
-func regimeString(r tau.Regime) string {
-	switch r {
-	case tau.Deterministe:
-		return "deterministe"
-	case tau.Probabiliste:
-		return "probabiliste"
-	case tau.Refus:
-		return "refus"
-	default:
-		return "unknown"
 	}
 }
 
@@ -180,6 +170,15 @@ func sha256File(path string) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(h.Sum(nil)), nil
+}
+
+// derefOrNeg1 dereferences a *float64, returning -1 if nil.
+// Used to populate the empiricalI4Report fields that remain float64 for JSON stability.
+func derefOrNeg1(p *float64) float64 {
+	if p == nil {
+		return -1
+	}
+	return *p
 }
 
 func writeReport(t *testing.T, report empiricalI4Report, outDir string) error {

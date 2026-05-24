@@ -2,9 +2,71 @@
 
 Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Versionnage Sémantique](https://semver.org/lang/fr/).
 
-## [Non publié]
+## [Non publié] — v0.1.1-pre · refactor consolidation post-audit
 
-### Ajouté (post-v0.1.0)
+**Refactor agressif complet** orchestré par Agent teams selon `AUDITPlan.md` (42 tâches T-001..T-040, 4 vagues parallèles). Source : `AUDIT.md` 2026-05-24, base commit `5a68c12`.
+
+### Ajouté
+
+- **4 ADRs** : `0006-types-valeur-transverses.md` (extraction `internal/thresholds/`), `0007-hysteresis-v1-simplifiee.md` (V1 simplifiée déclarée, cible V0.2 pour `LastRegime`), `0008-trace-ventilee-scores-dimensions.md` (champs `Trace.DSens/DAuthority/DInvariant`), `0009-types-erreurs-typees.md` (`DispatchError`, `RefusError`, `CalibrationError`, sentinels `errors.Is`-compatibles).
+- **Package `internal/thresholds/`** : type valeur transverse partagé (couche descendante, étanchéité gardée par `arch_test.go`). Déduplication D1 (3 `Thresholds` → 1).
+- **Package `internal/errors/`** peuplé : types typés + sentinels (`ErrFrontiereFranchie`, `ErrPeremptionProfile`, `ErrIncoherenceI4`, `ErrVerrouOntologique`). Couverture 100 %.
+- **Package `internal/testutil/`** peuplé : `BuildExchange(opts ...Option)` (PoC 3 tests migrés).
+- **`Trace` ventilée** (ADR-0008) : `Trace.DSens`, `Trace.DAuthority`, `Trace.DInvariant` peuplés aux étapes 2/4 du dispatcher ; lus directement par `EvaluateI3` et `EvaluateI4` (suppression du proxy `TauScore`).
+- **`Profile.Weights` injecté** à l'étape 6 du dispatcher (résout AUDIT P1-09 : poids calibrés sans effet runtime).
+- **`Exchange.FrontierCheck()`** méthode publique (résout duplication D2 entre `frontierFromExchange` et `Recablage`).
+- **`Regime.String() + MarshalJSON/UnmarshalJSON`** + identique pour `DiscoveryMode`. JSON désormais en string PascalCase (rétro-compat int préservée pour corpus v0.1.0).
+- **Constantes `tau.Diag*`** : `DiagFrontiereFranchie`, `DiagPeremptionProfile`, `DiagVerrouOntologique`, `DiagIncoherenceI4`. Élimine les littéraux dupliqués.
+- **`var _ tau.Kernel = (*Dispatcher)(nil)`** assertion compile-time (P3-02).
+- **`cmd/tau/runMain(args, in, out, stderr) int`** testable directement (couverture 76.1 % → 90.0 %). `TestMain` réutilise un binaire unique (P2-12).
+- **`CorpusEntry.Validate()`** + migration `ExpectedRegime → LabeledRegime` (rétro-compat JSON corpus v0.1.0).
+
+### Modifié
+
+- **P0-01 fermé** : nouvelle garde `TestArchNoConcreteLLMInDomain` (`internal/arch_test.go`) — walk AST détecte 12 substrings de SDK LLM concrets dans `internal/tau/**` et `internal/orchestration/`. Anti-patron PRD §7.2 #6 **désormais gardé en CI** (était annoncé par ADR-0003 mais absent).
+- **P0-02 fermé** : `app.NewDispatcher()` charge `calibration.DefaultProfile()` par défaut. La garde de péremption (anti-patron #3) est désormais active sur le chemin CLI standard. Godoc `orchestration.NewDispatcher` documente explicitement le risque sans-profil (test internes uniquement).
+- **Gate CI per-package** activé dans `.github/workflows/coverage.yml` : `internal/tau/*` ≥ 90 %, global ≥ 80 %.
+- **`I3PerimptionLimite`** : variable globale exportée → fonction getter pur `I3PerimptionLimite() time.Time` (anti-patron #7 renforcement).
+- **`StreamAsTauExchanges`** : drain explicite de `errs` sur `ctx.Done()` (résout P1-06 goroutine leak).
+- **Règle arch `calibration → tau/orch/bridge`** ajoutée à `arch_test.go` (résout V-A2).
+- **`BoundsHold` (I5)** : 1 passe au lieu de 2 — bench -46 % ns/op, -50 % allocs ; fuzz I5 inchangé (1.13M exec/s).
+- **`Decision.ProfileVersion` / `DateRevision`** lus dynamiquement du profil injecté (résout V-A4).
+- **`EmpiricalI4Stats.Sensitivity` / `Specificity`** : `float64` (sentinel `-1`) → `*float64 omitempty`.
+- **`app.selectLLM`** : `panic` → `error` typée `*errors.DispatchError`.
+- **CLAUDE.md / PRD.md / PRDPlanning.md** : alignement sur `TestFrontierCheck_Inside_*` (anciennement `TestRefusHorsFrontiere`). PRD §10.1 amendé avec note V1 hystérèse simplifiée + renvoi ADR-0007.
+- **Typographie FR** : 10 substitutions NBSP supplémentaires dans commentaires structurants Go.
+
+### Supprimé / Archivé
+
+- **Purge agressive** : 10 fichiers `cov*.out` (~350 KB), 2 binaires `*.exe` (~6.9 MB), `scripts/__pycache__/`, `.claude-flow/`, **`ruvector.db` désindexé** (anti-RAG PRD §3.2).
+- **Packages morts** : `internal/config/doc.go`, `internal/metrics/doc.go` supprimés (jamais peuplés, jamais importés depuis M0).
+- **Plans M0-M6 archivés** : `docs/superpowers/plans/` → `docs/archive/plans-m0-m6/` (6 plans, 9 824 LOC), avec `README.md` de redirection.
+- **`.gitignore`** durci : `*.exe`, `*.db`, `*.sqlite`, `*.sqlite3`, `__pycache__/`.
+
+### Vérification (état HEAD)
+
+- `go build ./...` : vert
+- `go test ./... -count=1 -short` : 14 packages OK
+- `go test -tags=e2e ./test/e2e/...` : vert
+- `go vet ./...` : vert
+- `golangci-lint run ./...` : vert (24 linters)
+- `go test -fuzz=FuzzI5 -fuzztime=5s` : 5.7M execs, 0 crash, 1.13M exec/s
+- **Couverture globale** : 92.1 % (était 90.9 %)
+- **Couverture `internal/tau/*`** : 100 % / 98.7 % / 92.7 % (gate ≥ 90 % respecté)
+- **Anti-patrons §7.2** : 7/7 gardés (était 6/7 — #6 désormais couvert)
+- **ADRs** : 9 total (4 nouvelles, statut Accepté)
+
+### Tâches déférées V0.2
+
+- **T-026** Typage `Exchange.Context` (struct + bag) — risque moyen, déféré pour stabilité v0.1.1.
+- **T-029** Détection clock-jump dans `durationNs` — optionnel.
+- **ADR-0010** Bridge TauGo ↔ cia-runtime (mécanisation Lean 4) — déferré V0.2.
+
+### Revue intégrée finale
+
+`ruflo-core:reviewer` : verdict **Accepté avec réserves** (3 findings mineurs sur cohérence ADR↔code — corrigés sauf 2 cosmétiques tracés). Aucun finding bloquant.
+
+### Ajouté (vague de couverture pré-audit, déjà annoncée)
 
 - **Couverture globale 76.3 % → 90.9 %** (PRD §17 critère #5 dépassé sous l'interprétation A, `cmd/*` inclus). Stratégie en 3 vagues P1/P2/P3 :
   - **P1 — `cmd/tau`** (0 % → 76.1 %, 16 tests ajoutés) : refacto `runDecide(in io.Reader, out io.Writer) int` + `runCalibrate(args []string) int` (suppression des `os.Exit` directs, retour d'exit codes). Tests directs `TestRunDecide_*`, `TestRunCalibrate_*`, `TestParseDateRev_*`, `TestLoadCorpus_*`. Le plafond 76.1 % est imposé par `main()` (13 statements wrapper) et les branches d'erreur encode/dispatcher inaccessibles sans mock — documenté.
@@ -60,7 +122,7 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 - `docs/adr/0004-agentmeshkafka-empirical-bridge.md` (126 l.) : ADR rétroactive M4, bi-régime A/B.
 - `docs/empirical/case-study-bfsi.md` (312 l.) : cas BFSI anonymisé démontrant la garde I3 préemptive (PRD §17 #1).
 - `README.md` final (343 l.) : badges CI/coverage/go-ref/Apache-2.0, doctrine, anti-objectifs, quick start, schéma ASCII des 4 couches, exemples d'usage (`tau decide`, `tau calibrate`, `make fuzz`, `make e2e`), tableau M0-M6, statut I1-I5.
-- `docs/superpowers/plans/2026-05-24-M6-release-v0.1.0.md` (1 130 l.) : sous-plan détaillé M6 (11 tâches M6.0-M6.10).
+- `docs/archive/plans-m0-m6/2026-05-24-M6-release-v0.1.0.md` (1 130 l.) : sous-plan détaillé M6 (11 tâches M6.0-M6.10).
 - `internal/tau/dimensions/*_test.go` : tests `TestDefault{Sens,Authority,Invariant}Weights_StructureAndSum` + branches probes étendues (couverture 83.1 % → 96.1 %).
 - `.golangci.yml` : `gochecknoglobals` activé (CLAUDE.md anti-patron #7) ; `//nolint:gochecknoglobals` chirurgicaux sur les globaux read-only documentés (`I3PerimptionLimite`, `defaultDimensionWeights`, `defaultThresholds`, `intents`, `buildTimestamp`).
 
@@ -98,7 +160,7 @@ M5 : calibration adaptative reproductible byte-identique (PRD §17 critère #10
 - `Makefile` : cible `e2e-calibration` (tag `e2e`).
 - `docs/algorithms/calibration.md` (214 l.) : domaines balayés, encodage milli-unités, tie-break, passthrough Weights, marshaller canonique, contrat byte-identique, 5 tests gardiens.
 - `docs/algorithms/drift.md` (161 l.) : 5 critères, skip empty-fingerprint, seul `DriftDateExpired` → Refus en V1, fingerprints V1 documentés.
-- `docs/superpowers/plans/2026-05-24-M5-calibration-drift.md` : sous-plan détaillé (1080 l., 10 tâches M5.0-M5.9).
+- `docs/archive/plans-m0-m6/2026-05-24-M5-calibration-drift.md` : sous-plan détaillé (1080 l., 10 tâches M5.0-M5.9).
 
 ### Notes
 
@@ -129,7 +191,7 @@ M4 : pont théorie ↔ empirie. Branche contingence active (PRD §18 risque #1 
 - `docs/empirical/I4-report.md` (151 l.) : rapport campagne — 120 décisions classifiées, statut I4 **Hypothèse inchangée** (le générateur synthétique n'injecte pas les clés `Context` qui pilotent D-INVARIANT au-dessus du seuil ; la garde I4 n'a jamais été sollicitée).
 - `docs/empirical/unmodeled.md` (108 l.) : 3 observations initiales (OBS-001 Context absent, OBS-002 frontière agrégée, OBS-003 AgentMeshKafka indisponible — risque #1 PRD §18 réalisé).
 - `docs/empirical/I4-regime.md` (53 l.) : note d'audit — Régime B (contingence) sélectionné, conditions de bascule vers A documentées.
-- `docs/superpowers/plans/2026-05-24-M4-agentmeshkafka-bridge.md` : sous-plan détaillé M4 (2134 l., 11 tâches).
+- `docs/archive/plans-m0-m6/2026-05-24-M4-agentmeshkafka-bridge.md` : sous-plan détaillé M4 (2134 l., 11 tâches).
 
 ### Notes
 
@@ -155,7 +217,7 @@ M3 : cinq invariants I1-I5 encodés et fuzzés, étape 8 dispatcher (`EvaluateI
 - `internal/tau/invariants/evaluator_test.go` : `TestStatus_String` couvre les 4 valeurs.
 - `docs/theory/05-invariants.md` : renvoi croisé chap. III.8.5 — verbatims I1-I5, reformulations exécutables, conditions de réfutation, helpers Go, marqueurs épistémiques.
 - `docs/empirical/fuzz-summary.md` : rapport empirique M3 — méthodologie, résultats par cible, découvertes, limites V1, prochaines étapes.
-- `docs/superpowers/plans/2026-05-24-M3-invariants-fuzz.md` : sous-plan détaillé M3 (2047 l., 11 tâches bite-sized).
+- `docs/archive/plans-m0-m6/2026-05-24-M3-invariants-fuzz.md` : sous-plan détaillé M3 (2047 l., 11 tâches bite-sized).
 
 ### Corrigé
 
@@ -187,7 +249,7 @@ M2 : trois dimensions (D-SENS, D-AUTORITÉ, D-INVARIANT) calculables, gardes on
 - `.golangci.yml` : termes français ajoutés au misspell ignore (combinaison, incohérente, détectée, frontière, verrou, ontologique).
 - `docs/theory/04-dimensions.md` (170 l.) : renvoi croisé chap. III.8.4 — 3 dimensions, sondes, encodage Go, asymétrie ontologique (Searle 1995), contrainte I4.
 - `docs/empirical/M2-sample-decisions.md` (397 l.) : 10 décisions tracées via `tau decide`, ventilation des scores par dimension, couvre tous les chemins (frontier refus, I3, I4, deterministe, probabiliste, hystérèse).
-- `docs/superpowers/plans/2026-05-23-M2-dimensions-gardes.md` (2416 l.) : sous-plan détaillé M2.
+- `docs/archive/plans-m0-m6/2026-05-23-M2-dimensions-gardes.md` (2416 l.) : sous-plan détaillé M2.
 
 ### Modifié
 
@@ -221,7 +283,7 @@ M1 : dispatcher minimal + stub LLM. `tau decide` rend une `Decision` instrument
 - `internal/arch_test.go` : règle `internal/bridge` parent (skip-always) remplacée par règles concrètes sur `internal/bridge/llm` et `internal/bridge/agentmeshkafka`.
 - `cmd/tau/main.go` : sous-commande `decide` (JSON stdin → JSON stdout, exit codes 0/2/3/4) ; version bumped à `0.0.2-alpha`.
 - `cmd/tau/main_test.go` : tests E2E `TestEndToEnd_DecideDeterministe` (« creative generation » → 0.262) et `TestEndToEnd_DecideProbabiliste` (« hello world » → 0.807).
-- `docs/superpowers/plans/2026-05-23-M1-dispatcher-stub-llm.md` : sous-plan détaillé M1 (1017 l., 9 tâches bite-sized).
+- `docs/archive/plans-m0-m6/2026-05-23-M1-dispatcher-stub-llm.md` : sous-plan détaillé M1 (1017 l., 9 tâches bite-sized).
 
 ### Corrigé
 

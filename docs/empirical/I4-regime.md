@@ -50,4 +50,4 @@ Procédure de bascule : ouvrir un ADR compagnon (`docs/adr/`), mettre à jour c
 | Corpus Régime B | `cmd/generate-corpus/testdata/synthetic-corpus-120-seed42-balanced.jsonl` |
 | SHA-256 corpus | `a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee` |
 | Prochaine revue | Post-M5 (ou dès disponibilité d'AgentMeshKafka) |
-| Plan de référence | `docs/superpowers/plans/2026-05-24-M4-agentmeshkafka-bridge.md` |
+| Plan de référence | `docs/archive/plans-m0-m6/2026-05-24-M4-agentmeshkafka-bridge.md` |

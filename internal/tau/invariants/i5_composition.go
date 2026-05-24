@@ -38,17 +38,6 @@ func Aggregate(p Pile) []string {
 	return out
 }
 
-// distinctLen returns the number of distinct strings in a layer.
-// Layers are treated as sets (AngleMort is logically a set of identifiers);
-// duplicates within a single layer contribute once to the cardinality.
-func distinctLen(layer AngleMort) int {
-	seen := map[string]struct{}{}
-	for _, a := range layer {
-		seen[a] = struct{}{}
-	}
-	return len(seen)
-}
-
 // BoundsHold reports whether Aggregate respects the two I5 bounds on p.
 // Both bounds are stated in terms of set cardinality (|Aᵢ|), so duplicate
 // identifiers within a single layer count once.
@@ -56,22 +45,30 @@ func distinctLen(layer AngleMort) int {
 //   - Lower bound: len(M(π)) >= max(|Aᵢ|)  (union contains the largest layer)
 //   - Upper bound: len(M(π)) <= Σ|Aᵢ|      (no ex-nihilo creation)
 //
-// Cheap finite check: never panics, never allocates beyond Aggregate's cost.
+// Single-pass over p: for each layer, a local seen set counts its distinct
+// entries while the outer seen set accumulates the global union. No second
+// traversal and no call to Aggregate — bounds and union are co-computed.
 func BoundsHold(p Pile) bool {
-	agg := Aggregate(p)
 	if len(p) == 0 {
-		return len(agg) == 0
+		return true
 	}
-	maxLayer := 0
-	sumLayers := 0
+	global := make(map[string]struct{})
+	maxLen := 0
+	sumLen := 0
 	for _, layer := range p {
-		d := distinctLen(layer)
-		if d > maxLayer {
-			maxLayer = d
+		local := make(map[string]struct{}, len(layer))
+		for _, a := range layer {
+			local[a] = struct{}{}
+			global[a] = struct{}{}
 		}
-		sumLayers += d
+		d := len(local)
+		if d > maxLen {
+			maxLen = d
+		}
+		sumLen += d
 	}
-	return len(agg) >= maxLayer && len(agg) <= sumLayers
+	union := len(global)
+	return union >= maxLen && union <= sumLen
 }
 
 // EvaluateI5 returns the I5 verdict for (x, decision).

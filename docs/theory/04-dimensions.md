@@ -164,7 +164,7 @@ type Capability struct {
 
 ---
 
-*Renvoi PRD : §5 (dimensions), §4.4 (asymétrie ontologique), §6.1 (I4). Plan M2 : `docs/superpowers/plans/2026-05-23-M2-dimensions-gardes.md`.*
+*Renvoi PRD : §5 (dimensions), §4.4 (asymétrie ontologique), §6.1 (I4). Plan M2 : `docs/archive/plans-m0-m6/2026-05-23-M2-dimensions-gardes.md`.*
 
 **Aligné monographie** : v2.4.3 (2026-05-21).
 **Daté** : 2026-05-23.

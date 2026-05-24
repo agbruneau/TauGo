@@ -64,30 +64,60 @@ func discoveryModeFromString(s string) tau.DiscoveryMode {
 
 // StreamAsTauExchanges adapts a bridge Adapter to the kernel's typed input.
 // It starts adapter.Stream and transforms each AgentMeshExchange to tau.Exchange
-// in a goroutine. Errors from the adapter are forwarded verbatim. Both output
+// in a goroutine. Errors from the adapter are forwarded on errOut. Both output
 // channels are closed when the source stream drains or ctx is canceled.
 //
-// Cancellation: if ctx is canceled before EOF, the conversion goroutine stops
-// and closes the exchanges channel; the error channel (errs) is passed through
-// directly from the adapter and may still emit a brief burst of errors before
-// the adapter itself closes it. Callers must drain errs after the exchanges
-// channel closes to avoid goroutine leaks in the adapter layer.
+// Cancellation: when ctx is canceled, the conversion goroutine drains the
+// adapter's error channel before returning so the adapter goroutine is never
+// left blocked on a full buffer (goroutine-leak fix, AUDIT P1-06).
+//
+//nolint:gocognit // drain logic intentionally co-located for clarity (P1-06)
 func StreamAsTauExchanges(
 	ctx context.Context,
 	adapter agentmeshkafka.Adapter,
 	topics []string,
 ) (exchanges <-chan tau.Exchange, errc <-chan error) {
-	src, errs := adapter.Stream(ctx, topics)
+	src, adapterErrs := adapter.Stream(ctx, topics)
 	out := make(chan tau.Exchange)
+	errOut := make(chan error, 8)
 	go func() {
 		defer close(out)
-		for x := range src {
+		defer close(errOut)
+		for {
 			select {
-			case out <- ToTauExchange(x):
 			case <-ctx.Done():
+				// Drain adapter errors so the adapter goroutine can exit cleanly.
+				for range adapterErrs {
+				}
 				return
+			case x, ok := <-src:
+				if !ok {
+					// Source closed: forward any remaining adapter errors then exit.
+					for e := range adapterErrs {
+						select {
+						case errOut <- e:
+						default:
+						}
+					}
+					return
+				}
+				select {
+				case out <- ToTauExchange(x):
+				case <-ctx.Done():
+					for range adapterErrs {
+					}
+					return
+				}
+			case e, ok := <-adapterErrs:
+				if !ok {
+					continue
+				}
+				select {
+				case errOut <- e:
+				default:
+				}
 			}
 		}
 	}()
-	return out, errs
+	return out, errOut
 }

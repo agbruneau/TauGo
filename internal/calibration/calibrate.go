@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"sort"
+
+	taugoerrors "github.com/agbruneau/taugo/internal/errors"
 )
 
 // CorpusEntry is one labeled exchange used for grid-search calibration.
@@ -18,9 +21,78 @@ type CorpusEntry struct {
 	InvariantScore float64 `json:"invariant_score"`
 	HumanInLoop    bool    `json:"human_in_loop"`
 	HasAttestation bool    `json:"has_attestation"`
-	// ExpectedRegime is one of: "deterministe" | "probabiliste" |
+	// LabeledRegime is one of: "deterministe" | "probabiliste" |
 	// "refus_authority" | "refus_i4".
-	ExpectedRegime string `json:"expected_regime"`
+	LabeledRegime string `json:"labeled_regime,omitempty"`
+	// Deprecated: utiliser LabeledRegime. Conservé pour rétro-compat
+	// des corpus JSON v0.1.0. Retrait V0.2.
+	ExpectedRegime string `json:"expected_regime,omitempty"`
+}
+
+// validRegimes is the set of accepted LabeledRegime values.
+//
+//nolint:gochecknoglobals // immutable lookup set for corpus validation
+var validRegimes = map[string]struct{}{
+	"deterministe":    {},
+	"probabiliste":    {},
+	"refus_authority": {},
+	"refus_i4":        {},
+}
+
+// migrate applique la rétro-compat : si LabeledRegime est vide mais ExpectedRegime non,
+// copie ExpectedRegime dans LabeledRegime.
+func (e *CorpusEntry) migrate() {
+	if e.LabeledRegime == "" && e.ExpectedRegime != "" {
+		e.LabeledRegime = e.ExpectedRegime
+	}
+}
+
+// Validate vérifie la cohérence de l'entrée de corpus.
+// Retourne *taugoerrors.CalibrationError si l'entrée est invalide.
+func (e *CorpusEntry) Validate() error {
+	if e.ID == "" {
+		return &taugoerrors.CalibrationError{Cause: fmt.Errorf("CorpusEntry.ID vide")}
+	}
+	if e.SensScore < 0 || e.SensScore > 1 {
+		return &taugoerrors.CalibrationError{Cause: fmt.Errorf("SensScore hors [0,1]: %f", e.SensScore)}
+	}
+	if e.AuthorityScore < 0 || e.AuthorityScore > 1 {
+		return &taugoerrors.CalibrationError{Cause: fmt.Errorf("AuthorityScore hors [0,1]: %f", e.AuthorityScore)}
+	}
+	if e.InvariantScore < 0 || e.InvariantScore > 1 {
+		return &taugoerrors.CalibrationError{Cause: fmt.Errorf("InvariantScore hors [0,1]: %f", e.InvariantScore)}
+	}
+	if _, ok := validRegimes[e.LabeledRegime]; !ok {
+		return &taugoerrors.CalibrationError{
+			Cause: fmt.Errorf("ExpectedRegime invalide : %q", e.LabeledRegime),
+		}
+	}
+	return nil
+}
+
+// LoadCorpus lit un fichier JSONL de corpus, applique la migration rétro-compat
+// (ExpectedRegime → LabeledRegime) et valide chaque entrée.
+// Retourne *CalibrationError si un fichier est illisible ou une entrée invalide.
+func LoadCorpus(path string) ([]CorpusEntry, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, &taugoerrors.CalibrationError{Cause: fmt.Errorf("open corpus %q: %w", path, err)}
+	}
+	defer f.Close()
+	dec := json.NewDecoder(f)
+	out := make([]CorpusEntry, 0, 64)
+	for dec.More() {
+		var e CorpusEntry
+		if err := dec.Decode(&e); err != nil {
+			return nil, &taugoerrors.CalibrationError{Cause: fmt.Errorf("decode corpus entry: %w", err)}
+		}
+		e.migrate()
+		if err := e.Validate(); err != nil {
+			return nil, err
+		}
+		out = append(out, e)
+	}
+	return out, nil
 }
 
 // Calibrate runs the V1 grid-search algorithm against the labeled corpus.
@@ -81,11 +153,11 @@ func Calibrate(corpus []CorpusEntry, _ int64, in Profile) Profile {
 }
 
 // countAgreement returns the number of corpus entries where simulate
-// predicts the same regime as the entry's ExpectedRegime.
+// predicts the same regime as the entry's LabeledRegime.
 func countAgreement(corpus []CorpusEntry, t Thresholds) int {
 	n := 0
 	for i := range corpus {
-		if simulate(corpus[i], t) == corpus[i].ExpectedRegime {
+		if simulate(corpus[i], t) == corpus[i].LabeledRegime {
 			n++
 		}
 	}

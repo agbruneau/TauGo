@@ -86,7 +86,7 @@ Détail complet de la stratégie : [`PRDPlanning.md` §A](PRDPlanning.md).
 | # | Anti-patron | Garde |
 |---|---|---|
 | 1 | Méthode `Predict*` / `Expected*` / `Forecast*` exportée | `TestNoPredictiveAPI` |
-| 2 | Bypass de `FrontierCheck.Inside()` *(4 conditions classiques toutes violées)* | `TestRefusHorsFrontiere` |
+| 2 | Bypass de `FrontierCheck.Inside()` *(4 conditions classiques toutes violées)* | `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* |
 | 3 | Profil de calibration périmé toléré (`today > date_revision`) | `TestExpiredProfileRefuses`, `TestI3_DateRevisionRespectee` |
 | 4 | Observation non modélisée passée sous silence | `TestUnmodeledObservationsReported` |
 | 5 | Citation/chiffre/API/DOI fabriqué dans `docs/` | Audit + PR sans marqueur d'incertitude sur affirmation datée → reject |

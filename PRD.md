@@ -160,7 +160,7 @@ func (f FrontierCheck) Inside() bool {
 }
 ```
 
-**Garde V1** *(M0)* — `Inside() == false` → `Refus(diag: "hors frontière τ")`. Test : `TestRefusHorsFrontiere`.
+**Garde V1** *(M0)* — `Inside() == false` → `Refus(diag: "hors frontière τ")`. Test : `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)*.
 
 ### 4.4 Asymétrie ontologique de τ_AUTORITÉ
 
@@ -292,7 +292,7 @@ type Attestation struct {
 | # | Anti-patron | Pourquoi *(III.8.7)* | Garde TauGo |
 |---|---|---|---|
 | 1 | **Usage prédictif** — `Predict*`, `Expected*`, `Forecast*` exportés | Le modèle est structurant, pas prédictif. Le substrat probabiliste interdit toute prédiction de comportement. | `TestNoPredictiveAPI` (réflexion sur méthodes exportées) ; PR rejetée |
-| 2 | **Usage hors frontière** — appliquer τ à une frontière non agentique | Sur-ingénierie injustifiée, signale au client un régime agentique alors qu'il est classique | `TestRefusHorsFrontiere` ; aucun drapeau « skip frontier check » toléré |
+| 2 | **Usage hors frontière** — appliquer τ à une frontière non agentique | Sur-ingénierie injustifiée, signale au client un régime agentique alors qu'il est classique | `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* ; aucun drapeau « skip frontier check » toléré |
 | 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; CI échoue si périmé |
 | 4 | **Usage clos** — tenir les 3 dimensions et 5 invariants pour exhaustifs | Hypothèse de complétude non acquise (chap. III.8.7) | `Decision.Trace.UnmodeledObservations []string` ; rapport mensuel `docs/empirical/unmodeled.md` |
 
@@ -535,6 +535,8 @@ SORTIE  : d Decision (toujours instrumentée)
    inv := EvaluateInvariants(x, decision, π)
    inv.AnyViolated() ⇒ trace.UnmodeledObservations += inv.Summary()
 ```
+
+**Note V1  — Hystérèse simplifiée** *(Probable  — temporaire, cible V0.2)* : l'implémentation v0.1.0 retourne systématiquement `Deterministe` dans la zone hystérèse, sans consulter de table `LastRegime`. Le champ `Thresholds.HysteresisGap` est présent dans le profil (rétrocompatibilité garantie) mais ignoré par le dispatcher en V1. La mémoire complète (`sync.Map[x.ID → Regime]` + TTL) est prévue en V0.2. *(cf. ADR-0007)*
 
 **L'ordre des étapes 1-8 n'est pas arbitraire** : frontière → ontologie → péremption → scores → cohérence → composite → hystérèse → invariants. Réordonner = casser une garde.
 
@@ -804,7 +806,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 
 | Milestone | Contenu | Critère d'acceptation |
 |---|---|---|
-| **M0** | Squelette repo, CI 3 OS, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestRefusHorsFrontiere` passe |
+| **M0** | Squelette repo, CI 3 OS, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)* passe |
 | **M1** | Dispatcher minimal, deux régimes, stub LLM | `tau decide --input fixture.json` rend une `Decision` instrumentée |
 | **M2** | Trois dimensions + score τ composite + gardes ontologique D-AUTORITÉ et I4 | Rapport décision avec scores/sondes/poids ; `TestRefusOntologiqueDAUTORITE` + `TestI4_IncoherenceDetectee` passent |
 | **M3** | Cinq invariants comme cibles fuzz | `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5 ; rapport `docs/empirical/fuzz-summary.md` |
@@ -838,7 +840,7 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=3
 | 6 | Chaque décision design dans `docs/` renvoie chap. III.8 | Lint manuel + grep |
 | 7 | Aucun emoji, aucune fabrication, aucune citation non sourçée | Audit textuel M6 |
 | 8 | Trois OS supportés (Linux/macOS/Windows) | CI matrix verte |
-| 9 | Quatre anti-patrons gardés par tests *(§7.2)* | `TestNoPredictiveAPI`, `TestRefusHorsFrontiere`, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` |
+| 9 | Quatre anti-patrons gardés par tests *(§7.2)* | `TestNoPredictiveAPI`, `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)*, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` |
 | 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` |
 
 ---

@@ -20,10 +20,6 @@ jobs:
       # Minimum coverage gate, measured over the business-logic surface
       # (internal/*), excluding cmd/ which is a wiring shell.
       # PRD §15.3: >= 80% global, >= 90% on internal/tau/*.
-      # In M0 only FrontierCheck is testable (cf. CHANGELOG); coverage
-      # of internal/tau is 100%, and the M0 floor is computed accordingly.
-      # The 90% per-package gate on tau/* activates in M1+ when more
-      # code is in scope.
       MIN_COVERAGE: '80.0'
     steps:
       - name: Checkout
@@ -43,6 +39,33 @@ jobs:
 
       - name: Generate HTML coverage report
         run: go tool cover -html=coverage.out -o coverage.html
+
+      - name: Per-package coverage gate (tau/* >= 90%)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Per-package coverage gate on internal/tau/*"
+          FAILED=0
+          while IFS= read -r line; do
+            # go test -cover output format: "ok  <pkg>  Xs  coverage: Y.Y% of statements in <coverpkg>"
+            pkg=$(echo "$line" | awk '{print $2}')
+            pct=$(echo "$line" | grep -oE 'coverage: [0-9]+\.[0-9]+%' | grep -oE '[0-9]+\.[0-9]+')
+            if echo "$pkg" | grep -qE "^github\.com/agbruneau/taugo/internal/tau(/|$)"; then
+              if [[ -n "$pct" ]]; then
+                if awk -v p="$pct" 'BEGIN { exit (p+0 >= 90.0) ? 0 : 1 }'; then
+                  echo "OK:   $pkg  ${pct}%"
+                else
+                  echo "::error::FAIL: $pkg covered ${pct}% (< 90%)"
+                  FAILED=1
+                fi
+              fi
+            fi
+          done < <(go test -cover -covermode=atomic ./internal/tau/... 2>&1)
+          if [[ "$FAILED" -ne 0 ]]; then
+            echo "::error::Per-package gate failed: one or more tau/* packages below 90%"
+            exit 1
+          fi
+          echo "Per-package gate: OK"
 
       - name: Enforce minimum coverage
         shell: bash

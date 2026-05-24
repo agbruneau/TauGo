@@ -2,6 +2,7 @@ package app_test
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -141,6 +142,78 @@ func TestToTauExchange_AttestationPreserved(t *testing.T) {
 	}
 	if got.AttestationInstitutionnelle.Marqueur != "Hypothese" {
 		t.Fatalf("Marqueur drift: %s", got.AttestationInstitutionnelle.Marqueur)
+	}
+}
+
+// blockingAdapter is a test-only Adapter that sends exchanges and errors on
+// unbuffered channels. It is used to verify that StreamAsTauExchanges drains
+// the error channel on context cancellation (goroutine-leak fix, AUDIT P1-06).
+type blockingAdapter struct {
+	ex   chan agentmeshkafka.AgentMeshExchange
+	errs chan error
+}
+
+func newBlockingAdapter() *blockingAdapter {
+	return &blockingAdapter{
+		ex:   make(chan agentmeshkafka.AgentMeshExchange),
+		errs: make(chan error), // unbuffered — will block if not drained
+	}
+}
+
+func (a *blockingAdapter) Stream(_ context.Context, _ []string) (ex <-chan agentmeshkafka.AgentMeshExchange, errs <-chan error) {
+	return a.ex, a.errs
+}
+
+func (a *blockingAdapter) Close() error { return nil }
+
+// TestStreamAsTauExchanges_DrainsErrsOnContextCancel verifies that canceling the
+// context causes StreamAsTauExchanges to drain the adapter's error channel,
+// allowing the adapter goroutine (or any sender) to unblock and exit cleanly.
+func TestStreamAsTauExchanges_DrainsErrsOnContextCancel(t *testing.T) {
+	t.Parallel()
+	a := newBlockingAdapter()
+	ctx, cancel := context.WithCancel(context.Background())
+
+	out, errc := app.StreamAsTauExchanges(ctx, a, nil)
+
+	// Signal when both output channels are closed.
+	done := make(chan struct{})
+	go func() {
+		for range out {
+		}
+		for range errc {
+		}
+		close(done)
+	}()
+
+	// Cancel before any exchange is sent.
+	cancel()
+
+	// The adapter still holds an unsent error on an unbuffered channel.
+	// StreamAsTauExchanges must drain it so the send below does not block.
+	errSent := make(chan struct{})
+	go func() {
+		// This send will complete only if StreamAsTauExchanges drains adapterErrs.
+		select {
+		case a.errs <- errors.New("adapter error"):
+		default:
+		}
+		close(errSent)
+		close(a.ex)
+		close(a.errs)
+	}()
+
+	timeout := time.After(time.Second)
+	select {
+	case <-done:
+		// Both channels closed in time — no goroutine leak.
+	case <-timeout:
+		t.Fatal("StreamAsTauExchanges did not close output channels within 1s after ctx cancel")
+	}
+	select {
+	case <-errSent:
+	case <-time.After(time.Second):
+		t.Fatal("adapter error-send goroutine did not complete within 1s")
 	}
 }
 

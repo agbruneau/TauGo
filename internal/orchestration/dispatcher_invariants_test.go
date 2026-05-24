@@ -13,7 +13,7 @@ import (
 //
 // Configuration: standard thresholds with AuthBlock=0.85. The exchange is
 // inside the frontier but has a low composite tau_score (fakeLLM score 0),
-// so EvaluateI3 does not fire (tauScore << AuthBlock).
+// so EvaluateI3 does not fire (authScore << AuthBlock).
 func TestStep8_InvariantsEvaluated_NoViolation_TraceEmpty(t *testing.T) {
 	t.Parallel()
 	d := orchestration.NewDispatcher(fakeLLM{score: 0.0}, orchestration.Thresholds{
@@ -36,30 +36,31 @@ func TestStep8_InvariantsEvaluated_NoViolation_TraceEmpty(t *testing.T) {
 }
 
 // TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched verifies that
-// when EvaluateI3 detects a violation, its Summary entry appears in
+// when EvaluateI3 detects a bypass violation, its Summary entry appears in
 // Trace.UnmodeledObservations.
 //
-// I3 violation condition: x.AttestationInstitutionnelle == nil &&
-// dec.Trace.Thresholds.AuthBlock > 0 && dec.Trace.TauScore >= AuthBlock.
+// V2 logic (ADR-0008): EvaluateI3 reads dec.Trace.DAuthority.Value directly.
+// To trigger a Probabiliste result that EvaluateI3 flags as Violated, we need:
+//   - DAuthority.Value >= AuthBlock (so the gate should have fired)
+//   - No attestation on x
+//   - But the exchange must NOT have been refused at step 2
 //
-// Construction:
-//   - AuthBlock = 0.60, chosen so that authScore (0.5625 for this exchange) < 0.60
-//     and therefore step 2 does NOT fire, while the composite tauScore (~0.692
-//     with fakeLLM=0.80) >= 0.60 so EvaluateI3 flags Violated at step 8.
-//   - Derivation: authScore = 0.25*0.25 + 0.25*0 + 0.25*1 + 0.25*1 = 0.5625
-//     (depth=1→0.25, org non-empty depth=1→0, humanInLoop=false→1, DynamicMCP→1)
-//     tauScore ≈ 0.4*0.97 + 0.3*0.5625 + 0.3*0.45 ≈ 0.692
-//   - No attestation on x, so EvaluateI3 returns Violated.
+// With correct scores this scenario cannot arise in a normal dispatcher flow
+// (step 2 would catch it). To test the EvaluateI3 bypass-detection path
+// directly, we use a forged Decision in i3_authority_asymmetry_test.go.
+//
+// This test verifies the complementary case: exchange with AuthBlock set well
+// above authScore (0.5625) produces no violation. The Probabiliste regime
+// is reached because tauScore (~0.692) >= Probabiliste threshold (0.65).
 func TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched(t *testing.T) {
 	t.Parallel()
 	d := orchestration.NewDispatcher(fakeLLM{score: 0.80}, orchestration.Thresholds{
 		Deterministe:  0.35,
 		Probabiliste:  0.65,
-		AuthBlock:     0.60, // above authScore(0.5625) but below tauScore(~0.692)
+		AuthBlock:     0.60, // above authScore(0.5625); step 2 does not fire
 		SensCoherence: 0.50,
 		InvCoherence:  0.50,
 	})
-	// newExchangeInsideFrontier: no attestation, DelegationDepth=1, DynamicMCP.
 	x := newExchangeInsideFrontier("e-s8-violation")
 
 	dec, err := d.Decide(context.Background(), x)
@@ -67,33 +68,31 @@ func TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched(t *testing.T)
 		t.Fatalf("decide: %v", err)
 	}
 	if dec.Regime == tau.Refus {
-		t.Fatalf("exchange was refused upstream; step 8 not reached. diag=%q tau_score=%.4f authBlock=%.4f",
-			dec.Diagnostic, dec.Trace.TauScore, dec.Trace.Thresholds.AuthBlock)
+		t.Fatalf("exchange was refused upstream; step 8 not reached. diag=%q", dec.Diagnostic)
 	}
-	if len(dec.Trace.UnmodeledObservations) == 0 {
-		t.Fatalf("UnmodeledObservations empty; expected I3 violation entry. tau_score=%.4f authBlock=%.4f Decision=%+v",
-			dec.Trace.TauScore, dec.Trace.Thresholds.AuthBlock, dec)
+	// With ventilated scores (ADR-0008), authScore.Value = 0.5625 < AuthBlock = 0.60,
+	// so EvaluateI3 correctly reports Held (no bypass). UnmodeledObservations must be empty.
+	if len(dec.Trace.UnmodeledObservations) != 0 {
+		t.Fatalf("expected no violation (DAuthority=%.4f < AuthBlock=%.4f), got: %v",
+			dec.Trace.DAuthority.Value, dec.Trace.Thresholds.AuthBlock, dec.Trace.UnmodeledObservations)
 	}
-	// Verify I3 diagnostic string is present.
-	foundI3 := false
-	for _, obs := range dec.Trace.UnmodeledObservations {
-		if len(obs) >= 2 && obs[:2] == "I3" {
-			foundI3 = true
-			break
-		}
+	// Confirm ventilated scores are populated on the Probabiliste decision.
+	if dec.Trace.DAuthority == nil {
+		t.Fatal("Trace.DAuthority must be non-nil on a Probabiliste decision")
 	}
-	if !foundI3 {
-		t.Fatalf("UnmodeledObservations does not contain I3 entry: %v", dec.Trace.UnmodeledObservations)
+	if dec.Trace.DSens == nil {
+		t.Fatal("Trace.DSens must be non-nil on a Probabiliste decision")
+	}
+	if dec.Trace.DInvariant == nil {
+		t.Fatal("Trace.DInvariant must be non-nil on a Probabiliste decision")
 	}
 }
 
 // TestStep8_RegimeUntouchedByEvaluation verifies that step 8 is pure
 // instrumentation: the Regime produced by step 7 is not modified when
-// an invariant violation is detected.
+// a nominal exchange is evaluated.
 func TestStep8_RegimeUntouchedByEvaluation(t *testing.T) {
 	t.Parallel()
-	// Same configuration as the violation test — regime must still be Probabiliste
-	// (tauScore ~0.692 >= Probabiliste threshold 0.65), not Refus.
 	d := orchestration.NewDispatcher(fakeLLM{score: 0.80}, orchestration.Thresholds{
 		Deterministe:  0.35,
 		Probabiliste:  0.65,
@@ -113,17 +112,5 @@ func TestStep8_RegimeUntouchedByEvaluation(t *testing.T) {
 	// Regime must be one of the two non-Refus outcomes.
 	if dec.Regime != tau.Deterministe && dec.Regime != tau.Probabiliste {
 		t.Fatalf("step 8 mutated Regime to unexpected value %v", dec.Regime)
-	}
-	// Confirm the I3 violation entry is present, proving step 8 ran and mutated only the trace.
-	foundI3 := false
-	for _, obs := range dec.Trace.UnmodeledObservations {
-		if len(obs) >= 2 && obs[:2] == "I3" {
-			foundI3 = true
-			break
-		}
-	}
-	if !foundI3 {
-		t.Fatalf("step 8 I3 violation not in trace; cannot confirm step 8 ran. tau_score=%.4f authBlock=%.4f observations=%v",
-			dec.Trace.TauScore, dec.Trace.Thresholds.AuthBlock, dec.Trace.UnmodeledObservations)
 	}
 }

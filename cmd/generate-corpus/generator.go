@@ -27,18 +27,6 @@ type Annotator interface {
 	Decide(ctx context.Context, x tau.Exchange) (tau.Decision, error)
 }
 
-// regimeString converts tau.Regime to its canonical string form.
-func regimeString(r tau.Regime) string {
-	switch r {
-	case tau.Deterministe:
-		return "Deterministe"
-	case tau.Probabiliste:
-		return "Probabiliste"
-	default:
-		return "Refus"
-	}
-}
-
 // DistributionProfile selects the mixing rule for generated traces.
 type DistributionProfile string
 
@@ -120,7 +108,7 @@ func (g *Generator) GenerateAnnotated(ctx context.Context, w io.Writer, n int, p
 		}
 		entry := AnnotatedEntry{
 			AgentMeshExchange: x,
-			ExpectedRegime:    regimeString(d.Regime),
+			ExpectedRegime:    d.Regime.String(),
 		}
 		if err := enc.Encode(&entry); err != nil {
 			return fmt.Errorf("encode line %d: %w", idx, err)

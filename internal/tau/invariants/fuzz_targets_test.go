@@ -101,9 +101,11 @@ func FuzzI2_Irreductibilite(f *testing.F) {
 	})
 }
 
-// fuzzRefTime is the fixed clock used by FuzzI3 to make the expiry check
+// fuzzRefTime returns the fixed clock used by FuzzI3 to make the expiry check
 // deterministic. It is in the past relative to any future DateRevision.
-var fuzzRefTime = time.Date(2026, 5, 24, 12, 0, 0, 0, time.UTC)
+func fuzzRefTime() time.Time {
+	return time.Date(2026, 5, 24, 12, 0, 0, 0, time.UTC)
+}
 
 // FuzzI3_AsymetrieAutorite exercises EvaluateI3WithClock. Two properties are
 // checked:
@@ -140,10 +142,10 @@ func FuzzI3_AsymetrieAutorite(f *testing.F) {
 			},
 		}
 
-		got := invariants.EvaluateI3WithClock(x, dec, fuzzRefTime)
+		got := invariants.EvaluateI3WithClock(x, dec, fuzzRefTime())
 
 		// Property 1: expired profile not refused => Violated.
-		profileExpired := invariants.IsProfileExpired(dec, fuzzRefTime)
+		profileExpired := invariants.IsProfileExpired(dec, fuzzRefTime())
 		notExpiryRefused := !(dec.Regime == tau.Refus && dec.Diagnostic == "profil périmé — veille requise")
 		if profileExpired && notExpiryRefused && got != invariants.Violated {
 			t.Fatalf("EvaluateI3WithClock=%v want Violated: profile expired, not refused", got)

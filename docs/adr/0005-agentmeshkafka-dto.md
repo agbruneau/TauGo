@@ -69,6 +69,6 @@ Stream(ctx context.Context, topics []string) (<-chan AgentMeshExchange, <-chan e
 - `internal/arch_test.go` lignes 32-34
 - `internal/bridge/agentmeshkafka/adapter.go` (DTO + interface)
 - `internal/app/agentmesh.go` (convertisseur — M4.3)
-- Plan : `docs/superpowers/plans/2026-05-24-M4-agentmeshkafka-bridge.md`
+- Plan : `docs/archive/plans-m0-m6/2026-05-24-M4-agentmeshkafka-bridge.md`
 
 Statut : *Confirmé par construction.*

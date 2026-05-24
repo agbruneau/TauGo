@@ -1,6 +1,8 @@
 package agentmeshkafka_test
 
 import (
+	"encoding/json"
+	"strings"
 	"testing"
 
 	"github.com/agbruneau/taugo/internal/bridge/agentmeshkafka"
@@ -188,11 +190,61 @@ func TestEmpiricalI4Summary(t *testing.T) {
 		t.Errorf("OtherRefusal = %d, want 1", s.OtherRefusal)
 	}
 	// Sensitivity = 2 / (2+0) = 1.0
-	if s.Sensitivity != 1.0 {
+	if s.Sensitivity == nil || *s.Sensitivity != 1.0 {
 		t.Errorf("Sensitivity = %v, want 1.0", s.Sensitivity)
 	}
 	// Specificity = 3 / (3+0) = 1.0
-	if s.Specificity != 1.0 {
+	if s.Specificity == nil || *s.Specificity != 1.0 {
 		t.Errorf("Specificity = %v, want 1.0", s.Specificity)
 	}
+}
+
+// TestEmpiricalI4Stats_SensitivityOmitemptySiNil vérifie que le champ Sensitivity
+// est absent du JSON lorsque nil, et présent lorsqu'il a une valeur.
+func TestEmpiricalI4Stats_SensitivityOmitemptySiNil(t *testing.T) {
+	t.Parallel()
+
+	t.Run("nil_absent_du_json", func(t *testing.T) {
+		t.Parallel()
+		// Zéro décisions → dénominateur nul → Sensitivity == nil.
+		s := agentmeshkafka.EmpiricalI4Summary(nil)
+		data, err := json.Marshal(s)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		if strings.Contains(string(data), `"sensitivity"`) {
+			t.Errorf("JSON ne doit pas contenir \"sensitivity\" quand nil, obtenu : %s", data)
+		}
+	})
+
+	t.Run("valeur_presente_dans_json", func(t *testing.T) {
+		t.Parallel()
+		const sens = 0.50
+		const inv = 0.50
+		// 1 TP, 0 FN → sensitivity = 1.0.
+		decisions := []agentmeshkafka.EmpiricalDecision{
+			{
+				RegimeStr:       "refus",
+				Diagnostic:      "I4 — combinaison incohérente détectée",
+				DSensValue:      0.30,
+				DInvariantValue: 0.60,
+				SensCoherence:   sens,
+				InvCoherence:    inv,
+			},
+		}
+		s := agentmeshkafka.EmpiricalI4Summary(decisions)
+		if s.Sensitivity == nil {
+			t.Fatal("Sensitivity doit être non-nil quand TP > 0")
+		}
+		if *s.Sensitivity != 1.0 {
+			t.Errorf("*Sensitivity = %f, want 1.0", *s.Sensitivity)
+		}
+		data, err := json.Marshal(s)
+		if err != nil {
+			t.Fatalf("marshal: %v", err)
+		}
+		if !strings.Contains(string(data), `"sensitivity":1`) {
+			t.Errorf("JSON doit contenir \"sensitivity\":1, obtenu : %s", data)
+		}
+	})
 }
