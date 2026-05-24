@@ -117,6 +117,11 @@ linters-settings:
 
   misspell:
     locale: US # Standardize on US English (or UK/Canadian if preferred, but usually US for code)
+    ignore-words:
+      - Probabiliste  # French regime name from τ operator spec (Monographie.md §III.8)
+      - Deterministe  # French regime name from τ operator spec
+      - Refus         # French regime name from τ operator spec
+      - agentmeshkafka # Product name, not a misspelling
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
