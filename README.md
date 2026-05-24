@@ -4,6 +4,9 @@
 [![Coverage](https://github.com/agbruneau/taugo/actions/workflows/coverage.yml/badge.svg)](https://github.com/agbruneau/taugo/actions/workflows/coverage.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/agbruneau/taugo.svg)](https://pkg.go.dev/github.com/agbruneau/taugo)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Dashboard](https://img.shields.io/badge/dashboard-live-brightgreen.svg)](https://agbruneau.github.io/TauGo/)
+
+> **Dashboard interactif** — [`https://agbruneau.github.io/TauGo/`](https://agbruneau.github.io/TauGo/) · graphe de connaissance navigable (338 nœuds, 1000 arêtes, 10 couches, tour pédagogique 12 étapes) généré par `understand-anything`.
 
 > **État** — `v0.1.0` taggé · `v0.1.1-pre` livré *(refactor consolidation post-audit, 2026-05-24, commit `2cf560c`)*. Tag `v0.1.1` à apposer après revue humaine. Source du refactor (archivée) : [`docs/archive/audits/`](docs/archive/audits/) · index [`docs/archive/README.md`](docs/archive/README.md).
 
