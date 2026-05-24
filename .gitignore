@@ -11,6 +11,11 @@
 *.out
 coverage.html
 coverage.txt
+cov*.out
+cov*.html
+
+# Python helper script artifacts
+scripts/__pycache__/
 
 # IDE
 .idea/

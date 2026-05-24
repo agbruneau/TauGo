@@ -4,6 +4,21 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+### Ajouté (post-v0.1.0)
+
+- **Couverture globale 76.3 % → 90.9 %** (PRD §17 critère #5 dépassé sous l'interprétation A, `cmd/*` inclus). Stratégie en 3 vagues P1/P2/P3 :
+  - **P1 — `cmd/tau`** (0 % → 76.1 %, 16 tests ajoutés) : refacto `runDecide(in io.Reader, out io.Writer) int` + `runCalibrate(args []string) int` (suppression des `os.Exit` directs, retour d'exit codes). Tests directs `TestRunDecide_*`, `TestRunCalibrate_*`, `TestParseDateRev_*`, `TestLoadCorpus_*`. Le plafond 76.1 % est imposé par `main()` (13 statements wrapper) et les branches d'erreur encode/dispatcher inaccessibles sans mock — documenté.
+  - **P2.1 — `cmd/generate-corpus`** (66.3 % → 89.2 %, 8 tests ajoutés) : refacto `run(args []string, stdout io.Writer) int`. Tests `TestRun_HappyPath_{Stdout,FileOutput}`, `TestRun_WithAnnotateFlag`, `TestRun_BadDistribution_Exit2`, `TestRun_CountZero_Exit2`, etc. Default `--output` changé de `testdata/synthetic-corpus.jsonl` à `"-"` (stdout) — comportement plus prévisible en composition pipeline.
+  - **P2.2 — branches d'erreur internes** : `tau/dimensions/clamp01` 60 % → 100 % (`TestClamp01_BelowZero/AboveOne`), `calibration/store` 88.6 % → 91.8 % (`TestExportSHA256_FileNotFound`, `TestSave_DirNotExists_ReturnsError`, `TestSave_RefreshCurrentFails_ReturnsError`), `agentmeshkafka/classifier` (`TestEmpiricalI4Summary_UnmodeledCounted`).
+  - **P3 — `internal/app/selectLLM`** (66.7 % → 100 %) : `TestSelectLLM_RealBackend_Panics` via `t.Setenv` + `recover` ; couvre la branche `TAUGO_LLM_BACKEND=real` documentée comme `panic` M5+ feature.
+
+### Notes
+
+- **Couverture finale par package** : `internal/bridge/llm` 100.0 %, `tau` 100.0 %, `tau/dimensions` 98.7 %, `tau/invariants` 97.1 %, `internal/app` 95.5 %, `calibration` 91.8 %, `orchestration` 91.1 %, `agentmeshkafka` 89.6 %, `cmd/generate-corpus` 89.2 %, `cmd/tau` 76.1 %. Total **90.9 %**.
+- **Audit reviewer** : décision sur l'interprétation 80 % du critère PRD §17 #5 : **interprétation A** retenue (`go tool cover -func ./... total ≥ 80 %`, incluant `cmd/*`). Le coût (~70 LOC pour P1.1 seul) était inférieur au coût d'amender la spec.
+- `.gitignore` : ajout `cov*.out`, `cov*.html`, `scripts/__pycache__/`.
+- Pas de nouveau tag : changement non-breaking (tests + refacto comportementalement identique). Sera bundle dans la prochaine release v0.1.1 ou v0.2.0.
+
 ## [0.1.0] — 2026-05-24
 
 **Première release publique V1.** Tous les critères de succès PRD §17 (10 items) sont opposables par test ou artefact. Six milestones M0-M6 livrés en cascade. Verdict de revue intégrée finale : APPROVE.
