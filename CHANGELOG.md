@@ -4,6 +4,42 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.0.2-alpha] — 2026-05-23
+
+M1 : dispatcher minimal + stub LLM. `tau decide` rend une `Decision` instrumentée. Cinq tests d'invariants `Decision`. Couverture globale 83.9 % (> 80 % gate).
+
+### Ajouté
+
+- `internal/tau/operator.go` : types `Trace` et `TraceThresholds` immuables ; champ `Decision.Trace` ; tags JSON snake_case sur tous les types publics.
+- `internal/tau/frontier.go` : tags JSON snake_case sur `FrontierCheck`.
+- `internal/orchestration/thresholds.go` : `Thresholds{Deterministe, Probabiliste}` avec invariant `Ordered()`.
+- `internal/orchestration/dispatcher.go` : `Dispatcher` implémentant le sous-ensemble M1 du pseudo-algo PRD §10 (étapes 1, 6, 7) ; `NewDispatcher` panic sur ordering invariant ; clampage `DurationNs ≥ 1` pour résolution timer Windows.
+- `internal/orchestration/dispatcher_test.go` : 3 tests (Deterministe, Probabiliste, hystérèse).
+- `internal/orchestration/decision_invariants_test.go` : `TestDecisionAlwaysTraced`, `TestRefusImpliesDiagnostic` (3 subtests), `TestTraceImmutable`.
+- `internal/bridge/llm/client.go` : interface étroite `Client` (PRD §12.2) — `Fingerprint()`, `Interpret(ctx, intent) (float64, error)`.
+- `internal/bridge/llm/stub.go` : `Stub` déterministe via FNV-1a 32-bit hash ; fingerprint `stub:v0` ; score ∈ [0, 1) ; mappage checked-in.
+- `internal/bridge/llm/stub_test.go` : fingerprint + déterminisme + bornes sur 4 cas (vide, 1 char, multi-mot, phrase).
+- `internal/app/app.go` : `NewDispatcher()` factory ; sélection LLM via env `TAUGO_LLM_BACKEND` (défaut `Stub` ; `real` panic en M5+).
+- `internal/app/app_test.go` : `TestDefaultLLMIsStub` (vérification comportementale TauScore vs Stub.Interpret).
+- `internal/arch_test.go` : règle `internal/bridge` parent (skip-always) remplacée par règles concrètes sur `internal/bridge/llm` et `internal/bridge/agentmeshkafka`.
+- `cmd/tau/main.go` : sous-commande `decide` (JSON stdin → JSON stdout, exit codes 0/2/3/4) ; version bumped à `0.0.2-alpha`.
+- `cmd/tau/main_test.go` : tests E2E `TestEndToEnd_DecideDeterministe` (« creative generation » → 0.262) et `TestEndToEnd_DecideProbabiliste` (« hello world » → 0.807).
+- `docs/superpowers/plans/2026-05-23-M1-dispatcher-stub-llm.md` : sous-plan détaillé M1 (1017 l., 9 tâches bite-sized).
+
+### Corrigé
+
+- Tags JSON manquants sur `tau.Exchange` : caché en M1.5, exposé par décodage silencieux de `intent_description` en chaîne vide (TauScore=0.261 = hash empty string). Fix `dff5565` aligne snake_case I/O.
+
+### Spec et planification
+
+- `PRDPlanning.md` reste référence ; sous-plan M1 commité séparément dans `docs/superpowers/plans/`.
+
+### Notes
+
+- Tous les sub-tasks M1 ont commit séparé. Couverture par package : `internal/tau` 100 %, `internal/orchestration` ≥ 90 %, `internal/bridge/llm` ≥ 80 %, `internal/app` ≥ 80 %.
+- `tau decide` accepte stdin JSON ; sortie JSON snake_case ; régimes `0=Unknown, 1=Deterministe, 2=Probabiliste, 3=Refus` (marshaled comme nombre — M2+ peut ajouter `MarshalJSON`).
+- Frontière de validité encore en mode placeholder (Inside=true toujours) ; les sondes réelles arrivent en M2.
+
 ## [0.0.1-alpha] — 2026-05-23
 
 Premier tag. Squelette M0 du PRD : pas de logique métier, étanchéité architecturale gardée, CI verte sur 3 OS.
