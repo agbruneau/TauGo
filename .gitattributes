@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.js binary
+*.css binary
+*.json binary
+*.ico binary
+*.svg text eol=lf
