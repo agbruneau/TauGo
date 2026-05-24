@@ -7,6 +7,7 @@ import (
 	"github.com/agbruneau/taugo/internal/bridge/llm"
 	"github.com/agbruneau/taugo/internal/tau"
 	"github.com/agbruneau/taugo/internal/tau/dimensions"
+	"github.com/agbruneau/taugo/internal/tau/invariants"
 )
 
 // defaultDimensionWeights holds the composite weights for tau_score = w_s*D_SENS + w_a*D_AUTH + w_i*D_INV.
@@ -17,10 +18,10 @@ var defaultDimensionWeights = struct{ DSens, DAuthority, DInvariant float64 }{
 	DInvariant: 0.3,
 }
 
-// Dispatcher implements the M2 subset of the tau pseudo-algorithm (PRD §10):
+// Dispatcher implements the M3 subset of the tau pseudo-algorithm (PRD §10):
 // steps 1 (frontier), 2 (ontological guard D-AUTORITE), 4 (dimension scores),
-// 5 (I4 coherence guard), 6 (weighted composite), and 7 (hysteresis decision).
-// Steps 3 (profile expiration) and 8 (invariant evaluation) land in M3/M5.
+// 5 (I4 coherence guard), 6 (weighted composite), 7 (hysteresis decision),
+// and 8 (invariant evaluation). Step 3 (profile expiration) lands in M5.
 type Dispatcher struct {
 	llm        llm.Client
 	thresholds Thresholds
@@ -45,7 +46,7 @@ func durationNs(start time.Time) int64 {
 	return 1
 }
 
-// Decide implements the M2 subset of PRD §10 (steps 1, 2, 4, 5, 6, 7).
+// Decide implements the M3 subset of PRD §10 (steps 1, 2, 4, 5, 6, 7, 8).
 func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, error) {
 	start := time.Now()
 
@@ -132,9 +133,10 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 		regime = tau.Deterministe
 	}
 
-	return tau.Decision{
+	// Step 7 result.
+	decision := tau.Decision{
 		Regime:         regime,
-		ProfileVersion: "M2-default",
+		ProfileVersion: "M3-default",
 		Trace: tau.Trace{
 			ExchangeID: x.ID,
 			TauScore:   tauScore,
@@ -142,7 +144,19 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 			Thresholds: traceThresholds,
 			DurationNs: durationNs(start),
 		},
-	}, nil
+	}
+
+	// Step 8 — Invariant evaluation (PRD §10 step 8). Violations are
+	// appended to UnmodeledObservations; Regime and Diagnostic are NOT
+	// changed (the dispatch is already complete; this is observability only).
+	statuses := invariants.EvaluateInvariants(x, decision)
+	if statuses.AnyViolated() {
+		decision.Trace.UnmodeledObservations = append(
+			decision.Trace.UnmodeledObservations,
+			statuses.Summary()...,
+		)
+	}
+	return decision, nil
 }
 
 // frontierFromExchange derives a FrontierCheck from the Exchange fields.
