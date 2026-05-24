@@ -86,7 +86,9 @@ func ClassifyI4(d EmpiricalDecision) I4Class {
 	case !i4condition && !isRefusI4:
 		return I4CoherentAccepted
 	}
-	return Unmodeled
+	// The switch above exhausts all four boolean combinations; this line is
+	// unreachable in practice (anti-patron #4 sentinel kept for future changes).
+	return Unmodeled // unreachable: switch above exhausts all four boolean combinations
 }
 
 // EmpiricalI4Stats aggregates classification counts and derived metrics for
@@ -123,6 +125,9 @@ func EmpiricalI4Summary(decisions []EmpiricalDecision) EmpiricalI4Stats {
 		case OtherRefusal:
 			s.OtherRefusal++
 		default:
+			// Reachable only if ClassifyI4 returns Unmodeled, which requires
+			// the switch in ClassifyI4 to not match — currently unreachable.
+			// Kept as anti-patron #4 sentinel (PRD §7.2.4).
 			s.Unmodeled++
 		}
 	}

@@ -159,6 +159,101 @@ func mustSHA256(t *testing.T, path string) string {
 	return sum
 }
 
+// TestExportSHA256_FileNotFound verifies that ExportSHA256 returns a non-nil
+// error when the requested path does not exist (covers the os.Open error branch).
+func TestExportSHA256_FileNotFound(t *testing.T) {
+	t.Parallel()
+	s := calibration.NewStore(t.TempDir())
+	_, err := s.ExportSHA256("/nonexistent/path/that/does/not/exist.json")
+	if err == nil {
+		t.Fatal("ExportSHA256 on missing file: expected error, got nil")
+	}
+}
+
+// TestSave_MkdirFails_ReturnsError verifies that Save returns a non-nil error
+// when the Store.Dir cannot be created (MkdirAll error path, lines 48-50).
+func TestSave_MkdirFails_ReturnsError(t *testing.T) {
+	t.Parallel()
+	// Create a regular file, then ask Store to use a subdirectory of it as Dir.
+	// MkdirAll cannot traverse a regular file as a path component.
+	tmp := t.TempDir()
+	blocker := filepath.Join(tmp, "blocker")
+	if err := os.WriteFile(blocker, []byte("x"), 0o600); err != nil {
+		t.Fatalf("setup: %v", err)
+	}
+
+	s := calibration.NewStore(filepath.Join(blocker, "subdir"))
+	_, err := s.Save(calibration.DefaultProfile())
+	if err == nil {
+		t.Fatal("Save under a file path: expected error, got nil")
+	}
+}
+
+// TestSave_WriteFileFails_ReturnsError verifies that Save returns a non-nil
+// error when os.WriteFile fails (the versioned-file write error path, lines
+// 60-62). The Dir is valid; we pre-create the target filename as a directory
+// so WriteFile cannot overwrite it.
+func TestSave_WriteFileFails_ReturnsError(t *testing.T) {
+	t.Parallel()
+	p := calibration.DefaultProfile()
+	dir := t.TempDir()
+
+	// Occupy the target path with a directory so os.WriteFile returns an error.
+	targetName := p.ID + "-" + p.Version + ".json"
+	if err := os.Mkdir(filepath.Join(dir, targetName), 0o755); err != nil {
+		t.Fatalf("setup mkdir: %v", err)
+	}
+
+	s := calibration.NewStore(dir)
+	_, err := s.Save(p)
+	if err == nil {
+		t.Fatal("Save with target occupied by a directory: expected error, got nil")
+	}
+}
+
+// TestSave_RefreshCurrentFails_ReturnsError verifies that Save returns a
+// non-nil error when refreshCurrent cannot create current.json (line 64-66 of
+// store.go). We pre-populate Dir/current.json with a non-empty directory so
+// that os.Remove fails silently, os.Symlink fails, and os.WriteFile also fails.
+func TestSave_RefreshCurrentFails_ReturnsError(t *testing.T) {
+	t.Parallel()
+	dir := t.TempDir()
+
+	// Block current.json with a non-empty directory (os.Remove ignores the
+	// error; symlink and WriteFile both fail against a directory that contains
+	// a file).
+	currentDir := filepath.Join(dir, "current.json")
+	if err := os.Mkdir(currentDir, 0o755); err != nil {
+		t.Fatalf("setup: create current.json dir: %v", err)
+	}
+	// Make it non-empty so os.Remove fails.
+	if err := os.WriteFile(filepath.Join(currentDir, "block"), []byte("x"), 0o600); err != nil {
+		t.Fatalf("setup: create blocker in current.json dir: %v", err)
+	}
+
+	s := calibration.NewStore(dir)
+	_, err := s.Save(calibration.DefaultProfile())
+	if err == nil {
+		t.Fatal("Save with current.json blocked: expected error, got nil")
+	}
+}
+
+// TestLoadCurrent_CorruptJSON verifies that LoadCurrent returns an error when
+// current.json contains invalid JSON (covers UnmarshalCanonical error path in
+// readProfile, line 120-122 of store.go).
+func TestLoadCurrent_CorruptJSON(t *testing.T) {
+	t.Parallel()
+	dir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(dir, "current.json"), []byte("not-json{{{"), 0o600); err != nil {
+		t.Fatalf("setup: %v", err)
+	}
+	s := calibration.NewStore(dir)
+	_, err := s.LoadCurrent()
+	if err == nil {
+		t.Fatal("LoadCurrent with corrupt JSON: expected error, got nil")
+	}
+}
+
 // TestStore_Save_CurrentJSONExists checks that current.json is created after Save.
 func TestStore_Save_CurrentJSONExists(t *testing.T) {
 	t.Parallel()

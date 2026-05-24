@@ -119,6 +119,42 @@ func TestClassifyI4(t *testing.T) {
 	}
 }
 
+// TestEmpiricalI4Summary_UnmodeledCounted verifies that EmpiricalI4Summary
+// keeps Unmodeled at zero for the full set of modeled decision types.
+// The Unmodeled bucket and the default: branch in EmpiricalI4Summary are
+// dead code under the current ClassifyI4 implementation: its switch exhausts
+// all four boolean combinations, making the trailing "return Unmodeled"
+// unreachable. The test documents this expectation explicitly (anti-patron #4).
+func TestEmpiricalI4Summary_UnmodeledCounted(t *testing.T) {
+	t.Parallel()
+
+	const sensThreshold = 0.50
+	const invThreshold = 0.50
+
+	// One representative decision for each of the five reachable classes.
+	decisions := []agentmeshkafka.EmpiricalDecision{
+		// I4CoherentAccepted
+		{RegimeStr: "deterministe", DSensValue: 0.60, DInvariantValue: 0.30, SensCoherence: sensThreshold, InvCoherence: invThreshold},
+		// I4IncoherentRefused
+		{RegimeStr: "refus", Diagnostic: "I4 — combinaison incohérente détectée", DSensValue: 0.30, DInvariantValue: 0.60, SensCoherence: sensThreshold, InvCoherence: invThreshold},
+		// I4FalsePositive
+		{RegimeStr: "refus", Diagnostic: "I4 — combinaison incohérente détectée", DSensValue: 0.70, DInvariantValue: 0.60, SensCoherence: sensThreshold, InvCoherence: invThreshold},
+		// I4FalseNegative
+		{RegimeStr: "deterministe", DSensValue: 0.20, DInvariantValue: 0.80, SensCoherence: sensThreshold, InvCoherence: invThreshold},
+		// OtherRefusal
+		{RegimeStr: "refus", Diagnostic: "hors frontière τ", SensCoherence: sensThreshold, InvCoherence: invThreshold},
+	}
+
+	s := agentmeshkafka.EmpiricalI4Summary(decisions)
+
+	if s.Total != 5 {
+		t.Errorf("Total = %d, want 5", s.Total)
+	}
+	if s.Unmodeled != 0 {
+		t.Errorf("Unmodeled = %d, want 0: every modeled decision must be classified", s.Unmodeled)
+	}
+}
+
 func TestEmpiricalI4Summary(t *testing.T) {
 	t.Parallel()
 
