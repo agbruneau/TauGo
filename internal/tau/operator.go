@@ -19,12 +19,12 @@ const (
 // Exchange is the interoperability exchange submitted to τ.
 type Exchange struct {
 	ID                          string         `json:"id"`
+	Initiator                   Principal      `json:"initiator"`
+	Target                      Capability     `json:"target"`
 	IntentDescription           string         `json:"intent_description"`
 	DiscoveredAt                time.Time      `json:"discovered_at"`
 	AttestationInstitutionnelle *Attestation   `json:"attestation_institutionnelle,omitempty"`
 	Context                     map[string]any `json:"context,omitempty"`
-	// Principal and Capability fields intentionally omitted in M0;
-	// added in M2 alongside the dimensions.
 }
 
 // Attestation is the opposable reference that populates the "execution"
@@ -36,12 +36,44 @@ type Attestation struct {
 	AssertedAt time.Time `json:"asserted_at"`
 }
 
+// DiscoveryMode describes how a Capability is discovered at the boundary.
+type DiscoveryMode int
+
+const (
+	// Static means the capability is known and wired at design time.
+	Static DiscoveryMode = iota
+	// DynamicMCP means the capability is discovered via MCP list_tools at runtime.
+	DynamicMCP
+	// DynamicA2A means the capability is discovered via A2A protocol at runtime.
+	DynamicA2A
+	// DynamicAGNTCY means the capability is discovered via AGNTCY registry at runtime.
+	DynamicAGNTCY
+)
+
+// Principal is the initiating agent of an interoperability exchange.
+type Principal struct {
+	ID              string `json:"id"`
+	HumanInLoop     bool   `json:"human_in_loop"`
+	Organization    string `json:"organization"`
+	DelegationDepth int    `json:"delegation_depth"` // 0 = direct human mandate
+}
+
+// Capability is the target capability being invoked in the exchange.
+type Capability struct {
+	ID            string        `json:"id"`
+	DiscoveryMode DiscoveryMode `json:"discovery_mode"`
+	ContractURI   string        `json:"contract_uri,omitempty"` // empty = no contract
+}
+
 // TraceThresholds is the immutable snapshot of the thresholds in effect
 // at the time of the decision. Mirrors orchestration.Thresholds; kept here
 // to avoid a tau -> orchestration import (forbidden by arch_test).
 type TraceThresholds struct {
-	Deterministe float64 `json:"deterministe"`
-	Probabiliste float64 `json:"probabiliste"`
+	Deterministe  float64 `json:"deterministe"`
+	Probabiliste  float64 `json:"probabiliste"`
+	AuthBlock     float64 `json:"auth_block"`
+	SensCoherence float64 `json:"sens_coherence"`
+	InvCoherence  float64 `json:"inv_coherence"`
 }
 
 // Trace is the immutable instrumentation of a Decision.
