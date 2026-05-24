@@ -29,6 +29,58 @@ Toute PR qui érode les frontières ci-dessus exige mise à jour explicite du [`
 
 ---
 
+## Agent teams — règle d'exploitation obligatoire
+
+**Toute planification et toute exécution de tâche passent par des sous-agents.** Le thread principal **coordonne, dispatche, intègre, valide** — il **n'implémente pas directement**. Cette règle est non négociable ; elle s'applique aux 7 milestones M0-M6 du [`PRDPlanning.md`](PRDPlanning.md) et à toute évolution ultérieure.
+
+### Cartographie agent → rôle
+
+| Agent | Rôle TauGo | Quand l'invoquer |
+|---|---|---|
+| `Plan` | Architecte logiciel | Avant chaque milestone : raffiner le sous-plan détaillé. Toute décision d'architecture non triviale. |
+| `ruflo-swarm:architect` | Architecte système | Design des interfaces et contrats inter-couches. ADR avant changement structurel. |
+| `ruflo-swarm:coordinator` | Coordinateur swarm | Quand ≥ 3 agents tournent en parallèle sur tâches indépendantes. |
+| `Explore` | Recherche read-only | Localiser patterns FibGo à calquer. Rechercher symboles dans la monographie. |
+| `ruflo-core:researcher` | Pathfinder théorie ↔ code | Vérifier l'alignement chap. III.8 ↔ Go. Récupérer verbatim d'invariant. Rédiger `docs/theory/`. |
+| `ruflo-core:coder` | Implémentation TDD | Écriture du code Go conforme aux conventions §Conventions de code. |
+| `ruflo-core:reviewer` | Revue de code | Gate avant merge : conformité invariants, anti-patrons, étanchéité Clean Arch. |
+| `understand-anything:project-scanner` | Inventaire repo | Avant M6 : rapport d'audit final. |
+| `understand-anything:architecture-analyzer` | Analyse couches | Vérifier que les couches livrées correspondent à PRD §8. |
+| `general-purpose` | Tâches ouvertes | Recherche comparative inter-projets, exploration ambiguë. |
+
+### Pattern d'exécution par tâche
+
+```
+1. RECHERCHE (parallèle si possible)
+   ├─ Explore  → patterns FibGo, code de référence
+   └─ ruflo-core:researcher → alignement théorie ↔ implémentation
+
+2. ARCHITECTURE (si tâche non triviale)
+   └─ Plan ou ruflo-swarm:architect → décomposition bite-sized
+
+3. IMPLÉMENTATION (parallèle pour tâches indépendantes)
+   └─ ruflo-core:coder × N
+
+4. REVUE
+   └─ ruflo-core:reviewer
+
+5. INTÉGRATION (thread principal)
+   → tests CI verts → commit conventionnel signé → tag si milestone
+```
+
+### Règles d'orchestration
+
+1. **Le thread principal ne code pas.** Il dispatche, lit les diffs produits, intègre.
+2. **Parallélisme par défaut** quand tâches indépendantes (recherche vs implémentation, plusieurs sondes, etc.). Invocations multiples dans **un seul message** pour exécution concurrente.
+3. **Sérialisation imposée** pour : commits, tags, intégration finale, décisions ADR.
+4. **Briefing autoportant** : chaque dispatch d'agent contient le contexte complet — pas de référence implicite à la conversation principale. L'agent ne voit rien d'autre que son prompt.
+5. **Vérification post-agent** : après chaque retour, le coordinateur **lit le diff réel** avant de relancer. Ne pas faire confiance aveuglément au rapport d'un agent.
+6. **Choix d'exécution** : `superpowers:subagent-driven-development` (recommandé) pour M0-M3 ; `superpowers:executing-plans` (inline avec checkpoints) pour M4-M6 si continuité contextuelle requise.
+
+Détail complet de la stratégie : [`PRDPlanning.md` §A](PRDPlanning.md).
+
+---
+
 ## Anti-patrons interdits (gardés par test)
 
 | # | Anti-patron | Garde |
@@ -175,6 +227,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 8. **Veille active I3** — profil porte `date_revision` ; périmé → `Refus`. CI alerte à 30 jours avant péremption.
 9. **Renvois croisés** — toute décision dans `docs/theory/` cite `chap. III.8.X.Y` ; lint manuel à chaque clôture de milestone.
 10. **CI active** — `make test && make lint && make fuzz` en local avant PR. CI rejoue sur 3 OS. Pas de workflow concurrent.
+11. **Agent teams obligatoires** — toute planification et toute exécution de tâche passent par sous-agents *(cf. §Agent teams ci-dessus)*. Le thread principal coordonne, dispatche, intègre — ne code pas directement. Plan d'exécution canonique : [`PRDPlanning.md`](PRDPlanning.md).
 
 ---
 
@@ -220,7 +273,8 @@ Tableau enrichi au fil de M1-M5 (modèle FibGo `Claude.md`).
 
 ## Références
 
-- [`PRD.md`](PRD.md) — spec canonique V0.1 (1217 l., 20 sections, glossaire)
+- [`PRD.md`](PRD.md) — spec canonique V0.2 (911 l., 20 sections, glossaire)
+- [`PRDPlanning.md`](PRDPlanning.md) — plan d'exécution M0-M6 par agent teams
 - **Monographie** : `agbruneau/InteroperabiliteAgentique` v2.4.3 (2026-05-21), chap. III.8 — épingler dans chaque `Profile`
 - **Ingénierie** : `agbruneau/FibGo` — `Claude.md`, `.golangci.yml`, `arch_test.go`, `internal/calibration/`
 - **Empirie** : `agbruneau/AgentMeshKafka` — bridge en `internal/bridge/agentmeshkafka/` (M4)
@@ -230,4 +284,4 @@ Tableau enrichi au fil de M1-M5 (modèle FibGo `Claude.md`).
 
 ---
 
-*CLAUDE.md V0.2 (refactorisé) — 2026-05-23. Document vivant : déviation matérielle = mise à jour de ce fichier ET du `PRD.md`, AVANT le code.*
+*CLAUDE.md V0.3 — 2026-05-23. Ajout de la section §Agent teams et de la directive #11. Document vivant : déviation matérielle = mise à jour de ce fichier ET du `PRD.md`, AVANT le code.*
