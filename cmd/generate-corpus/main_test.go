@@ -3,12 +3,15 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"os"
 	"strings"
 	"testing"
 
+	"github.com/agbruneau/taugo/internal/app"
 	"github.com/agbruneau/taugo/internal/bridge/agentmeshkafka"
 )
 
@@ -139,5 +142,93 @@ func TestGenerateCorpus_FrozenHash_Seed42_120_Balanced(t *testing.T) {
 	const want = "a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee"
 	if got != want {
 		t.Fatalf("frozen hash drift: got=%s want=%s", got, want)
+	}
+}
+
+// TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime verifies that
+// GenerateAnnotated enriches every line with a valid expected_regime field.
+func TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime(t *testing.T) {
+	t.Parallel()
+	d := app.NewDispatcher()
+	var buf bytes.Buffer
+	if err := NewGenerator(42).GenerateAnnotated(context.Background(), &buf, 30, ProfileBalanced, d); err != nil {
+		t.Fatal(err)
+	}
+	valid := map[string]bool{"Deterministe": true, "Probabiliste": true, "Refus": true}
+	scanner := bufio.NewScanner(&buf)
+	lineN := 0
+	for scanner.Scan() {
+		lineN++
+		var entry AnnotatedEntry
+		if err := json.Unmarshal(scanner.Bytes(), &entry); err != nil {
+			t.Fatalf("line %d: invalid JSON: %v", lineN, err)
+		}
+		if entry.ExpectedRegime == "" {
+			t.Errorf("line %d: missing expected_regime", lineN)
+		}
+		if !valid[entry.ExpectedRegime] {
+			t.Errorf("line %d: unexpected value %q", lineN, entry.ExpectedRegime)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		t.Fatal(err)
+	}
+	if lineN != 30 {
+		t.Fatalf("got %d lines, want 30", lineN)
+	}
+}
+
+// TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash confirms that the
+// non-annotated Generate path is unaffected by the --annotate flag: same seed
+// must produce the same sha256 as the M4 frozen value.
+func TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	if err := NewGenerator(42).Generate(&buf, 120, ProfileBalanced); err != nil {
+		t.Fatal(err)
+	}
+	h := sha256.Sum256(buf.Bytes())
+	got := hex.EncodeToString(h[:])
+	const want = "a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee"
+	if got != want {
+		t.Fatalf("baseline hash changed after annotation feature was added: got=%s want=%s", got, want)
+	}
+}
+
+// TestGoldenCorpus_FrozenHash_Seed42_200_Balanced pins the sha256 of the
+// checked-in golden calibration corpus (tests/calibration/golden-corpus.jsonl).
+// Two successive generations must be identical; both must match the pinned constant.
+func TestGoldenCorpus_FrozenHash_Seed42_200_Balanced(t *testing.T) {
+	t.Parallel()
+	d := app.NewDispatcher()
+
+	hashGen := func() string {
+		var buf bytes.Buffer
+		if err := NewGenerator(42).GenerateAnnotated(context.Background(), &buf, 200, ProfileBalanced, d); err != nil {
+			t.Fatalf("GenerateAnnotated: %v", err)
+		}
+		h := sha256.Sum256(buf.Bytes())
+		return hex.EncodeToString(h[:])
+	}
+
+	run1 := hashGen()
+	run2 := hashGen()
+	if run1 != run2 {
+		t.Fatalf("annotated generation is not reproducible: run1=%s run2=%s", run1, run2)
+	}
+
+	// Pinned after first green run.
+	const want = "beb6c8d87911ef58d189c6f1c3d4adf9b71777e6dce328ed781e394614ac3a1b"
+	if run1 != want {
+		t.Fatalf("golden corpus hash drift: got=%s want=%s", run1, want)
+	}
+
+	// Also verify the checked-in file matches, if present.
+	if data, err := os.ReadFile("../../tests/calibration/golden-corpus.jsonl"); err == nil {
+		fh := sha256.Sum256(data)
+		fgot := hex.EncodeToString(fh[:])
+		if fgot != want {
+			t.Errorf("checked-in golden-corpus.jsonl hash mismatch: got=%s want=%s", fgot, want)
+		}
 	}
 }

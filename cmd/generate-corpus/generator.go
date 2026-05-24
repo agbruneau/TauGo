@@ -1,14 +1,43 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"math/rand/v2"
 	"time"
 
+	"github.com/agbruneau/taugo/internal/app"
 	"github.com/agbruneau/taugo/internal/bridge/agentmeshkafka"
+	"github.com/agbruneau/taugo/internal/tau"
 )
+
+// AnnotatedEntry wraps an AgentMeshExchange with its expected_regime,
+// computed by piping the exchange through app.ToTauExchange + Dispatcher.Decide.
+type AnnotatedEntry struct {
+	agentmeshkafka.AgentMeshExchange
+	ExpectedRegime string `json:"expected_regime"`
+}
+
+// Annotator converts AgentMeshExchange records to AnnotatedEntry by running
+// each through the production Dispatcher. It satisfies the interface used by
+// GenerateAnnotated; callers provide the concrete dispatcher via app.NewDispatcher.
+type Annotator interface {
+	Decide(ctx context.Context, x tau.Exchange) (tau.Decision, error)
+}
+
+// regimeString converts tau.Regime to its canonical string form.
+func regimeString(r tau.Regime) string {
+	switch r {
+	case tau.Deterministe:
+		return "Deterministe"
+	case tau.Probabiliste:
+		return "Probabiliste"
+	default:
+		return "Refus"
+	}
+}
 
 // DistributionProfile selects the mixing rule for generated traces.
 type DistributionProfile string
@@ -57,6 +86,47 @@ type Generator struct {
 func NewGenerator(seed int64) *Generator {
 	src := rand.NewPCG(uint64(seed), uint64(seed)^0xdeadbeef_cafebabe)
 	return &Generator{rng: rand.New(src)} //nolint:gosec // intentional: reproducibility requires math/rand, not crypto/rand
+}
+
+// GenerateAnnotated writes n exchanges to w as JSONL, each enriched with an
+// expected_regime field derived by running app.ToTauExchange + a.Decide on
+// every AgentMeshExchange. The base RNG stream is identical to Generate so
+// that non-annotated fields are byte-for-byte reproducible for the same seed.
+func (g *Generator) GenerateAnnotated(ctx context.Context, w io.Writer, n int, profile DistributionProfile, a Annotator) error {
+	wts, err := weightsFor(profile)
+	if err != nil {
+		return err
+	}
+	if n < 1 {
+		return fmt.Errorf("count must be >= 1")
+	}
+
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(false)
+
+	plan := buildPlan(n, wts, g)
+	g.rng.Shuffle(len(plan), func(i, j int) { plan[i], plan[j] = plan[j], plan[i] })
+
+	base := time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC)
+	for idx, fn := range plan {
+		x := fn(idx)
+		x.DiscoveredAt = base.Add(time.Duration(idx) * time.Minute)
+		x.SourceTopic = "agentic.synth"
+		x.SourceOffset = int64(idx)
+
+		d, derr := a.Decide(ctx, app.ToTauExchange(x))
+		if derr != nil {
+			return fmt.Errorf("annotate line %d: %w", idx, derr)
+		}
+		entry := AnnotatedEntry{
+			AgentMeshExchange: x,
+			ExpectedRegime:    regimeString(d.Regime),
+		}
+		if err := enc.Encode(&entry); err != nil {
+			return fmt.Errorf("encode line %d: %w", idx, err)
+		}
+	}
+	return nil
 }
 
 // Generate writes n exchanges to w as JSONL.
