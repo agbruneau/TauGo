@@ -27,3 +27,6 @@ default.pgo
 # config local
 .env
 .env.local
+
+# agent runtime
+.claude-flow/
