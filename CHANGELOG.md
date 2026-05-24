@@ -4,6 +4,36 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.0.6-alpha] — 2026-05-24
+
+M5 : calibration adaptative reproductible byte-identique (PRD §17 critère #10), détection de drift sur les 5 critères PRD §11.4, persistance JSON canonique avec `current.json` (symlink + fallback Windows), CLI `tau calibrate`, étape 3 dispatcher (refus profil périmé — anti-patron #3). Revue intégrée : APPROVE.
+
+### Ajouté
+
+- `internal/calibration/calibrate.go` : `Calibrate(corpus, seed)` — grid search déterministe en milli-unités int64 (calque FibGo, évite IEEE-754) sur `Deterministe ∈ [0.10,0.90]` × `HysteresisGap ∈ [0.05,0.20]` × `AuthBlock ∈ [0.70,0.95]` × `SensCoherence ∈ [0.30,0.70]` (InvCoherence = SensCoherence en V1). Tie-break conservateur. Helper `MarshalCanonical/UnmarshalCanonical` (tri JSON récursif sur deux passes via `json.UseNumber()` + `sortedAny`).
+- `internal/calibration/weights.go` : `CalibrateWeights` V1 = passthrough (les poids `DefaultProfile()` ne sont pas mutés faute de signal empirique M4 — cf. I4-report.md). Type `WeightHook` pour la stratégie V2 (gradient ou bayésien).
+- `internal/calibration/drift.go` : `DriftCriterion` énuméré (5 critères PRD §11.4), `DriftReport`, `Env`, `CheckDrift(profile, now, env)`. `FingerprintCPU()` = tuple `GOOS-GOARCH-NumCPU` (simplification V1), `FingerprintCorpus(path)` = sha256 du fichier. `DriftScoreDistribution` = placeholder V1 documenté (V2 introduira la fenêtre glissante). Skip si fingerprint profile vide (pas de faux positif au premier démarrage).
+- `internal/calibration/store.go` : `Store{Dir}` — `Save/Load/LoadCurrent` ; chemin `<Dir>/<ID>-<Version>.json` ; `current.json` symlink sur Linux/macOS, fallback **copie + sidecar `.source`** sur Windows (`os.Symlink` requiert privilège Developer Mode). Tests conditionnés par build tag `!windows`/`windows`.
+- `internal/orchestration/dispatcher.go` : étape 3 PRD §10 (reportée de M4) — `if !profile.DateRevision.IsZero() && now().After(profile.DateRevision) → Refus("profil périmé — veille requise")`. Constructeurs `NewDispatcherWithProfile`, méthode `WithClock(c)` (calque `EvaluateI3WithClock` M3). Helper `refusDecision` extrait pour ramener `Decide` sous funlen=100.
+- `cmd/tau/calibrate.go` + extension `main.go` : sous-commande `tau calibrate --corpus PATH --output PATH --date-revision YYYY-MM-DD --version-monographie STRING --seed INT --created-at TIMESTAMP`. Le drapeau `--created-at` permet byte-identité (écrase `time.Now()` de `DefaultProfile()`).
+- `cmd/generate-corpus/main.go` : drapeau `--annotate-with-dispatcher` (bool, défaut false) — enrichit chaque ligne avec `expected_regime` via `app.ToTauExchange` + `Dispatcher.Decide`. Préserve la byte-identité du baseline M4 quand inactif.
+- `tests/calibration/golden-corpus.jsonl` : 200 lignes annotées (seed=42, balanced, sha256 `beb6c8d87911ef58d189c6f1c3d4adf9b71777e6dce328ed781e394614ac3a1b`). Distribution `expected_regime` : Deterministe 90 / Probabiliste 50 / Refus 60.
+- `test/e2e/calibration_determinism_test.go` (build tag `e2e`) : `TestCalibrationDeterministic` (PRD §17 #10, deux runs → même sha256), `TestExpiredProfileRefuses` (PRD §15.1, anti-patron #3), `TestCalibrate_GoldenCorpus_FixedHash` (hash pinné `d753245b87933f97c6324f54df1572fab7cc68c52bc49baa1b891ab97abff6c7`).
+- `internal/orchestration/dispatcher_expiry_test.go` : 4 tests étape 3 (expired/not-expired/zero-date/nil-profile).
+- `Makefile` : cible `e2e-calibration` (tag `e2e`).
+- `docs/algorithms/calibration.md` (214 l.) : domaines balayés, encodage milli-unités, tie-break, passthrough Weights, marshaller canonique, contrat byte-identique, 5 tests gardiens.
+- `docs/algorithms/drift.md` (161 l.) : 5 critères, skip empty-fingerprint, seul `DriftDateExpired` → Refus en V1, fingerprints V1 documentés.
+- `docs/superpowers/plans/2026-05-24-M5-calibration-drift.md` : sous-plan détaillé (1080 l., 10 tâches M5.0-M5.9).
+
+### Notes
+
+- **PRD §17 critère #10 atteint** : `TestCalibrationDeterministic` + hash pinné garantissent la byte-identité d'un profile pour `(corpus, seed, created_at, date_revision, version_monographie)` fixé.
+- **Anti-patron #3 fermé** : la garde de péremption (étape 3 dispatcher) est désormais E2E. Test `TestExpiredProfileRefuses` couvre PRD §15.1.
+- **Windows symlink** : fallback transparent (copie + sidecar) sans privilège Developer Mode. Logging slog.
+- **Asymétrie date-révision drift vs dispatcher** : `CheckDrift` utilise `!now.Before(dateRevision)` (alerte précoce, today==dateRev → drift), dispatcher utilise `now().After(dateRevision)` (blocage strict, today==dateRev → pas de refus). Délibérée mais à documenter en M6 (OBS-1 reviewer).
+- **Revue intégrée M5** : APPROVE. Deux observations info (asymétrie ci-dessus + commentaire `simulate()` à clarifier) reportées à M6.
+- Race detector indisponible Windows local — CI Linux/macOS couvre.
+
 ## [0.0.5-alpha] — 2026-05-24
 
 M4 : pont théorie ↔ empirie. Branche contingence active (PRD §18 risque #1 réalisé — AgentMeshKafka inexistant local/GitHub). DTO neutre + adaptateur fichier + convertisseur en couche `app/` + générateur de corpus synthétique reproductible byte-identique + harness empirique I4 + 3 rapports.
