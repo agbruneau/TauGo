@@ -1,0 +1,20 @@
+{
+  "corpus_path": "C:\\Users\\agbru\\OneDrive\\Documents\\GitHub\\TauGo\\cmd\\generate-corpus\\testdata\\synthetic-corpus-120-seed42-balanced.jsonl",
+  "corpus_sha256": "a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee",
+  "profile_version": "M3-default",
+  "sensitivity": -1,
+  "specificity": 1,
+  "stats": {
+    "total": 120,
+    "i4_coherent_accepted": 84,
+    "i4_incoherent_refused": 0,
+    "i4_false_positive": 0,
+    "i4_false_negative": 0,
+    "other_refusal": 36,
+    "unmodeled": 0,
+    "sensitivity": -1,
+    "specificity": 1
+  },
+  "timestamp": "2026-05-24T11:27:43Z",
+  "total_decisions": 120
+}
