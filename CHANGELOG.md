@@ -23,6 +23,8 @@ Premier tag. Squelette M0 du PRD : pas de logique métier, étanchéité archite
 - `cmd/tau/main.go` — CLI minimale (`--help`, `--version`) ; points d'injection ldflags `main.version` et `main.buildTimestamp`.
 - `.github/workflows/ci.yml` — matrice 3 OS (Linux/macOS/Windows) × Go 1.25.x : test (race CGO), lint (golangci-lint v1.64.8), build, cross-compile (linux/arm64, darwin/{amd64,arm64}), fuzz-smoke placeholder pour M3+.
 - `.github/workflows/coverage.yml` — gate 80 % couverture globale ; per-package 90 % sur `tau/*` actif en M1+.
+- `README.md` — point d'entrée FR-CA : quick start, doctrine (TauGo est / n'est pas), architecture résumée, liens vers PRD/CLAUDE/PRDPlanning.
+- `docs/theory/03-operateur-tau.md` — premier renvoi croisé chap. III.8.3 : définition formelle `τ : t_fix(g) ≺ t_int ↦ t_fix(g) ≈ t_int`, table d'encodage TauGo, propriétés exploitables (bases I1, I2, orthogonalité), frontière de validité (4 conditions), anti-patrons cités.
 
 ### Spec et planification
 
