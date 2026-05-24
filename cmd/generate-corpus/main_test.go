@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -230,5 +231,140 @@ func TestGoldenCorpus_FrozenHash_Seed42_200_Balanced(t *testing.T) {
 		if fgot != want {
 			t.Errorf("checked-in golden-corpus.jsonl hash mismatch: got=%s want=%s", fgot, want)
 		}
+	}
+}
+
+// ---------------------------------------------------------------------------
+// run() unit tests — P2.1 coverage push
+// ---------------------------------------------------------------------------
+
+// TestRun_HappyPath_Stdout verifies that run writes valid JSONL to the provided
+// writer when --output is not specified (defaults to "-" i.e. stdout).
+func TestRun_HappyPath_Stdout(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	code := run([]string{"--count", "5", "--seed", "1"}, &buf)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	lines := strings.Split(strings.TrimRight(buf.String(), "\n"), "\n")
+	if len(lines) != 5 {
+		t.Fatalf("expected 5 lines, got %d", len(lines))
+	}
+	for i, line := range lines {
+		var x agentmeshkafka.AgentMeshExchange
+		if err := json.Unmarshal([]byte(line), &x); err != nil {
+			t.Errorf("line %d: invalid JSON: %v", i, err)
+		}
+	}
+}
+
+// TestRun_HappyPath_FileOutput verifies that run creates the output file and
+// writes JSONL when --output points to a temp file.
+func TestRun_HappyPath_FileOutput(t *testing.T) {
+	t.Parallel()
+	out := filepath.Join(t.TempDir(), "corpus.jsonl")
+	var buf bytes.Buffer
+	code := run([]string{"--count", "3", "--seed", "7", "--output", out}, &buf)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	data, err := os.ReadFile(out)
+	if err != nil {
+		t.Fatalf("output file not created: %v", err)
+	}
+	lines := strings.Split(strings.TrimRight(string(data), "\n"), "\n")
+	if len(lines) != 3 {
+		t.Fatalf("expected 3 lines in file, got %d", len(lines))
+	}
+}
+
+// TestRun_WithAnnotateFlag verifies that --annotate-with-dispatcher enriches
+// every output line with an expected_regime field.
+func TestRun_WithAnnotateFlag(t *testing.T) {
+	t.Parallel()
+	out := filepath.Join(t.TempDir(), "annotated.jsonl")
+	var buf bytes.Buffer
+	code := run([]string{"--annotate-with-dispatcher", "--count", "3", "--seed", "2", "--output", out}, &buf)
+	if code != 0 {
+		t.Fatalf("expected exit 0, got %d", code)
+	}
+	data, err := os.ReadFile(out)
+	if err != nil {
+		t.Fatalf("output file not created: %v", err)
+	}
+	valid := map[string]bool{"Deterministe": true, "Probabiliste": true, "Refus": true}
+	scanner := bufio.NewScanner(bytes.NewReader(data))
+	lineN := 0
+	for scanner.Scan() {
+		lineN++
+		var entry AnnotatedEntry
+		if err := json.Unmarshal(scanner.Bytes(), &entry); err != nil {
+			t.Fatalf("line %d: invalid JSON: %v", lineN, err)
+		}
+		if entry.ExpectedRegime == "" {
+			t.Errorf("line %d: missing expected_regime", lineN)
+		}
+		if !valid[entry.ExpectedRegime] {
+			t.Errorf("line %d: unexpected expected_regime value %q", lineN, entry.ExpectedRegime)
+		}
+	}
+	if lineN != 3 {
+		t.Fatalf("expected 3 annotated lines, got %d", lineN)
+	}
+}
+
+// TestRun_BadDistribution_Exit2 verifies that an unknown --distribution value
+// causes run to return exit code 2.
+func TestRun_BadDistribution_Exit2(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	code := run([]string{"--count", "5", "--distribution", "unknown"}, &buf)
+	if code != 2 {
+		t.Fatalf("expected exit 2 for bad distribution, got %d", code)
+	}
+}
+
+// TestRun_NegativeCount_Exit2 verifies that --count < 1 causes exit code 2.
+func TestRun_NegativeCount_Exit2(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	code := run([]string{"--count", "-1"}, &buf)
+	if code != 2 {
+		t.Fatalf("expected exit 2 for negative count, got %d", code)
+	}
+}
+
+// TestRun_CountZero_Exit2 verifies that --count=0 causes exit code 2.
+func TestRun_CountZero_Exit2(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	code := run([]string{"--count", "0"}, &buf)
+	if code != 2 {
+		t.Fatalf("expected exit 2 for count=0, got %d", code)
+	}
+}
+
+// TestRun_UnknownFlag_Exit2 verifies that an unrecognized flag causes exit code 2.
+func TestRun_UnknownFlag_Exit2(t *testing.T) {
+	t.Parallel()
+	var buf bytes.Buffer
+	code := run([]string{"--no-such-flag"}, &buf)
+	if code != 2 {
+		t.Fatalf("expected exit 2 for unknown flag, got %d", code)
+	}
+}
+
+// TestRun_OutputDirNotWritable_Exit1 verifies that an unwritable output path
+// causes run to return exit code 1.
+// On Windows the standard approach is to use a path under a non-existent
+// directory; creating a file inside a missing parent directory always fails.
+func TestRun_OutputDirNotWritable_Exit1(t *testing.T) {
+	t.Parallel()
+	out := filepath.Join(t.TempDir(), "nonexistent-subdir", "corpus.jsonl")
+	var buf bytes.Buffer
+	code := run([]string{"--count", "1", "--output", out}, &buf)
+	if code != 1 {
+		t.Fatalf("expected exit 1 for unwritable output path, got %d", code)
 	}
 }
