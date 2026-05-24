@@ -1,0 +1,3 @@
+{"id":"a1","intent":"book meeting with Alice","score":0.72}
+{"id":"a2","intent":"cancel subscription","score":0.45}
+{"id":"a3","intent":"query balance","score":0.30}
