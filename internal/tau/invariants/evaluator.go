@@ -84,10 +84,3 @@ func EvaluateInvariants(x tau.Exchange, dec tau.Decision) Statuses {
 		I5: EvaluateI5(x, dec),
 	}
 }
-
-// === STUBS TEMPORAIRES — supprimés en M3.6 ===
-// EvaluateI3 est implémenté dans i3_authority_asymmetry.go (M3.4).
-// EvaluateI4 est implémenté dans i4_coherence.go (M3.5).
-// Le stub I5 renvoie NotApplicable jusqu'à M3.6.
-
-func EvaluateI5(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
