@@ -13,8 +13,9 @@ import (
 )
 
 // runCalibrate is the entry point for `tau calibrate`.
-// It is kept as a standalone function so it can be called directly from tests.
-func runCalibrate(args []string) {
+// Returns an exit code: 0 success, 1 runtime error, 2 bad flags/args.
+// Kept as a standalone function so it can be called directly from tests.
+func runCalibrate(args []string) int {
 	fs := flag.NewFlagSet("calibrate", flag.ContinueOnError)
 	corpusPath := fs.String("corpus", "", "path to pre-scored JSONL corpus (required)")
 	outputPath := fs.String("output", "", "output profile JSON path (required)")
@@ -36,59 +37,60 @@ FLAGS:
 
 	if err := fs.Parse(args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		os.Exit(2)
+		return 2
 	}
 
 	if *corpusPath == "" || *outputPath == "" || *dateRevStr == "" {
 		fmt.Fprintln(os.Stderr, "tau calibrate: --corpus, --output and --date-revision are required")
 		fs.Usage()
-		os.Exit(2)
+		return 2
 	}
 
 	dateRev, err := parseDateRev(*dateRevStr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: invalid --date-revision:", err)
-		os.Exit(2)
+		return 2
 	}
 
 	createdAt, err := time.Parse(time.RFC3339, *createdAtStr)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: invalid --created-at:", err)
-		os.Exit(2)
+		return 2
 	}
 
 	corpusFingerprint, err := calibration.FingerprintCorpus(*corpusPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate:", err)
-		os.Exit(1)
+		return 1
 	}
 
 	entries, err := loadCorpus(*corpusPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: reading corpus:", err)
-		os.Exit(1)
+		return 1
 	}
 
-	in := calibration.DefaultProfile()
-	in.DateRevision = dateRev
-	in.VersionMonographie = *versionMono
-	in.CreatedAt = createdAt
-	in.CorpusFingerprint = corpusFingerprint
-	in.CPUFingerprint = calibration.FingerprintCPU()
-	in.ModelLLMFingerprint = "stub:v0"
+	profile := calibration.DefaultProfile()
+	profile.DateRevision = dateRev
+	profile.VersionMonographie = *versionMono
+	profile.CreatedAt = createdAt
+	profile.CorpusFingerprint = corpusFingerprint
+	profile.CPUFingerprint = calibration.FingerprintCPU()
+	profile.ModelLLMFingerprint = "stub:v0"
 
-	out := calibration.Calibrate(entries, *seed, in)
+	out := calibration.Calibrate(entries, *seed, profile)
 
 	b, err := calibration.MarshalCanonical(out)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: marshal:", err)
-		os.Exit(1)
+		return 1
 	}
 
 	if err := os.WriteFile(*outputPath, b, 0o600); err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: write output:", err)
-		os.Exit(1)
+		return 1
 	}
+	return 0
 }
 
 // parseDateRev accepts RFC3339 or YYYY-MM-DD formats.

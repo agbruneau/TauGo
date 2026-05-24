@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/agbruneau/taugo/internal/app"
@@ -24,11 +25,9 @@ func main() {
 			fmt.Printf("tau %s (build %s)\n", version, buildTimestamp)
 			os.Exit(0)
 		case "decide":
-			runDecide()
-			return
+			os.Exit(runDecide(os.Stdin, os.Stdout))
 		case "calibrate":
-			runCalibrate(os.Args[2:])
-			return
+			os.Exit(runCalibrate(os.Args[2:]))
 		}
 	}
 	flag.Usage = func() {
@@ -50,20 +49,24 @@ Specification: PRD.md
 	os.Exit(1)
 }
 
-func runDecide() {
+// runDecide reads a JSON Exchange from in, decides a regime, and writes the
+// JSON Decision to out. Returns an exit code: 0 success, 2 bad input,
+// 3 decide error, 4 encode error.
+func runDecide(in io.Reader, out io.Writer) int {
 	var x tau.Exchange
-	if err := json.NewDecoder(os.Stdin).Decode(&x); err != nil {
+	if err := json.NewDecoder(in).Decode(&x); err != nil {
 		fmt.Fprintln(os.Stderr, "error decoding stdin:", err)
-		os.Exit(2)
+		return 2
 	}
 	d := app.NewDispatcher()
 	decision, err := d.Decide(context.Background(), x)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "error deciding:", err)
-		os.Exit(3)
+		return 3
 	}
-	if err := json.NewEncoder(os.Stdout).Encode(decision); err != nil {
+	if err := json.NewEncoder(out).Encode(decision); err != nil {
 		fmt.Fprintln(os.Stderr, "error encoding decision:", err)
-		os.Exit(4)
+		return 4
 	}
+	return 0
 }
