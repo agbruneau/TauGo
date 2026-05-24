@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	buildTimestamp = "dev"
+	buildTimestamp = "dev" //nolint:gochecknoglobals // build-time variable set via -ldflags; cannot be const
 	version        = "0.0.2-alpha"
 )
 

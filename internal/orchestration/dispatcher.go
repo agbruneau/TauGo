@@ -13,7 +13,7 @@ import (
 
 // defaultDimensionWeights holds the composite weights for tau_score = w_s*D_SENS + w_a*D_AUTH + w_i*D_INV.
 // Initial values per PRD §11.1: (0.4, 0.3, 0.3). Status: Hypothesis.
-var defaultDimensionWeights = struct{ DSens, DAuthority, DInvariant float64 }{
+var defaultDimensionWeights = struct{ DSens, DAuthority, DInvariant float64 }{ //nolint:gochecknoglobals // read-only after init; package-private calibration default, see PRD §11.1
 	DSens:      0.4,
 	DAuthority: 0.3,
 	DInvariant: 0.3,

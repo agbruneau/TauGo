@@ -8,7 +8,7 @@ import (
 )
 
 // defaultThresholds uses M2 values. Calibration in M5 will override these.
-var defaultThresholds = orchestration.DefaultThresholds()
+var defaultThresholds = orchestration.DefaultThresholds() //nolint:gochecknoglobals // read-only after init; single-point default for app wiring, see PRD §12.2
 
 // NewDispatcher constructs the production Dispatcher.
 // Default LLM: deterministic Stub (PRD §15.4).

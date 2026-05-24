@@ -111,3 +111,49 @@ func TestDAuthority_ProbesMapPopulated(t *testing.T) {
 		}
 	}
 }
+
+// TestDefaultAuthorityWeights_StructureAndSum verifies DefaultAuthorityWeights
+// returns a non-zero struct whose weights sum to 1.0 (PRD §5.2).
+func TestDefaultAuthorityWeights_StructureAndSum(t *testing.T) {
+	t.Parallel()
+	w := dimensions.DefaultAuthorityWeights()
+	if w.ChainDepth == 0 && w.CrossOrg == 0 && w.HumanAnchor == 0 && w.DynamicResolution == 0 {
+		t.Fatal("DefaultAuthorityWeights returned all-zero struct")
+	}
+	sum := w.ChainDepth + w.CrossOrg + w.HumanAnchor + w.DynamicResolution
+	const eps = 1e-9
+	if sum < 1.0-eps || sum > 1.0+eps {
+		t.Fatalf("DefaultAuthorityWeights sum = %f, want 1.0", sum)
+	}
+}
+
+// TestDAuthority_ChainDepthSaturation covers probeChainDepth saturation at depth >= 4.
+func TestDAuthority_ChainDepthSaturation(t *testing.T) {
+	t.Parallel()
+	x := newLongChainExchange()
+	x.Initiator.DelegationDepth = 4
+	w := authorityWeights()
+	score, err := dimensions.ScoreDAuthority(context.Background(), x, w)
+	if err != nil {
+		t.Fatalf("ScoreDAuthority error: %v", err)
+	}
+	if score.Probes["A_chain_depth"] != 1.0 {
+		t.Fatalf("expected A_chain_depth=1.0 at depth=4, got %f", score.Probes["A_chain_depth"])
+	}
+}
+
+// TestDAuthority_CrossOrg_EmptyOrg covers probeCrossOrg returning 1 for empty org.
+func TestDAuthority_CrossOrg_EmptyOrg(t *testing.T) {
+	t.Parallel()
+	x := newShortChainExchange()
+	x.Initiator.Organization = ""
+	x.Initiator.DelegationDepth = 0
+	w := authorityWeights()
+	score, err := dimensions.ScoreDAuthority(context.Background(), x, w)
+	if err != nil {
+		t.Fatalf("ScoreDAuthority error: %v", err)
+	}
+	if score.Probes["A_cross_org"] != 1.0 {
+		t.Fatalf("expected A_cross_org=1.0 for empty org, got %f", score.Probes["A_cross_org"])
+	}
+}

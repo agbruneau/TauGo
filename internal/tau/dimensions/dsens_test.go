@@ -2,6 +2,7 @@ package dimensions_test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -113,3 +114,52 @@ func TestDSens_ProbesMapPopulated(t *testing.T) {
 		}
 	}
 }
+
+// TestDefaultSensWeights_StructureAndSum verifies that DefaultSensWeights returns
+// a non-zero struct whose weights sum to 1.0 (PRD §5.1).
+func TestDefaultSensWeights_StructureAndSum(t *testing.T) {
+	t.Parallel()
+	w := dimensions.DefaultSensWeights()
+	if w.Contract == 0 && w.RuntimeResolve == 0 && w.CapabilityDiscov == 0 && w.ReasonerIntent == 0 {
+		t.Fatal("DefaultSensWeights returned all-zero struct")
+	}
+	sum := w.Contract + w.RuntimeResolve + w.CapabilityDiscov + w.ReasonerIntent
+	const eps = 1e-9
+	if sum < 1.0-eps || sum > 1.0+eps {
+		t.Fatalf("DefaultSensWeights sum = %f, want 1.0", sum)
+	}
+}
+
+// TestDSens_EmptyIntent covers probeRuntimeResolve returning 0 (empty IntentDescription).
+func TestDSens_EmptyIntent(t *testing.T) {
+	t.Parallel()
+	x := newStaticExchange()
+	x.IntentDescription = ""
+	w := sensWeights()
+	score, err := dimensions.ScoreDSens(context.Background(), x, w, nil)
+	if err != nil {
+		t.Fatalf("ScoreDSens error: %v", err)
+	}
+	if score.Probes["S_runtime_resolve"] != 0 {
+		t.Fatalf("expected S_runtime_resolve=0 for empty intent, got %f", score.Probes["S_runtime_resolve"])
+	}
+}
+
+// TestDSens_LLMClientError covers probeReasonerIntent propagating an error.
+func TestDSens_LLMClientError(t *testing.T) {
+	t.Parallel()
+	_, err := dimensions.ScoreDSens(context.Background(), newDynamicExchange(), sensWeights(), &errClient{})
+	if err == nil {
+		t.Fatal("expected error from errClient, got nil")
+	}
+}
+
+// errClient is a test double that always returns an error from Interpret.
+type errClient struct{}
+
+func (e *errClient) Fingerprint() string { return "err-client-v0" }
+func (e *errClient) Interpret(_ context.Context, _ string) (float64, error) {
+	return 0, errClientErr
+}
+
+var errClientErr = fmt.Errorf("stub error")

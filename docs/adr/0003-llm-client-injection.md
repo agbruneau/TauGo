@@ -104,6 +104,29 @@ Règles d'application :
    séparé. Overkill pour V1 ; ajoute latence et infrastructure réseau en test.
    Non écarté définitivement pour V2+ si le kernel devient distribué.
 
+## Clarification — `tau/dimensions` et l'import de `bridge/llm`
+
+L'analyse d'architecture M6.7 (audit A2) a relevé que `internal/tau/dimensions/dsens.go`
+importe `internal/bridge/llm`. Cette observation est conforme à la présente ADR et ne
+constitue pas un écart.
+
+**Règle précisée** : `internal/tau/*` peut importer `internal/bridge/llm` **si et
+seulement si l'import porte sur l'interface `llm.Client`**, et non sur une
+implémentation concrète (stub, client Anthropic, etc.). L'interface est un contrat
+pur en Go — elle n'introduit aucune dépendance sur un SDK externe, aucun appel réseau,
+et aucun non-déterminisme dans les tests unitaires.
+
+En conséquence :
+
+- `import "github.com/agbruneau/taugo/internal/bridge/llm"` dans `tau/dimensions`
+  → **autorisé** (accès à l'interface `llm.Client` uniquement).
+- `import "github.com/anthropic-ai/..."` ou tout SDK LLM concret dans `tau/*`
+  → **interdit** (anti-patron PRD §7.2.6, gardé par `arch_test.go`).
+
+La garde statique `TestArchNoConcreteLLMInDomain` (fichier `internal/arch_test.go`)
+vérifie l'absence de SDK LLM concret dans `tau/*` et `orchestration/*`, et reste
+inchangée. Elle ne bloque pas l'import de l'interface.
+
 ## Renvois
 
 - PRD §12.2 (interface llm.Client et injection)

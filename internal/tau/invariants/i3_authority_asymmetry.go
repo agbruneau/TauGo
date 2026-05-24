@@ -10,7 +10,7 @@ import (
 // Beyond this date the institutional-fact landscape is presumed to have
 // shifted; the profile must be renewed or τ refuses by the expiry clause.
 // Dated 2026-05-24; next review 2027-01-01. Status: Probable.
-var I3PerimptionLimite = time.Date(2027, 1, 1, 0, 0, 0, 0, time.UTC)
+var I3PerimptionLimite = time.Date(2027, 1, 1, 0, 0, 0, 0, time.UTC) //nolint:gochecknoglobals // read-only sentinel, written once at init; see PRD §6.1 I3 veille trimestrielle
 
 // diagI3OntologicalRefus is the exact diagnostic string emitted by the
 // dispatcher (orchestration/dispatcher.go step 2) when the ontological

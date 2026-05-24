@@ -183,7 +183,7 @@ func buildPlan(n int, wts branchWeights, g *Generator) []func(int) agentmeshkafk
 
 // intents is a fixed-size list used to vary IntentDescription deterministically
 // without calling rng at construction time (preserves shuffle determinism).
-var intents = [8]string{
+var intents = [8]string{ //nolint:gochecknoglobals // compile-time constant table; immutable after init
 	"query customer profile",
 	"transfer file to downstream agent",
 	"validate policy document",

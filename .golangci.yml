@@ -46,6 +46,9 @@ linters:
     # Security
     - gosec # Inspects source code for security problems
 
+    # Globals guard (CLAUDE.md anti-pattern #7)
+    - gochecknoglobals # Checks that no global variables exist (see PRD §7.2 #7)
+
     # Meta
     - nolintlint # Reports ill-formed or unnecessary //nolint directives
 
@@ -140,6 +143,7 @@ issues:
         - gosec
         - dupl
         - unparam
+        - gochecknoglobals # test-scope globals (sentinel times, table fixtures) are acceptable
 
     # Exclude specific linter issues that are considered false positives or not relevant
     - linters:
