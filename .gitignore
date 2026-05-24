@@ -1,8 +1,8 @@
 # binaries
 /bin/
 /dist/
-tau
-tau.exe
+/tau
+/tau.exe
 
 # go
 *.test
