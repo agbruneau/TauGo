@@ -4,6 +4,36 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.0.4-alpha] — 2026-05-24
+
+M3 : cinq invariants I1-I5 encodés et fuzzés, étape 8 dispatcher (`EvaluateInvariants → Trace.UnmodeledObservations`), gardes anti-patrons #1/#3/#4 par test. Smoke fuzz 5 s vert sur 5 cibles. Couverture `tau/invariants` 91.2 %.
+
+### Ajouté
+
+- `internal/tau/invariants/` (nouveau package) : `evaluator.go` (types `Status`, `Statuses`, `EvaluateInvariants`), `i1_conservation.go` + `Conserve`, `i2_irreductibility.go` + `Residu`/`Recablage`, `i3_authority_asymmetry.go` + `IsProfileExpired` + `EvaluateI3WithClock` + constante `I3PerimptionLimite` (2027-01-01 UTC), `i4_coherence.go` + `IsIncoherent`, `i5_composition.go` + `AngleMort`/`Pile`/`Aggregate`/`M`/`BoundsHold` (API d'agrégation calculée en V1 — la mention « V2 calcule » du PRD §6.1 est levée).
+- `internal/tau/invariants/fuzz_targets_test.go` : 5 cibles fuzz `FuzzI1_Conservation`, `FuzzI2_Irreductibilite`, `FuzzI3_AsymetrieAutorite`, `FuzzI4_CoherenceContrainte`, `FuzzI5_CompositionConjonctive`. Smoke 5 s : I1 8.6M, I2 8.6M, I3 8.2M, I4 9.5M, I5 701K exécutions, 0 crash.
+- `internal/tau/invariants/testdata/fuzz/FuzzI*/seed-*` : corpus seeds checked-in (3 seeds/cible) + 1 cas de régression FuzzI5 (`bf9c5ac437b95a58`).
+- `internal/orchestration/dispatcher.go` : étape 8 du pseudo-algo PRD §10 — `invariants.EvaluateInvariants(x, dec)` ; `AnyViolated() → append(Summary())` dans `Trace.UnmodeledObservations`. Régime et Diagnostic intouchés.
+- `internal/orchestration/dispatcher_invariants_test.go` : 3 tests (no violation, violation détectée, régime préservé).
+- `internal/anti_patterns_test.go` : `TestNoPredictiveAPI` (parse AST des 4 packages, regex `^(Predict|Expected|Forecast)`), `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported`.
+- `internal/arch_test.go` : règle `tau/invariants` étendue (3 deny : `tau/dimensions`, `orchestration`, `bridge`).
+- `internal/tau/invariants/evaluator_test.go` : `TestStatus_String` couvre les 4 valeurs.
+- `docs/theory/05-invariants.md` : renvoi croisé chap. III.8.5 — verbatims I1-I5, reformulations exécutables, conditions de réfutation, helpers Go, marqueurs épistémiques.
+- `docs/empirical/fuzz-summary.md` : rapport empirique M3 — méthodologie, résultats par cible, découvertes, limites V1, prochaines étapes.
+- `docs/superpowers/plans/2026-05-24-M3-invariants-fuzz.md` : sous-plan détaillé M3 (2047 l., 11 tâches bite-sized).
+
+### Corrigé
+
+- `internal/tau/invariants/i5_composition.go` : `BoundsHold` utilisait `len(layer)` (longueur slice) au lieu de la cardinalité ensembliste. Détecté par `FuzzI5_CompositionConjonctive` sur une pile `[["z","z"]]` (commit `7b4739c`). Calque le pattern FibGo « fuzz-discovered fix avant feat ».
+
+### Notes
+
+- Race detector indisponible sur Windows local (CGO/gcc) ; CI Linux/macOS couvre. Smoke fuzz 5 s sur dev, 30 s sur CI via `make fuzz`, 24 h hebdo via `make fuzz-long`.
+- Étape 3 du dispatcher (péremption `today > date_revision`) reportée à M5 ; la propriété est gardée au niveau `Profile` en M3 (`TestI3_DateRevisionRespectee`).
+- `EvaluateI5` retourne `Held` par construction V1 (pile d'angles morts non attachée à `Decision` avant V2) ; les bornes algébriques `max(|Aᵢ|) ≤ M(π) ≤ Σ|Aⱼ|` sont exercées directement par `FuzzI5` via `BoundsHold`.
+- Revue intégrée M3 : APPROVE_WITH_CONCERNS. Observations résiduelles (info, non-bloquantes) reportées : couverture branche `EvaluateI2` zero-residue, vitesse FuzzI5 décodage byte-slice, couplage indirect `TestUnmodeledObservationsReported` ↔ `TestStep8_*`.
+- Anti-patron #2 (hors frontière) toujours gardé par `TestFrontierCheck_*` (M0).
+
 ## [0.0.3-alpha] — 2026-05-23
 
 M2 : trois dimensions (D-SENS, D-AUTORITÉ, D-INVARIANT) calculables, gardes ontologique I3 et cohérence I4 actives, pseudo-algo PRD §10 complet (étapes 1-7), Profile et AtomicThresholds. Couverture globale 92.2%.
