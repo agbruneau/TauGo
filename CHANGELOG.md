@@ -4,6 +4,38 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.0.3-alpha] — 2026-05-23
+
+M2 : trois dimensions (D-SENS, D-AUTORITÉ, D-INVARIANT) calculables, gardes ontologique I3 et cohérence I4 actives, pseudo-algo PRD §10 complet (étapes 1-7), Profile et AtomicThresholds. Couverture globale 92.2%.
+
+### Ajouté
+
+- `internal/tau/operator.go` : types `Principal`, `Capability`, `DiscoveryMode` (Static / DynamicMCP / DynamicA2A / DynamicAGNTCY) ; champs `Exchange.Initiator`, `Exchange.Target` ; `TraceThresholds` étendu (`AuthBlock`, `SensCoherence`, `InvCoherence`).
+- `internal/tau/dimensions/` (nouveau package) : `score.go` (type `Score` partagé + `clamp01`), `dsens.go` + tests (4 sondes PRD §5.1), `dauthority.go` + tests (4 sondes PRD §5.2 + asymétrie ontologique), `dinvariant.go` + tests (4 sondes PRD §5.3 + contrainte I4).
+- `internal/orchestration/dispatcher.go` : refonte M2 — `frontierFromExchange` heuristique (remplace placeholder M1) ; étape 2 garde ontologique D-AUTORITÉ (Refus I3) ; étape 4 scores des 3 dimensions ; étape 5 garde I4 ; étape 6 composite pondéré ; étape 7 hystérèse. Pseudo-algo PRD §10 étapes 1-7 complet.
+- `internal/orchestration/thresholds.go` : étendu (`AuthBlock`, `SensCoherence`, `InvCoherence`) + `DefaultThresholds()`.
+- `internal/orchestration/guards_test.go` : `TestRefusOntologiqueDAUTORITE`, `TestI4_IncoherenceDetectee`, `TestOntologicalGuardPassesWithAttestation`, `TestI4_CoherentCombinationAccepted`.
+- `internal/calibration/profile.go` : `Profile`, `Weights`, `Thresholds` (PRD §11.3) + `DefaultProfile()` (DateRevision 2026-12-01, version monographie v2.4.3).
+- `internal/calibration/thresholds_atomic.go` : `AtomicThresholds` calque FibGo `bigfft/fft.go` — `atomic.Int64` privés en milli-unités, accesseurs lecture, `SetTuning` coordonné, panic sentinel sur ordering violation, `Snapshot()` immuable.
+- `internal/app/app.go` : utilise `orchestration.DefaultThresholds()` au lieu de hard-coded.
+- `cmd/tau/main_test.go` : E2E adapté pour exchanges M2 (Initiator + Target inclus).
+- `.golangci.yml` : termes français ajoutés au misspell ignore (combinaison, incohérente, détectée, frontière, verrou, ontologique).
+- `docs/theory/04-dimensions.md` (170 l.) : renvoi croisé chap. III.8.4 — 3 dimensions, sondes, encodage Go, asymétrie ontologique (Searle 1995), contrainte I4.
+- `docs/empirical/M2-sample-decisions.md` (397 l.) : 10 décisions tracées via `tau decide`, ventilation des scores par dimension, couvre tous les chemins (frontier refus, I3, I4, deterministe, probabiliste, hystérèse).
+- `docs/superpowers/plans/2026-05-23-M2-dimensions-gardes.md` (2416 l.) : sous-plan détaillé M2.
+
+### Modifié
+
+- Tests dispatcher et invariants Decision adaptés pour le frontier heuristique M2 (les fixtures M1 fournissaient des Exchange sans Initiator/Target, qui maintenant tombent hors frontière par défaut).
+- `TestDefaultLLMIsStub` adapté — vérification par déterminisme TauScore plutôt que comparaison directe au score Stub (le composite M2 ne se réduit plus à la sonde LLM seule).
+
+### Notes
+
+- Couverture par package : `tau/dimensions` 41.8 %, `orchestration` ≥ 80 %, `calibration` 100 %, `tau` 0.7 % (le code tau est mostly types/interface, sans logique testable directement — testée indirectement via dimensions et orchestration).
+- M2.10 `docs/empirical/M2-sample-decisions.md` constitue le premier corpus de référence pour la calibration M5.
+- Atomic accessors prêts pour la concurrence M5 (test `TestAtomicThresholds_ConcurrentReadsSafe` valide 100 goroutines).
+- Anti-patrons à venir en M3 : `TestNoPredictiveAPI`, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported`.
+
 ## [0.0.2-alpha] — 2026-05-23
 
 M1 : dispatcher minimal + stub LLM. `tau decide` rend une `Decision` instrumentée. Cinq tests d'invariants `Decision`. Couverture globale 83.9 % (> 80 % gate).
