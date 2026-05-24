@@ -1,0 +1,6 @@
+go test fuzz v1
+string("e-dyn-a2a")
+string("negotiate")
+uint8(3)
+uint8(1)
+bool(false)

@@ -1,0 +1,7 @@
+go test fuzz v1
+string("x")
+string("intent")
+uint8(3)
+uint8(5)
+bool(false)
+int8(1)

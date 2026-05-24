@@ -1,0 +1,7 @@
+go test fuzz v1
+string("e-seed-1")
+string("compute")
+uint8(1)
+uint8(0)
+bool(false)
+int8(0)
