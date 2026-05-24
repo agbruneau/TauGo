@@ -22,10 +22,19 @@ func TestFrontierCheck_Inside_OneConditionMet_Refused(t *testing.T) {
 		name string
 		f    FrontierCheck
 	}{
-		{"universOuvert=false", FrontierCheck{false, true, true, true}},
-		{"compositionVariable=false", FrontierCheck{true, false, true, true}},
-		{"pairProbabiliste=false", FrontierCheck{true, true, false, true}},
-		{"coutNonBorne=false", FrontierCheck{true, true, true, false}},
+		{"allFalse", FrontierCheck{}}, // zero value — ordinary deterministic call, outside frontier
+		{"universOuvert=false", FrontierCheck{
+			UniversOuvert: false, CompositionVariable: true, PairProbabiliste: true, CoutNonBorne: true,
+		}},
+		{"compositionVariable=false", FrontierCheck{
+			UniversOuvert: true, CompositionVariable: false, PairProbabiliste: true, CoutNonBorne: true,
+		}},
+		{"pairProbabiliste=false", FrontierCheck{
+			UniversOuvert: true, CompositionVariable: true, PairProbabiliste: false, CoutNonBorne: true,
+		}},
+		{"coutNonBorne=false", FrontierCheck{
+			UniversOuvert: true, CompositionVariable: true, PairProbabiliste: true, CoutNonBorne: false,
+		}},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
