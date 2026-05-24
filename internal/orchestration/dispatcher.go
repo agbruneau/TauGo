@@ -111,6 +111,9 @@ func (d *Dispatcher) Decide(ctx context.Context, x tau.Exchange) (tau.Decision, 
 
 	// Step 3 — Profile expiry guard (PRD §10, §7.1 C3, anti-pattern #3).
 	// Only active when a Profile was supplied via NewDispatcherWithProfile.
+	// Uses After (strict): today == dateRevision is NOT a hard refusal here.
+	// calibration.CheckDrift uses !Before (>=), firing one day earlier as an
+	// early warning. This asymmetry is deliberate; see drift.go CheckDrift.
 	if d.profile != nil && !d.profile.DateRevision.IsZero() && d.now().After(d.profile.DateRevision) {
 		return refusDecision(x, "profil périmé — veille requise", frontier, tt, durationNs(start)), nil
 	}

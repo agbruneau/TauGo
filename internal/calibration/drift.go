@@ -97,6 +97,12 @@ func CheckDrift(current Profile, now time.Time, env Env) DriftReport {
 		)
 	}
 
+	// Deliberate asymmetry with the dispatcher (orchestration.Dispatcher step 3):
+	// !now.Before(dateRevision) fires on the day of expiry itself (today == dateRev
+	// triggers drift), whereas the dispatcher uses now.After(dateRevision) and
+	// only blocks the day after. This gives one extra day of early warning before
+	// the hard refusal kicks in (PRD §11.4 last sentence). See also:
+	// internal/orchestration/dispatcher.go step 3 comment.
 	if !now.Before(current.DateRevision) {
 		report.Criteria = append(report.Criteria, DriftDateExpired)
 		report.Details[DriftDateExpired] = fmt.Sprintf(

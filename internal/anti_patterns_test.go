@@ -112,6 +112,10 @@ func TestI3_DateRevisionRespectee(t *testing.T) {
 //
 // V1 check: verifies Statuses.Summary produces non-empty, well-formed strings
 // that can be threaded into Trace.UnmodeledObservations.
+//
+// Full end-to-end guard (dispatcher → Trace.UnmodeledObservations) is covered
+// by TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched in
+// internal/orchestration/dispatcher_invariants_test.go.
 func TestUnmodeledObservationsReported(t *testing.T) {
 	t.Parallel()
 	s := invariants.Statuses{

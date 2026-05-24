@@ -97,12 +97,17 @@ func countAgreement(corpus []CorpusEntry, t Thresholds) int {
 // of the dispatcher logic (M3); it intentionally omits LLM calls because
 // all scores are pre-computed in the corpus.
 //
+// Naming note: "Deterministe" and "Probabiliste" reflect confidence in the
+// decision, not the raw score magnitude. A high SensScore means the kernel is
+// confident enough to commit deterministically; a moderate score keeps the
+// regime probabilistic. PRD §4 (frontier) and §10 (algorithm) define the
+// semantics.
+//
 // Rule order mirrors PRD §10 dispatcher steps 2–7:
 //  1. refus_authority — AuthorityScore >= AuthBlock without attestation
 //  2. refus_i4        — incoherence: low SensScore and high InvariantScore
-//  3. deterministe    — SensScore >= Deterministe
-//  4. probabiliste    — SensScore >= Probabiliste threshold (inverted meaning:
-//     Probabiliste is the upper gate; below it but above Deterministe = prob)
+//  3. deterministe    — SensScore >= Probabiliste threshold (high confidence)
+//  4. probabiliste    — SensScore >= Deterministe threshold (moderate confidence)
 //  5. default         — probabiliste
 func simulate(e CorpusEntry, t Thresholds) string {
 	if e.AuthorityScore >= t.AuthBlock && !e.HasAttestation {

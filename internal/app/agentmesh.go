@@ -66,6 +66,12 @@ func discoveryModeFromString(s string) tau.DiscoveryMode {
 // It starts adapter.Stream and transforms each AgentMeshExchange to tau.Exchange
 // in a goroutine. Errors from the adapter are forwarded verbatim. Both output
 // channels are closed when the source stream drains or ctx is canceled.
+//
+// Cancellation: if ctx is canceled before EOF, the conversion goroutine stops
+// and closes the exchanges channel; the error channel (errs) is passed through
+// directly from the adapter and may still emit a brief burst of errors before
+// the adapter itself closes it. Callers must drain errs after the exchanges
+// channel closes to avoid goroutine leaks in the adapter layer.
 func StreamAsTauExchanges(
 	ctx context.Context,
 	adapter agentmeshkafka.Adapter,

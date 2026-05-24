@@ -26,7 +26,12 @@ const (
 	I4FalseNegative
 
 	// OtherRefusal: the decision is a Refus with a non-I4 diagnostic (frontier,
-	// I3, etc.). I4 classification is not applicable.
+	// I3, expired profile, etc.). I4 classification is not applicable.
+	//
+	// V1 aggregates all non-I4 refusals under this single bucket. A finer
+	// ventilation into distinct causes (e.g. frontier refusal vs. I3 ontological
+	// lock vs. expired profile) is planned for M4-bis once the empirical corpus
+	// provides enough samples per cause to measure their individual rates.
 	OtherRefusal
 
 	// Unmodeled: none of the above categories applies. Appended to the

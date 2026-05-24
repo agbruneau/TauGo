@@ -36,6 +36,11 @@ func TestAdapter_StreamSignature(t *testing.T) {
 	// Compile-time: an Adapter.Stream returns the documented channel types.
 	// Use a concrete *FileAdapter (which is always non-nil when allocated) to
 	// exercise the type assertion without a dead nil-branch.
+	//
+	// The zero-value &FileAdapter{} has no open file; Stream with an empty
+	// filename path calls os.Open(""), which fails silently on the error
+	// channel and closes both channels immediately. This is intentional: the
+	// test verifies the channel-type contract, not the streaming behavior.
 	var a agentmeshkafka.Adapter = &agentmeshkafka.FileAdapter{}
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()

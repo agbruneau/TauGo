@@ -139,7 +139,9 @@ func TestEmpiricalI4Campaign(t *testing.T) {
 
 // toEmpiricalDecision computes dimension scores for exchange x (mirroring what
 // the dispatcher does) and builds the EmpiricalDecision used for classification.
-// The external test package may import tau/dimensions directly (no arch violation).
+// The external test package may import tau/dimensions directly: arch_test.go
+// (line 93) excludes _test.go files from the bridge-isolation walk, so this
+// import is permitted.
 func toEmpiricalDecision(ctx context.Context, x tau.Exchange, dec tau.Decision, th orchestration.Thresholds) agentmeshkafka.EmpiricalDecision {
 	sensScore, _ := dimensions.ScoreDSens(ctx, x, dimensions.DefaultSensWeights(), nil)
 	invScore, _ := dimensions.ScoreDInvariant(ctx, x, dimensions.DefaultInvariantWeights())

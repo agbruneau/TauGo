@@ -86,6 +86,13 @@ func BoundsHold(p Pile) bool {
 // coupling between tau.Decision and the layer-stack concept before the Trace
 // type is extended.
 //
+// FuzzI5 throughput note: the fuzzer decodes a raw byte slice into a variable-
+// length Pile of AngleMort slices, which is heavier than simple scalar decoding.
+// This reduces observed throughput (roughly 700K executions/s vs 8M for scalar
+// fuzz targets). The 30 s CI window (-fuzztime=30s) provides adequate coverage
+// of the union and bounds properties; a V2 corpus-seeding pass is tracked as a
+// performance refinement, not a correctness blocker.
+//
 // Status: Probable (chap. III.8.5).
 func EvaluateI5(_ tau.Exchange, _ tau.Decision) Status {
 	// V1: stack not reified in Trace. Held by construction; fuzz verifies
