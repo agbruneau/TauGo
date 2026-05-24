@@ -638,16 +638,21 @@ tau calibrate \
 
 ### 12.1 `AgentMeshKafka` — validateur empirique
 
+Le pont expose un DTO local `AgentMeshExchange` (miroir nominal de `tau.Exchange`, type délibérément distinct) afin de préserver l'étanchéité Clean Architecture : `arch_test.go` interdit `bridge/agentmeshkafka → tau` (lignes 32-34). La conversion vers `tau.Exchange` est hébergée en `internal/app/agentmesh.go` via `app.ToTauExchange` et `app.StreamAsTauExchanges`, seule couche autorisée à voir simultanément `bridge/*` et `tau/*`. *(ADR-0005)*
+
 ```go
 package agentmeshkafka
 
+// AgentMeshExchange est un DTO local — miroir nominal de tau.Exchange mais
+// type délibérément distinct (ADR-0005, étanchéité Clean Architecture).
+// La conversion vers tau.Exchange est hébergée en internal/app/agentmesh.go.
 type Adapter interface {
-    Stream(ctx context.Context, topics []string) (<-chan tau.Exchange, <-chan error)
+    Stream(ctx context.Context, topics []string) (<-chan AgentMeshExchange, <-chan error)
     Close() error
 }
 ```
 
-*Statut : hypothèse — dépend de la stabilité d'AgentMeshKafka au moment de M4. Mock intermédiaire en attendant.*
+*Statut : Confirmé par ADR-0005 (DTO neutre, M4). La signature initiale qui retournait `tau.Exchange` violait `arch_test.go` ligne 32 — corrigée en M4. Dépendance résiduelle : stabilité du schéma AgentMeshKafka. (Hypothèse — dépend de la stabilité d'AgentMeshKafka au-delà de M4.)*
 
 ### 12.2 `LLMClient` injecté
 
