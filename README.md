@@ -13,7 +13,7 @@ TauGo implémente le **kernel exécutable de l'opérateur τ** défini au chapit
 *Interopérabilité Agentique en Écosystème d'Entreprise* (`agbruneau/InteroperabiliteAgentique` v2.4.3,
 *(chap. III.8)*).
 
-L'API publique unique est :
+L'API publique unique est :
 
 ```go
 // Decide est l'unique point de décision public. Renvoie Deterministe,
@@ -22,12 +22,12 @@ L'API publique unique est :
 func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 ```
 
-**Régimes de sortie** : `Deterministe | Probabiliste | Refus`.
+**Régimes de sortie** : `Deterministe | Probabiliste | Refus`.
 
 **Opérateur τ** -- déplace l'instant de fixation `t_fix(g)`, jamais le contenu de la grandeur `g`.
 τ décide *où* le sens, l'autorité et le support se fixent, donc *avec quoi* appeler.
 
-**Trois dimensions** *(III.8.4)* :
+**Trois dimensions** *(III.8.4)* :
 
 | Dimension | Sémantique | Plage |
 |---|---|---|
@@ -35,8 +35,8 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 | D-AUTORITE | Portée de la chaîne de délégation | [0,1] |
 | D-INVARIANT | Support des invariants d'intégration | [0,1] |
 
-**Cinq invariants réfutables** *(III.8.5)* : I1 conservation, I2 irréductibilité, I3 asymétrie
-d'autorité, I4 cohérence, I5 composition conjonctive. Marqueurs épistémiques :
+**Cinq invariants réfutables** *(III.8.5)* : I1 conservation, I2 irréductibilité, I3 asymétrie
+d'autorité, I4 cohérence, I5 composition conjonctive. Marqueurs épistémiques :
 voir [§7 Statut des invariants](#7-statut-des-invariants).
 
 **Frontière de validité** -- τ ne s'applique qu'aux échanges satisfaisant simultanément les
@@ -47,7 +47,7 @@ Aucun fallback silencieux.
 
 ## 2. Anti-objectifs
 
-TauGo **n'est pas** *(PRD §3.3)* :
+TauGo **n'est pas** *(PRD §3.3)* :
 
 - un framework agentique ou un orchestrateur d'agents
 - un wrapper LLM ou un service réseau
@@ -68,7 +68,7 @@ make all                     # lint + test + build (Linux/macOS)
 ./tau --help
 ```
 
-Sous Windows sans `make` :
+Sous Windows sans `make` :
 
 ```bash
 go build -trimpath -o tau.exe ./cmd/tau
@@ -76,13 +76,13 @@ go test -short ./...
 golangci-lint run ./...
 ```
 
-Décision depuis stdin JSON :
+Décision depuis stdin JSON :
 
 ```bash
 echo '{"id":"e-1","intent_description":"creative generation","universe_open":true,"composition_variable":true,"peer_probabilistic":true,"cost_unbounded":true}' | ./tau decide
 ```
 
-Calibration reproductible byte-identique (M5) :
+Calibration reproductible byte-identique (M5) :
 
 ```bash
 make calibrate ARGS="--corpus tests/calibration/golden-corpus.jsonl \
@@ -91,7 +91,7 @@ make calibrate ARGS="--corpus tests/calibration/golden-corpus.jsonl \
                      --date-revision 2026-12-01"
 ```
 
-Remarque : `-race` nécessite CGO (gcc). Les runners Linux/macOS CI l'activent ; sous
+Remarque : `-race` nécessite CGO (gcc). Les runners Linux/macOS CI l'activent ; sous
 Windows sans gcc local, utiliser `go test -short ./...`.
 
 ---
@@ -140,8 +140,8 @@ Etancheite gardée par `internal/arch_test.go`. Détail dans [docs/adr/0001-clea
 +----------------------+  +-------------------------+
 ```
 
-Regles d'etancheite : `tau/* → orchestration`, `tau/* → bridge`, `bridge → tau/*` direct,
-et `dimensions <-> invariants` : tous interdits. Violation = `arch_test.go` rouge.
+Regles d'etancheite : `tau/* → orchestration`, `tau/* → bridge`, `bridge → tau/*` direct,
+et `dimensions <-> invariants` : tous interdits. Violation = `arch_test.go` rouge.
 
 ---
 
@@ -163,7 +163,7 @@ echo '{"id":"e-in","intent_description":"creative generation with open capabilit
   | ./tau decide
 ```
 
-Codes de sortie : `0` = succes, `2` = entree invalide, `3` = Refus, `4` = erreur interne.
+Codes de sortie : `0` = succes, `2` = entree invalide, `3` = Refus, `4` = erreur interne.
 
 ### B. `tau calibrate` -- reproductibilite byte-identique (M5)
 
@@ -219,7 +219,7 @@ make empirical-i4          # campagne empirique I4 sur 120 traces (tag 'empirica
 
 ## 6. Etat V0.1.0
 
-Tous les milestones M0-M6 ont ete livres. Version courante : `v0.1.0-alpha` (a tagger apres M6).
+Tous les milestones M0-M6 ont ete livres. Version courante : `v0.1.0-alpha` (a tagger apres M6).
 
 | Milestone | Date | Tag | Contenu | Statut |
 |---|---|---|---|---|
@@ -231,7 +231,7 @@ Tous les milestones M0-M6 ont ete livres. Version courante : `v0.1.0-alpha` (a t
 | M5 | 2026-05-24 | v0.0.6-alpha | Calibration adaptative, drift, `tau calibrate` | livre |
 | M6 | 2026-05-24 | v0.1.0 (cible) | ADR 0001-0005, docs theory/empirical, README final | en cours |
 
-**V0.2+ envisage** : KafkaAdapter reel (bascule Regime A), calibration des poids par gradient
+**V0.2+ envisage** : KafkaAdapter reel (bascule Regime A), calibration des poids par gradient
 (V2 `CalibrateWeights`), fenetre glissante drift, TUI Bubble Tea (`tau-stack`).
 
 ---
@@ -239,18 +239,18 @@ Tous les milestones M0-M6 ont ete livres. Version courante : `v0.1.0-alpha` (a t
 ## 7. Statut des invariants
 
 Marqueurs epitemiques conformes a `InteroperabiliteAgentique/CLAUDE.md §1.4`.
-Detail et conditions de refutation : [docs/theory/05-invariants.md](docs/theory/05-invariants.md)
+Detail et conditions de refutation : [docs/theory/05-invariants.md](docs/theory/05-invariants.md)
 *(chap. III.8.5)*.
 
 | # | Enonce court | Statut | Cible fuzz |
 |---|---|---|---|
 | I1 | τ conserve la grandeur (deplace `t_fix`, pas le contenu) | Probable | `FuzzI1_Conservation` |
 | I2 | Residu migrant non vide, non recablable hors ligne | Confirme | `FuzzI2_Irreductibilite` |
-| I3 | D-AUTORITE asymetrique (fait institutionnel -- Searle 1995) ; sans `AttestationInstitutionnelle` → refus ontologique. Veille trimestrielle ; date 2026-05-16. | Probable | `FuzzI3_AsymetrieAutorite` |
-| I4 | `i ≈ pendant ⟹ s ≈ pendant` ; configuration incoherente → refus | Hypothese | `FuzzI4_CoherenceContrainte` |
-| I5 | Pile composee herite de la conjonction ; `M(π) >= max(|Ai|)` | Probable | `FuzzI5_CompositionConjonctive` |
+| I3 | D-AUTORITE asymetrique (fait institutionnel -- Searle 1995) ; sans `AttestationInstitutionnelle` → refus ontologique. Veille trimestrielle ; date 2026-05-16. | Probable | `FuzzI3_AsymetrieAutorite` |
+| I4 | `i ≈ pendant ⟹ s ≈ pendant` ; configuration incoherente → refus | Hypothese | `FuzzI4_CoherenceContrainte` |
+| I5 | Pile composee herite de la conjonction ; `M(π) >= max(|Ai|)` | Probable | `FuzzI5_CompositionConjonctive` |
 
-I4 reste a statut **Hypothese** : le corpus synthétique M4 n'injecte pas les clés `Context`
+I4 reste a statut **Hypothese** : le corpus synthétique M4 n'injecte pas les clés `Context`
 qui pilotent D-INVARIANT au-dessus du seuil `θ_inv`. Voir [docs/empirical/I4-report.md](docs/empirical/I4-report.md).
 
 ---
@@ -288,8 +288,8 @@ qui pilotent D-INVARIANT au-dessus du seuil `θ_inv`. Voir [docs/empirical/I4-re
 ### Empirique
 
 - [`docs/empirical/M2-sample-decisions.md`](docs/empirical/M2-sample-decisions.md) -- 10 decisions tracees, ventilation scores par dimension
-- [`docs/empirical/fuzz-summary.md`](docs/empirical/fuzz-summary.md) -- rapport fuzz M3 : resultats I1-I5, 0 crash
-- [`docs/empirical/I4-report.md`](docs/empirical/I4-report.md) -- campagne I4 : 120 traces, statut Hypothese inchange
+- [`docs/empirical/fuzz-summary.md`](docs/empirical/fuzz-summary.md) -- rapport fuzz M3 : resultats I1-I5, 0 crash
+- [`docs/empirical/I4-report.md`](docs/empirical/I4-report.md) -- campagne I4 : 120 traces, statut Hypothese inchange
 - [`docs/empirical/I4-regime.md`](docs/empirical/I4-regime.md) -- regime B (contingence), conditions de bascule vers A
 - [`docs/empirical/unmodeled.md`](docs/empirical/unmodeled.md) -- 3 observations non modelisees (OBS-001 a OBS-003)
 - [`docs/empirical/case-study-bfsi.md`](docs/empirical/case-study-bfsi.md) -- cas d'usage BFSI anonymise (M6)
@@ -300,22 +300,22 @@ qui pilotent D-INVARIANT au-dessus du seuil `θ_inv`. Voir [docs/empirical/I4-re
 
 | Composant | Version | Note |
 |---|---|---|
-| Go | 1.25+ (toolchain 1.26.x) | Aligne FibGo ; `go.mod` authoritative |
-| golangci-lint | v1.64.8 | Epingle ; 24 linters ; calque FibGo |
-| Fuzz | natif Go (`testing.F`) | I1-I5 ; 30 s CI, 24 h nocturne |
+| Go | 1.25+ (toolchain 1.26.x) | Aligne FibGo ; `go.mod` authoritative |
+| golangci-lint | v1.64.8 | Epingle ; 24 linters ; calque FibGo |
+| Fuzz | natif Go (`testing.F`) | I1-I5 ; 30 s CI, 24 h nocturne |
 | Build reproductible | `-trimpath -ldflags="-buildid= -X main.buildTimestamp=1778889600"` | Byte-identique a timestamp gele |
 | Cross-compile | linux × {amd64,arm64}, darwin × {amd64,arm64}, windows × amd64 | `make build-all` |
 | CI | GitHub Actions -- 3 OS (ubuntu, windows, macos) | `make test && make lint && make fuzz` |
-| Race detector | CGO requis | Actif Linux/macOS CI ; Windows couvert via runner GH |
+| Race detector | CGO requis | Actif Linux/macOS CI ; Windows couvert via runner GH |
 
 ---
 
 ## 10. Cadence de revue
 
-Conformement au PRD §16 :
+Conformement au PRD §16 :
 
-- **Mensuelle (scope)** : revue des limites V1 contre nouvelles traces empiriques ; mise a jour de `docs/empirical/unmodeled.md`.
-- **Trimestrielle (I3)** : veille sur l'invariant I3 (asymetrie d'autorite -- Searle 1995). Le profil porte `DateRevision` ; un profil perime entraîne `Refus` automatique (anti-patron #3, etape 3 dispatcher). Alerte CI a 30 jours avant peremption.
+- **Mensuelle (scope)** : revue des limites V1 contre nouvelles traces empiriques ; mise a jour de `docs/empirical/unmodeled.md`.
+- **Trimestrielle (I3)** : veille sur l'invariant I3 (asymetrie d'autorite -- Searle 1995). Le profil porte `DateRevision` ; un profil perime entraîne `Refus` automatique (anti-patron #3, etape 3 dispatcher). Alerte CI a 30 jours avant peremption.
 
 ---
 
@@ -328,7 +328,7 @@ Apache-2.0. Voir [LICENSE](LICENSE).
 ## 12. Cosignature IA
 
 TauGo a ete concu et realise en collaboration avec Claude (Anthropic), en tant que co-auteur
-technique de l'implementation. Chaque commit produit par un agent IA porte la mention :
+technique de l'implementation. Chaque commit produit par un agent IA porte la mention :
 
 ```
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
@@ -339,5 +339,5 @@ Cette pratique est conforme a la politique editoriale du projet
 
 ---
 
-*TauGo V0.1.0 -- 2026-05-24. Reference canonique : `agbruneau/InteroperabiliteAgentique` v2.4.3,
-chap. III.8. Spec complete : [`PRD.md`](PRD.md).*
+*TauGo V0.1.0 -- 2026-05-24. Reference canonique : `agbruneau/InteroperabiliteAgentique` v2.4.3,
+chap. III.8. Spec complete : [`PRD.md`](PRD.md).*

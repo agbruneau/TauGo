@@ -1,10 +1,10 @@
 # PRD — TauGo
 
-**Projet** : TauGo — kernel exécutable Go de l'opérateur τ et validateur empirique des invariants I1-I5
-**Auteur** : André-Guy Bruneau, M.Sc. **·** **Date** : 2026-05-23 **·** **Statut** : V0.2 (refactorisé)
-**Référence canonique** : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8 (monographie : opérateur τ, dimensions D-SENS/D-AUTORITÉ/D-INVARIANT, invariants I1-I5)
-**Référence d'ingénierie** : `agbruneau/FibGo` (Clean Architecture, calibration adaptative, fuzz, déterminisme byte-identique)
-**Référence empirique** : `agbruneau/AgentMeshKafka` (substrat de validation, traces réelles)
+**Projet** : TauGo — kernel exécutable Go de l'opérateur τ et validateur empirique des invariants I1-I5
+**Auteur** : André-Guy Bruneau, M.Sc. **·** **Date** : 2026-05-23 **·** **Statut** : V0.2 (refactorisé)
+**Référence canonique** : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8 (monographie : opérateur τ, dimensions D-SENS/D-AUTORITÉ/D-INVARIANT, invariants I1-I5)
+**Référence d'ingénierie** : `agbruneau/FibGo` (Clean Architecture, calibration adaptative, fuzz, déterminisme byte-identique)
+**Référence empirique** : `agbruneau/AgentMeshKafka` (substrat de validation, traces réelles)
 
 ---
 
@@ -24,26 +24,26 @@
 
 ## 1. Finalité
 
-TauGo implémente le **kernel exécutable de l'opérateur τ** défini au chap. III.8 de la monographie. Il bâtit le pont entre :
+TauGo implémente le **kernel exécutable de l'opérateur τ** défini au chap. III.8 de la monographie. Il bâtit le pont entre :
 
-- la **théorie** — τ comme opérateur de migration de l'instant de fixation, trois dimensions, cinq invariants réfutables *(chap. III.8.3-8.5)* ;
-- l'**empirie** — `AgentMeshKafka` comme substrat de validation contre traces réelles ;
-- l'**ingénierie** — `FibGo` comme calque opérationnel : dispatch multi-mode, calibration adaptative versionnée, fuzz, build reproductible byte-identique.
+- la **théorie** — τ comme opérateur de migration de l'instant de fixation, trois dimensions, cinq invariants réfutables *(chap. III.8.3-8.5)* ;
+- l'**empirie** — `AgentMeshKafka` comme substrat de validation contre traces réelles ;
+- l'**ingénierie** — `FibGo` comme calque opérationnel : dispatch multi-mode, calibration adaptative versionnée, fuzz, build reproductible byte-identique.
 
 **Livrable empirique du Calcul d'Intégration Agentique (CIA)** — instrument d'épreuve du modèle, pas le modèle.
 
 ### 1.1 Posture épistémique et marqueurs d'incertitude
 
-TauGo hérite intégralement de la posture du chap. III.8.2 : *le modèle τ vaut par ce qu'il rend pensable, non par ce qu'il garantit.* Validation visée = **structurelle**, pas prédictive. Toute prétention prédictive serait une dénaturation *(anti-patron §7.2)*.
+TauGo hérite intégralement de la posture du chap. III.8.2 : *le modèle τ vaut par ce qu'il rend pensable, non par ce qu'il garantit.* Validation visée = **structurelle**, pas prédictive. Toute prétention prédictive serait une dénaturation *(anti-patron §7.2)*.
 
-Convention héritée de `InteroperabiliteAgentique/CLAUDE.md` §1.4, appliquée à tout `docs/`, ADR ou commentaire qui pose une affirmation factuelle datée :
+Convention héritée de `InteroperabiliteAgentique/CLAUDE.md` §1.4, appliquée à tout `docs/`, ADR ou commentaire qui pose une affirmation factuelle datée :
 
 | Marqueur | Sémantique | Application TauGo |
 |---|---|---|
-| **Confirmé** | Source primaire ou résultat déductif | I2 ; chaîne build FibGo (Go 1.25+, golangci-lint, race) ; horodatage gelé |
-| **Probable** | Inférence solide, signaux convergents | I1, I3, I5 ; choix `errgroup` pour orchestration |
-| **Hypothèse** | Plausible non corroboré | I4 (testable, non testée) ; pondérations initiales des sondes ; capacité d'AgentMeshKafka à servir de validateur M4 |
-| **À vérifier** | Recherche complémentaire requise | Estimation 6-10 semaines ; pertinence de deux profils LLM (raisonnement / outillage) |
+| **Confirmé** | Source primaire ou résultat déductif | I2 ; chaîne build FibGo (Go 1.25+, golangci-lint, race) ; horodatage gelé |
+| **Probable** | Inférence solide, signaux convergents | I1, I3, I5 ; choix `errgroup` pour orchestration |
+| **Hypothèse** | Plausible non corroboré | I4 (testable, non testée) ; pondérations initiales des sondes ; capacité d'AgentMeshKafka à servir de validateur M4 |
+| **À vérifier** | Recherche complémentaire requise | Estimation 6-10 semaines ; pertinence de deux profils LLM (raisonnement / outillage) |
 
 **Une fabrication détectée** (citation, chiffre, API, version, DOI inventés) **invalide le livrable concerné — sans appel.**
 
@@ -55,7 +55,7 @@ Convention héritée de `InteroperabiliteAgentique/CLAUDE.md` §1.4, appliquée 
 
 ### 2.1 Frontière de validité — les 4 conditions classiques toutes violées
 
-τ ne s'applique qu'aux échanges qui satisfont **simultanément** les quatre violations suivantes :
+τ ne s'applique qu'aux échanges qui satisfont **simultanément** les quatre violations suivantes :
 
 | Condition classique | Violation requise |
 |---|---|
@@ -64,17 +64,17 @@ Convention héritée de `InteroperabiliteAgentique/CLAUDE.md` §1.4, appliquée 
 | Pair non probabiliste (déterministe sous contrat) | Pair réellement probabiliste |
 | Coût d'erreur borné et réversible | Coût d'erreur non borné et/ou irréversible |
 
-**Hors frontière → `Refus`** avec diagnostic. Pas de fallback silencieux. Évite la « sur-extension symétrique de la table rase » *(chap. III.8.6.2 C1)*.
+**Hors frontière → `Refus`** avec diagnostic. Pas de fallback silencieux. Évite la « sur-extension symétrique de la table rase » *(chap. III.8.6.2 C1)*.
 
 ### 2.2 Trois dimensions — vue synoptique
 
 | Dimension *(III.8.4)* | Manifestation V1 | Métrique |
 |---|---|---|
-| **D-SENS** | Lieu de fixation du sens : avant / pendant | `[0,1]` — 0 = contrat câblé, 1 = sens négocié à l'exécution |
+| **D-SENS** | Lieu de fixation du sens : avant / pendant | `[0,1]` — 0 = contrat câblé, 1 = sens négocié à l'exécution |
 | **D-AUTORITÉ** | Portée de la chaîne de délégation | `[0,1]` — 0 = courte/intra-domaine/humain ancré, 1 = longue/inter-org/sans humain |
 | **D-INVARIANT** | Support des invariants d'intégration | `[0,1]` — 0 = support figé, 1 = support tracé/négocié pendant |
 
-Sondes et calibration : §5 et §11.
+Sondes et calibration : §5 et §11.
 
 ### 2.3 Sortie discrète et API publique
 
@@ -100,7 +100,7 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 - Bibliothèque Go `internal/tau/` — dispatcher, frontière, opérateur τ formalisé
 - Trois dimensions calculables, sondes nommées, métriques `[0,1]`
 - Cinq invariants I1-I5 sous forme de cibles fuzz `FuzzI*`
-- Calibration adaptative — pattern FibGo : hystérèse, `atomic.Int64`, profils versionnés, invalidation par drift
+- Calibration adaptative — pattern FibGo : hystérèse, `atomic.Int64`, profils versionnés, invalidation par drift
 - Adaptateur `AgentMeshKafka` — validateur empirique end-to-end
 - CLI minimale `cmd/tau/` — dispatch, dump de trace, rapport d'invariants, export de profil
 - CI — `go test -race`, fuzz court, lint, build reproductible byte-identique, cross-compile
@@ -108,8 +108,8 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 
 ### 3.2 Exclus de V1 (reportés)
 
-- **V2 — `cia-runtime`** : mécanisation Lean 4 des invariants *(renvoi HGL — `RechercheFondamentale.md`)*
-- **V3 — `tau-stack`** : TUI Bubble Tea, replay de traces, calibration en charge, dashboard
+- **V2 — `cia-runtime`** : mécanisation Lean 4 des invariants *(renvoi HGL — `RechercheFondamentale.md`)*
+- **V3 — `tau-stack`** : TUI Bubble Tea, replay de traces, calibration en charge, dashboard
 - Couche RAG sur `ruvector.db` — étude séparée
 - Service réseau (gRPC/HTTP) — V1 = lib + CLI uniquement
 - Métrique de pile composée M(π) opérante *(chap. III.8.6.3)* — V1 expose l'API, V2 calcule
@@ -126,7 +126,7 @@ TauGo **n'est pas** un framework agentique · **n'orchestre pas** d'agents · **
 
 ## 4. L'opérateur τ — formalisation exécutable
 
-*Renvoi canonique : chap. III.8.3.*
+*Renvoi canonique : chap. III.8.3.*
 
 ### 4.1 Définition
 
@@ -140,9 +140,9 @@ où `g` est une grandeur d'interopérabilité (sens, autorité, support d'invari
 
 | Propriété *(III.8.3.1)* | Conséquence exécutable |
 |---|---|
-| τ opère sur `t_fix`, jamais sur le contenu de `g` | TauGo ne réécrit pas les capacités ; il décide *quand* leur résolution s'effectue. Base I1. |
+| τ opère sur `t_fix`, jamais sur le contenu de `g` | TauGo ne réécrit pas les capacités ; il décide *quand* leur résolution s'effectue. Base I1. |
 | τ non trivial seulement si `t_fix(g) ≺ t_int` peut être strictement violé sans détruire `g` | TauGo n'applique τ qu'aux échanges dont la migration est elle-même possible. Base I2. |
-| L'application de τ à une grandeur n'entraîne pas mécaniquement son application à une autre | Les trois dimensions sont scoreées **indépendamment** ; seule contrainte : I4 (cohérence). Base de l'orthogonalité. |
+| L'application de τ à une grandeur n'entraîne pas mécaniquement son application à une autre | Les trois dimensions sont scoreées **indépendamment** ; seule contrainte : I4 (cohérence). Base de l'orthogonalité. |
 
 ### 4.3 Encodage exécutable de la frontière
 
@@ -160,18 +160,18 @@ func (f FrontierCheck) Inside() bool {
 }
 ```
 
-**Garde V1** *(M0)* — `Inside() == false` → `Refus(diag: "hors frontière τ")`. Test : `TestRefusHorsFrontiere`.
+**Garde V1** *(M0)* — `Inside() == false` → `Refus(diag: "hors frontière τ")`. Test : `TestRefusHorsFrontiere`.
 
 ### 4.4 Asymétrie ontologique de τ_AUTORITÉ
 
-*Renvoi : chap. III.8.4.2.bis — Searle (1995), faits institutionnels vs protocolaires.*
+*Renvoi : chap. III.8.4.2.bis — Searle (1995), faits institutionnels vs protocolaires.*
 
-τ n'est **pas symétrique** sur ses trois dimensions :
+τ n'est **pas symétrique** sur ses trois dimensions :
 
 - `τ_SENS` et `τ_INVARIANT` — faits protocolaires, instaurables in-band par accord entre pairs. Coûteux mais applicables.
-- `τ_AUTORITÉ` — fait institutionnel ; déplacement vers l'exécution = instaurer un fait sans institution. **Ontologiquement bloqué** sans institution émettrice externe.
+- `τ_AUTORITÉ` — fait institutionnel ; déplacement vers l'exécution = instaurer un fait sans institution. **Ontologiquement bloqué** sans institution émettrice externe.
 
-**Encodage V1** *(M2)* :
+**Encodage V1** *(M2)* :
 
 ```go
 type Attestation struct {
@@ -182,17 +182,17 @@ type Attestation struct {
 }
 ```
 
-`D-AUTORITÉ ≥ θ_auth_block ∧ Attestation == nil` → `Refus(diag: "I3 — verrou ontologique D-AUTORITÉ")`. Test : `TestRefusOntologiqueDAUTORITE`.
+`D-AUTORITÉ ≥ θ_auth_block ∧ Attestation == nil` → `Refus(diag: "I3 — verrou ontologique D-AUTORITÉ")`. Test : `TestRefusOntologiqueDAUTORITE`.
 
 ---
 
 ## 5. Les trois dimensions
 
-*Renvoi canonique : chap. III.8.4. Granularité = **par frontière d'interopérabilité**, pas par système ; un système réel mélange des frontières des deux pôles.*
+*Renvoi canonique : chap. III.8.4. Granularité = **par frontière d'interopérabilité**, pas par système ; un système réel mélange des frontières des deux pôles.*
 
 ### 5.1 D-SENS — lieu de fixation du sens
 
-**Question opérante** *(III.8.4.1)* : *le pair qui consomme une capacité décide-t-il de l'invoquer à partir d'une interprétation produite à l'exécution, ou à partir d'un câblage produit à la conception ?*
+**Question opérante** *(III.8.4.1)* : *le pair qui consomme une capacité décide-t-il de l'invoquer à partir d'une interprétation produite à l'exécution, ou à partir d'un câblage produit à la conception ?*
 
 | Sonde | Indicateur | Poids initial *(à calibrer M4)* |
 |---|---|---|
@@ -201,11 +201,11 @@ type Attestation struct {
 | `S_capability_discovery` | Découverte dynamique (MCP `list_tools`, A2A équivalent) | 0.20 |
 | `S_reasoner_intent` | Interprétation d'intention par raisonneur probabiliste | 0.15 |
 
-`D_SENS = Σ wᵢ · Sᵢ(x)`. *Statut : hypothèse — pondérations initiales, à corroborer sur traces AgentMeshKafka.*
+`D_SENS = Σ wᵢ · Sᵢ(x)`. *Statut : hypothèse — pondérations initiales, à corroborer sur traces AgentMeshKafka.*
 
 ### 5.2 D-AUTORITÉ — portée de la chaîne de délégation
 
-**Question opérante** *(III.8.4.2)* : *la chaîne est-elle longue, dynamique, inter-organisationnelle, sans humain ancré ?*
+**Question opérante** *(III.8.4.2)* : *la chaîne est-elle longue, dynamique, inter-organisationnelle, sans humain ancré ?*
 
 | Sonde | Indicateur | Poids initial |
 |---|---|---|
@@ -218,9 +218,9 @@ type Attestation struct {
 
 ### 5.3 D-INVARIANT — support des invariants d'intégration
 
-**Question opérante** *(III.8.4.3)* : *le support de l'invariant repose-t-il sur un artefact figé avant l'interaction, ou tracé / négocié / observé pendant ?*
+**Question opérante** *(III.8.4.3)* : *le support de l'invariant repose-t-il sur un artefact figé avant l'interaction, ou tracé / négocié / observé pendant ?*
 
-**Contrainte de cohérence** *(III.8.4.5, I4)* — D-INVARIANT est **contraint par D-SENS** : `i ≈ pendant ⟹ s ≈ pendant`. Direction dissymétrique : c'est D-SENS qui contraint D-INVARIANT, jamais l'inverse.
+**Contrainte de cohérence** *(III.8.4.5, I4)* — D-INVARIANT est **contraint par D-SENS** : `i ≈ pendant ⟹ s ≈ pendant`. Direction dissymétrique : c'est D-SENS qui contraint D-INVARIANT, jamais l'inverse.
 
 | Sonde | Indicateur | Poids initial |
 |---|---|---|
@@ -243,17 +243,17 @@ type Attestation struct {
 
 ## 6. Les cinq invariants — reformulation exécutable
 
-*Renvoi canonique : chap. III.8.5. Verbatim disponible dans `InteroperabiliteAgentique/Monographie.md` lignes ~5723-5737.*
+*Renvoi canonique : chap. III.8.5. Verbatim disponible dans `InteroperabiliteAgentique/Monographie.md` lignes ~5723-5737.*
 
 ### 6.1 Tableau-maître
 
 | # | Énoncé monographie | Statut | Reformulation exécutable | Cible fuzz |
 |---|---|---|---|---|
 | **I1** | τ déplace l'instant de fixation d'une grandeur **sans altérer la grandeur** | Probable | Pour tout échange `x` admissible, `Conserve(x, τ(x)) == true` *(égalité modulo équivalence métier déclarée)* | `FuzzI1_Conservation` |
-| **I2** | Le résidu migrant est **non vide et non recâblable hors ligne** sans détruire l'agentivité | Confirmé par construction | Pour tout `x` dans la frontière, `Residu(x) := { g | t_fix(g) ≈ t_int } ≠ ∅` ; tout `Recablage(x)` qui vide le résidu doit faire perdre ≥ 1 condition de frontière | `FuzzI2_Irreductibilite` |
-| **I3** | Trois dimensions **orthogonales en valeur, asymétriques en maturité** ; D-AUTORITÉ = fait institutionnel sans support à 2026-05-16 | Probable, daté 2026-05-16 | `D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus`. Clause de péremption : `date_revision ≤ 2027-01-01` dans le profil | `FuzzI3_AsymetrieAutorite` |
-| **I4** | D-INVARIANT contraint par D-SENS : `i ≈ pendant ⟹ s ≈ pendant` ; combinaisons incohérentes **observables** | Hypothèse, empiriquement testable | `D-INVARIANT(x) ≥ θ_inv ∧ D-SENS(x) < θ_sens ⇒ Refus(diag: "I4")` | `FuzzI4_CoherenceContrainte` |
-| **I5** | Pile hérite de la **conjonction** des angles morts ; pas de réconciliation transversale sauf hors pile | Probable | Pour pile `π = [C₁,…,Cₙ]`, `M(π) = |⋃Aᵢ|` satisfait `M(π) ≥ max(|Aᵢ|)` et `M(π) ≤ Σ|Aᵢ|`. V1 expose l'API d'agrégation ; V2 calcule | `FuzzI5_CompositionConjonctive` |
+| **I2** | Le résidu migrant est **non vide et non recâblable hors ligne** sans détruire l'agentivité | Confirmé par construction | Pour tout `x` dans la frontière, `Residu(x) := { g | t_fix(g) ≈ t_int } ≠ ∅` ; tout `Recablage(x)` qui vide le résidu doit faire perdre ≥ 1 condition de frontière | `FuzzI2_Irreductibilite` |
+| **I3** | Trois dimensions **orthogonales en valeur, asymétriques en maturité** ; D-AUTORITÉ = fait institutionnel sans support à 2026-05-16 | Probable, daté 2026-05-16 | `D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus`. Clause de péremption : `date_revision ≤ 2027-01-01` dans le profil | `FuzzI3_AsymetrieAutorite` |
+| **I4** | D-INVARIANT contraint par D-SENS : `i ≈ pendant ⟹ s ≈ pendant` ; combinaisons incohérentes **observables** | Hypothèse, empiriquement testable | `D-INVARIANT(x) ≥ θ_inv ∧ D-SENS(x) < θ_sens ⇒ Refus(diag: "I4")` | `FuzzI4_CoherenceContrainte` |
+| **I5** | Pile hérite de la **conjonction** des angles morts ; pas de réconciliation transversale sauf hors pile | Probable | Pour pile `π = [C₁,…,Cₙ]`, `M(π) = |⋃Aᵢ|` satisfait `M(π) ≥ max(|Aᵢ|)` et `M(π) ≤ Σ|Aᵢ|`. V1 expose l'API d'agrégation ; V2 calcule | `FuzzI5_CompositionConjonctive` |
 
 ### 6.2 Conditions de réfutation observables
 
@@ -267,17 +267,17 @@ type Attestation struct {
 
 ### 6.3 Articulation et priorités V1
 
-- **I1 + I2** fondent l'opérateur : conservation + non-trivialité. Garde combinée : `TestOperatorWellDefined`.
-- **I3 + I4** caractérisent la structure : asymétrie de maturité + contrainte de cohérence. Garde : `TestSpaceNonFlat`.
-- **I5** régit la composition. Garde V2 : `TestM_Monotonicity`.
+- **I1 + I2** fondent l'opérateur : conservation + non-trivialité. Garde combinée : `TestOperatorWellDefined`.
+- **I3 + I4** caractérisent la structure : asymétrie de maturité + contrainte de cohérence. Garde : `TestSpaceNonFlat`.
+- **I5** régit la composition. Garde V2 : `TestM_Monotonicity`.
 
-**Priorité empirique #1** : **I4** (Hypothèse non encore testée) — campagne dédiée en M4, rapport `docs/empirical/I4-report.md`.
+**Priorité empirique #1** : **I4** (Hypothèse non encore testée) — campagne dédiée en M4, rapport `docs/empirical/I4-report.md`.
 
 ---
 
 ## 7. Conditions de validité & anti-patrons d'usage
 
-*Renvoi : chap. III.8.6.2 (conditions) et III.8.7 (anti-patrons). Garde opérationnelle pour chaque ligne.*
+*Renvoi : chap. III.8.6.2 (conditions) et III.8.7 (anti-patrons). Garde opérationnelle pour chaque ligne.*
 
 ### 7.1 Conditions de validité en environnement gouverné
 
@@ -285,16 +285,16 @@ type Attestation struct {
 |---|---|---|
 | C1 | La frontière agentique est réelle (4 conditions classiques toutes violées) | `FrontierCheck.Inside()` §4.3 |
 | C2 | D-AUTORITÉ = facteur limitant, non résolu (I3 = contrainte de conception) | `θ_auth_block` conservateur (≤ 0.85), refus ontologique §4.4 |
-| C3 | Modèle daté et révisable (horizon 2027-2030) | `Profile.DateRevision` ; CI échoue si `today > date_revision` sans MAJ |
+| C3 | Modèle daté et révisable (horizon 2027-2030) | `Profile.DateRevision` ; CI échoue si `today > date_revision` sans MAJ |
 
 ### 7.2 Quatre anti-patrons d'usage interdits
 
 | # | Anti-patron | Pourquoi *(III.8.7)* | Garde TauGo |
 |---|---|---|---|
-| 1 | **Usage prédictif** — `Predict*`, `Expected*`, `Forecast*` exportés | Le modèle est structurant, pas prédictif. Le substrat probabiliste interdit toute prédiction de comportement. | `TestNoPredictiveAPI` (réflexion sur méthodes exportées) ; PR rejetée |
-| 2 | **Usage hors frontière** — appliquer τ à une frontière non agentique | Sur-ingénierie injustifiée, signale au client un régime agentique alors qu'il est classique | `TestRefusHorsFrontiere` ; aucun drapeau « skip frontier check » toléré |
-| 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; CI échoue si périmé |
-| 4 | **Usage clos** — tenir les 3 dimensions et 5 invariants pour exhaustifs | Hypothèse de complétude non acquise (chap. III.8.7) | `Decision.Trace.UnmodeledObservations []string` ; rapport mensuel `docs/empirical/unmodeled.md` |
+| 1 | **Usage prédictif** — `Predict*`, `Expected*`, `Forecast*` exportés | Le modèle est structurant, pas prédictif. Le substrat probabiliste interdit toute prédiction de comportement. | `TestNoPredictiveAPI` (réflexion sur méthodes exportées) ; PR rejetée |
+| 2 | **Usage hors frontière** — appliquer τ à une frontière non agentique | Sur-ingénierie injustifiée, signale au client un régime agentique alors qu'il est classique | `TestRefusHorsFrontiere` ; aucun drapeau « skip frontier check » toléré |
+| 3 | **Usage atemporel** — I3 sans date ni revérification | Transforme un instrument de navigation daté en assertion intemporelle | `Trace.profile.date_revision` + `profile.version_monographie` ; CI échoue si périmé |
+| 4 | **Usage clos** — tenir les 3 dimensions et 5 invariants pour exhaustifs | Hypothèse de complétude non acquise (chap. III.8.7) | `Decision.Trace.UnmodeledObservations []string` ; rapport mensuel `docs/empirical/unmodeled.md` |
 
 ### 7.3 Refus — décision de premier rang
 
@@ -306,7 +306,7 @@ type Attestation struct {
 | Profil périmé | `profil périmé — veille requise` | §11.4 |
 | Observation non modélisée à fort impact | `usage clos potentiel` | §7.2 #4 |
 
-**Refus n'est pas un échec** : c'est une décision pleine, instrumentée, opposable. La trace expose le diagnostic, les scores qui l'ont produit, le profil en vigueur et le renvoi III.8.
+**Refus n'est pas un échec** : c'est une décision pleine, instrumentée, opposable. La trace expose le diagnostic, les scores qui l'ont produit, le profil en vigueur et le renvoi III.8.
 
 ---
 
@@ -350,7 +350,7 @@ CLAUDE.md · README.md · LICENSE · Makefile · .golangci.yml · go.mod
 | **3 Domaine** | `tau`, `tau/dimensions`, `tau/invariants` | `errors`, `metrics` | `orchestration`, `bridge`, `app`, `cmd` |
 | **4 Infrastructure** | `bridge/*`, `calibration` *(persistance)* | `errors`, `metrics` | `tau/*`, `orchestration` |
 
-**Gardes architecturales** *(M0)* — `internal/arch_test.go` interdit :
+**Gardes architecturales** *(M0)* — `internal/arch_test.go` interdit :
 
 - `tau/* → orchestration` · `tau/* → bridge` · `bridge → tau/*` direct
 - `dimensions ↔ invariants` (orthogonalité encodée)
@@ -360,7 +360,7 @@ CLAUDE.md · README.md · LICENSE · Makefile · .golangci.yml · go.mod
 
 - Seuils dynamiques en `atomic.Int64` privés, accesseurs publics *(`calibration/thresholds.go`)*
 - Étanchéité par `arch_test.go` *(règles propres TauGo)*
-- Aucun global mutable dans `tau/*` ; seules les `Thresholds` mutables, via accesseurs atomiques
+- Aucun global mutable dans `tau/*` ; seules les `Thresholds` mutables, via accesseurs atomiques
 - Erreurs typées (`DispatchError`, `RefusError`, `CalibrationError`)
 - `t.Parallel()` cible 100 % adoption M1
 - Sentinel panic re-propagé (calque `bigfft/fermat.go`) pour invariants internes cassés
@@ -536,7 +536,7 @@ SORTIE  : d Decision (toujours instrumentée)
    inv.AnyViolated() ⇒ trace.UnmodeledObservations += inv.Summary()
 ```
 
-**L'ordre des étapes 1-8 n'est pas arbitraire** : frontière → ontologie → péremption → scores → cohérence → composite → hystérèse → invariants. Réordonner = casser une garde.
+**L'ordre des étapes 1-8 n'est pas arbitraire** : frontière → ontologie → péremption → scores → cohérence → composite → hystérèse → invariants. Réordonner = casser une garde.
 
 ### 10.2 Interface publique
 
@@ -550,13 +550,13 @@ type Kernel interface {
 
 ### 10.3 Instrumentation
 
-Toute décision produit une `Trace` non-mutable couvrant : scores avec sondes et poids · état de la frontière · `τ_score` · seuils · état des cinq invariants · profil (version, `date_revision`) · durée · observations non modélisées. Vérifié par `TestDecisionAlwaysTraced` + `TestTraceImmutable`.
+Toute décision produit une `Trace` non-mutable couvrant : scores avec sondes et poids · état de la frontière · `τ_score` · seuils · état des cinq invariants · profil (version, `date_revision`) · durée · observations non modélisées. Vérifié par `TestDecisionAlwaysTraced` + `TestTraceImmutable`.
 
 ---
 
 ## 11. Calibration adaptative
 
-*Discipline héritée de `FibGo/internal/calibration/` : atomic, hystérèse, profils versionnés persistés, invalidation par drift de fingerprint.*
+*Discipline héritée de `FibGo/internal/calibration/` : atomic, hystérèse, profils versionnés persistés, invalidation par drift de fingerprint.*
 
 ### 11.1 Paramètres calibrés
 
@@ -571,7 +571,7 @@ Toute décision produit une `Trace` non-mutable couvrant : scores avec sondes et
 | `Weights.D*` (composite) | `[0,1]`, somme = 1 | `(0.4, 0.3, 0.3)` | Pondération `τ_score` |
 | `Weights.*Probes` | par sonde, somme par dimension = 1 | §5 | Pondération interne |
 
-*Statut : hypothèse — initialisations à corroborer sur traces AgentMeshKafka M4.*
+*Statut : hypothèse — initialisations à corroborer sur traces AgentMeshKafka M4.*
 
 ### 11.2 Pattern atomic (calque FibGo `bigfft/fft.go`)
 
@@ -590,7 +590,7 @@ func (t *Thresholds) SetDeterministe(v float64) {
 }
 ```
 
-**Invariant** : `Thresholds.Deterministe() ≤ Thresholds.Probabiliste()` en tout temps. Violation = panic interne sentinel (calque FibGo `bigfft/fermat.go`).
+**Invariant** : `Thresholds.Deterministe() ≤ Thresholds.Probabiliste()` en tout temps. Violation = panic interne sentinel (calque FibGo `bigfft/fermat.go`).
 
 ### 11.3 Persistance des profils
 
@@ -630,7 +630,7 @@ tau calibrate \
   --version-monographie v2.4.3
 ```
 
-**Reproductible byte-identique à corpus fixé** : même corpus + même seed → mêmes seuils + mêmes poids. Vérifié par `TestCalibrationDeterministic`.
+**Reproductible byte-identique à corpus fixé** : même corpus + même seed → mêmes seuils + mêmes poids. Vérifié par `TestCalibrationDeterministic`.
 
 ---
 
@@ -638,7 +638,7 @@ tau calibrate \
 
 ### 12.1 `AgentMeshKafka` — validateur empirique
 
-Le pont expose un DTO local `AgentMeshExchange` (miroir nominal de `tau.Exchange`, type délibérément distinct) afin de préserver l'étanchéité Clean Architecture : `arch_test.go` interdit `bridge/agentmeshkafka → tau` (lignes 32-34). La conversion vers `tau.Exchange` est hébergée en `internal/app/agentmesh.go` via `app.ToTauExchange` et `app.StreamAsTauExchanges`, seule couche autorisée à voir simultanément `bridge/*` et `tau/*`. *(ADR-0005)*
+Le pont expose un DTO local `AgentMeshExchange` (miroir nominal de `tau.Exchange`, type délibérément distinct) afin de préserver l'étanchéité Clean Architecture : `arch_test.go` interdit `bridge/agentmeshkafka → tau` (lignes 32-34). La conversion vers `tau.Exchange` est hébergée en `internal/app/agentmesh.go` via `app.ToTauExchange` et `app.StreamAsTauExchanges`, seule couche autorisée à voir simultanément `bridge/*` et `tau/*`. *(ADR-0005)*
 
 ```go
 package agentmeshkafka
@@ -652,7 +652,7 @@ type Adapter interface {
 }
 ```
 
-*Statut : Confirmé par ADR-0005 (DTO neutre, M4). La signature initiale qui retournait `tau.Exchange` violait `arch_test.go` ligne 32 — corrigée en M4. Dépendance résiduelle : stabilité du schéma AgentMeshKafka. (Hypothèse — dépend de la stabilité d'AgentMeshKafka au-delà de M4.)*
+*Statut : Confirmé par ADR-0005 (DTO neutre, M4). La signature initiale qui retournait `tau.Exchange` violait `arch_test.go` ligne 32 — corrigée en M4. Dépendance résiduelle : stabilité du schéma AgentMeshKafka. (Hypothèse — dépend de la stabilité d'AgentMeshKafka au-delà de M4.)*
 
 ### 12.2 `LLMClient` injecté
 
@@ -674,7 +674,7 @@ type Client interface {
 }
 ```
 
-**Stub déterministe obligatoire** — `internal/bridge/llm/stub.go` fournit un mapping `intent → score` checked-in. Évite la dépendance LLM externe en CI ; garantit calibration reproductible.
+**Stub déterministe obligatoire** — `internal/bridge/llm/stub.go` fournit un mapping `intent → score` checked-in. Évite la dépendance LLM externe en CI ; garantit calibration reproductible.
 
 **Garde** — aucun import de package LLM concret (`anthropic`, `openai`, …) dans `internal/tau/*` ou `internal/orchestration/*`. Injection en `internal/app/`. Vérifié par `arch_test.go`.
 
@@ -690,14 +690,14 @@ type Client interface {
 | **Module** | `github.com/agbruneau/taugo` | À vérifier (username GitHub à confirmer M0) |
 | **Licence** | Apache-2.0 | Confirmé |
 | **Dépendances** | `golang.org/x/sync/errgroup`, stdlib `log/slog`, `math/big` *(si scoring l'exige)* | Probable |
-| **Aucun framework** | Pas de Bubble Tea V1, ni gRPC, ni cobra ; `flag` standard | Confirmé (§3.3) |
-| **LLM** | Injecté via interface §12.2 ; aucune dépendance concrète en `tau/*` | Confirmé |
+| **Aucun framework** | Pas de Bubble Tea V1, ni gRPC, ni cobra ; `flag` standard | Confirmé (§3.3) |
+| **LLM** | Injecté via interface §12.2 ; aucune dépendance concrète en `tau/*` | Confirmé |
 | **Lint** | `golangci-lint v1.64.8` épinglé, config calque FibGo (24 linters, `govet shadow`, complexité max 15/30) | Confirmé |
 | **Build reproductible** | `-trimpath`, `-buildvcs=true`, timestamp gelé `1778889600` (calque InteroperabiliteAgentique) | Confirmé |
 | **PGO** | Optionnel `make build-pgo`, profil checked-in après M3 | Probable |
 | **Cross-compile** | linux/{amd64,arm64}, darwin/{amd64,arm64}, windows/amd64 | Confirmé |
 | **Race detector** | `go test -race` sur 3 OS via CGO (Linux/macOS) | Confirmé |
-| **Fuzz** | `FuzzI1`-`FuzzI5` ; 30 s CI courte, 24 h nocturne | Confirmé |
+| **Fuzz** | `FuzzI1`-`FuzzI5` ; 30 s CI courte, 24 h nocturne | Confirmé |
 
 ---
 
@@ -708,8 +708,8 @@ type Client interface {
 | Convention | Application TauGo |
 |---|---|
 | **Langue** | FR-CA pour `PRD.md`, `CLAUDE.md`, `docs/`, commentaires structurants. **Godoc en anglais.** |
-| **Typographie française** | Espaces insécables U+00A0 avant `: ; ? ! »` et après `«` ; guillemets `« … »`. **Cible M6** ; M0-M5 = dette éditoriale assumée. |
-| **Marqueurs d'incertitude** | Obligatoires dans `docs/` sur affirmation datée : `Confirmé · Probable · Hypothèse · À vérifier · Je ne sais pas (avec piste)`. |
+| **Typographie française** | Espaces insécables U+00A0 avant `: ; ? ! »` et après `«` ; guillemets `« … »`. **Cible M6** ; M0-M5 = dette éditoriale assumée. |
+| **Marqueurs d'incertitude** | Obligatoires dans `docs/` sur affirmation datée : `Confirmé · Probable · Hypothèse · À vérifier · Je ne sais pas (avec piste)`. |
 | **Citations** | Style auteur-date `(Nom, année)`. Pagination pour citation directe. |
 | **Renvois croisés monographie** | Chaque décision théorique dans `docs/theory/` cite `*(chap. III.8.X.Y)*` en italique. |
 | **Patrons de raisonnement** | Recommandation = (1) compromis principal · (2) ≥ 1 alternative · (3) conditions de retournement. |
@@ -720,19 +720,19 @@ type Client interface {
 ### 14.2 Code (calque FibGo)
 
 - Packages par responsabilité, jamais par feature
-- Interfaces étroites (ISP) ≤ 5 méthodes : `Kernel`, `Adapter`, `Client`, `TraceReporter`
+- Interfaces étroites (ISP) ≤ 5 méthodes : `Kernel`, `Adapter`, `Client`, `TraceReporter`
 - Erreurs structurées (`fmt.Errorf("%w", err)`, types typés). **Pas de panic** sauf invariants internes — sentinel re-propagé via classifier *(calque `bigfft/fermat.go`)*
 - `t.Parallel()` systématique (cible 100 %)
-- Complexité max : cyclomatique 15, cognitive 30 ; fonction ≤ 100 LOC / 50 statements
+- Complexité max : cyclomatique 15, cognitive 30 ; fonction ≤ 100 LOC / 50 statements
 - `doc.go` par package public, obligatoire M0 pour `tau`, `orchestration`, `calibration`
-- Commentaires : *pourquoi*, jamais *quoi*. Pas de référence au caller ni à la tâche
+- Commentaires : *pourquoi*, jamais *quoi*. Pas de référence au caller ni à la tâche
 - **Pas de globaux mutables non synchronisés** dans `tau/*` — exception = ADR
 
 ### 14.3 Commits — Conventional Commits
 
-`<type>(<scope>): <description>` avec types : `feat · fix · perf · refactor · test · docs · chore · theory`. `theory` = mise à jour `docs/theory/` motivée par révision monographie.
+`<type>(<scope>): <description>` avec types : `feat · fix · perf · refactor · test · docs · chore · theory`. `theory` = mise à jour `docs/theory/` motivée par révision monographie.
 
-Co-signature obligatoire pour commits assistés par IA :
+Co-signature obligatoire pour commits assistés par IA :
 
 ```
 Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
@@ -742,12 +742,12 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 
 | Construction | Garde |
 |---|---|
-| `Predict*` / `Expected*` / `Forecast*` dans l'API publique de `tau` | Anti-patron §7.2 #1 ; `TestNoPredictiveAPI` |
-| Imports LLM concrets dans `internal/tau/*` ou `internal/orchestration/*` | §12.2 ; `arch_test.go` |
-| Globaux mutables non synchronisés dans `tau/*` | §14.2 ; `gochecknoglobals` |
-| Citation sans référence vérifiable dans `docs/` | §14.1 ; audit manuel |
-| Affirmation datée sans marqueur d'incertitude dans `docs/` | §14.1 ; revue PR |
-| Suppression de garde dans `arch_test.go` sans ADR | §8.1 ; revue PR |
+| `Predict*` / `Expected*` / `Forecast*` dans l'API publique de `tau` | Anti-patron §7.2 #1 ; `TestNoPredictiveAPI` |
+| Imports LLM concrets dans `internal/tau/*` ou `internal/orchestration/*` | §12.2 ; `arch_test.go` |
+| Globaux mutables non synchronisés dans `tau/*` | §14.2 ; `gochecknoglobals` |
+| Citation sans référence vérifiable dans `docs/` | §14.1 ; audit manuel |
+| Affirmation datée sans marqueur d'incertitude dans `docs/` | §14.1 ; revue PR |
+| Suppression de garde dans `arch_test.go` sans ADR | §8.1 ; revue PR |
 
 ---
 
@@ -759,8 +759,8 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 |---|---|---|---|
 | **Unit** | Chaque fonction publique, sonde, score | `go test` standard | ≥ 80 % / package |
 | **Property-based** | Pureté, monotonie, idempotence | `gopter` (calque FibGo) | Toutes les propriétés algébriques déclarées |
-| **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en CI courte ; 24 h hebdomadaire |
-| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-golden/` | Immuable sans ADR |
+| **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en CI courte ; 24 h hebdomadaire |
+| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-golden/` | Immuable sans ADR |
 | **Architecture** | Étanchéité des couches *(§8.1)* | `internal/arch_test.go` | 100 % des règles |
 | **E2E** *(M4+)* | Via `AgentMeshKafka` | `test/e2e/` | ≥ 1 scénario par régime |
 | **Empirique I4** *(M4+)* | Détection combinaisons incohérentes sur traces réelles | `docs/empirical/I4-report.md` | Campagne dédiée |
@@ -776,7 +776,7 @@ func FuzzI4_CoherenceContrainte(f *testing.F) // (s < θ_sens, ·, i ≥ θ_inv)
 func FuzzI5_CompositionConjonctive(f *testing.F) // M(π) ≥ max(|Aᵢ|), M(π) ≤ Σ|Aᵢ|
 ```
 
-Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30s ./internal/tau/invariants/`.
+Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30s ./internal/tau/invariants/`.
 
 ### 15.3 Gates CI
 
@@ -804,23 +804,23 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30
 
 | Milestone | Contenu | Critère d'acceptation |
 |---|---|---|
-| **M0** | Squelette repo, CI 3 OS, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestRefusHorsFrontiere` passe |
+| **M0** | Squelette repo, CI 3 OS, `CLAUDE.md`, `.golangci.yml`, `arch_test.go`, `FrontierCheck`, `cmd/tau` minimal | `git init` + premier commit vert ; tag `v0.0.1-alpha` ; `TestRefusHorsFrontiere` passe |
 | **M1** | Dispatcher minimal, deux régimes, stub LLM | `tau decide --input fixture.json` rend une `Decision` instrumentée |
-| **M2** | Trois dimensions + score τ composite + gardes ontologique D-AUTORITÉ et I4 | Rapport décision avec scores/sondes/poids ; `TestRefusOntologiqueDAUTORITE` + `TestI4_IncoherenceDetectee` passent |
-| **M3** | Cinq invariants comme cibles fuzz | `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5 ; rapport `docs/empirical/fuzz-summary.md` |
-| **M4** | Adaptateur `AgentMeshKafka` + campagne empirique I4 | Trace end-to-end ; rapport `docs/empirical/I4-report.md` avec ≥ 100 traces analysées |
-| **M5** | Calibration adaptative + persistance versionnée + détection de drift | `tau calibrate` reproductible byte-identique sur corpus fixé ; `TestCalibrationDeterministic` passe |
+| **M2** | Trois dimensions + score τ composite + gardes ontologique D-AUTORITÉ et I4 | Rapport décision avec scores/sondes/poids ; `TestRefusOntologiqueDAUTORITE` + `TestI4_IncoherenceDetectee` passent |
+| **M3** | Cinq invariants comme cibles fuzz | `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5 ; rapport `docs/empirical/fuzz-summary.md` |
+| **M4** | Adaptateur `AgentMeshKafka` + campagne empirique I4 | Trace end-to-end ; rapport `docs/empirical/I4-report.md` avec ≥ 100 traces analysées |
+| **M5** | Calibration adaptative + persistance versionnée + détection de drift | `tau calibrate` reproductible byte-identique sur corpus fixé ; `TestCalibrationDeterministic` passe |
 | **M6** | Documentation alignée monographie + typographie française + release `v0.1.0` | Tag, `CHANGELOG.md`, `README.md`, `docs/theory/` complet avec renvois III.8 |
 
-**Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · `.github/workflows/{ci,coverage}.yml` · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
+**Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · `.github/workflows/{ci,coverage}.yml` · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
 
-**Estimation indicative** : 6-10 semaines à temps partiel. *À vérifier selon disponibilité réelle.*
+**Estimation indicative** : 6-10 semaines à temps partiel. *À vérifier selon disponibilité réelle.*
 
-**Cadence de revue** :
+**Cadence de revue** :
 
 - **Mensuelle** sur dérive de scope *(§3.3 anti-objectifs)*
 - **Trimestrielle** sur péremption I3 *(`date_revision`)* et veille statut RFC d'identité agentique déléguée
-- **Post-M3** : la reformulation exécutable des invariants tient-elle ? Réajustement éventuel après campagne fuzz
+- **Post-M3** : la reformulation exécutable des invariants tient-elle ? Réajustement éventuel après campagne fuzz
 
 ---
 
@@ -847,41 +847,41 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30
 
 | # | Risque | Probabilité | Impact | Mitigation | Marqueur |
 |---|---|---|---|---|---|
-| 1 | `AgentMeshKafka` pas prêt comme validateur M4 | Probable | Élevé | Stabiliser AgentMeshKafka avant M4 ; mock intermédiaire ; M4 reportable 2-3 sem sans bloquer M5 | Probable |
-| 2 | Invariants I1-I5 trop abstraits pour fuzz direct | Probable | Moyen | Reformulation exécutable §6 ; revue ciblée M3 ; raffinement après M4 | Probable |
-| 3 | Drift TauGo ↔ révisions monographie | Probable | Moyen | Tag version épinglé dans `CLAUDE.md` et chaque `Profile` ; revue à chaque release monographie | Probable |
-| 4 | Scope creep vers framework agentique | Probable | Élevé | §3.3 anti-objectifs ; revue mensuelle stricte ; lignes interdites en CI *(§14.4)* | Probable |
-| 5 | Interface LLM fuit l'abstraction probabiliste dans `tau/*` | À vérifier | Moyen | Interface étroite §12.2 ; stub déterministe ; `arch_test.go` interdit imports concrets | À vérifier |
-| 6 | `ruvector.db` impose couplage RAG prématuré | Probable | Faible | Exclu V1 §3.2 ; étude séparée | Probable |
-| 7 | Verrou D-AUTORITÉ mal calibré → faux refus en cascade | Hypothèse | Moyen | Calibration empirique M4 ; `θ_auth_block` initial conservateur (0.85) ; corpus cas-limites | Hypothèse |
-| 8 | Calibration sensible au modèle LLM injecté → profils non-portables | Probable | Moyen | `model_llm_fingerprint` dans profil §11.3 ; matrice de profils par modèle | Probable |
-| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde CI `TestI3_DateRevisionRespectee` ; alerte 30 j avant péremption | Probable |
-| 10 | Couplage `AgentMeshKafka` rend TauGo non-portable | Hypothèse | Faible | `bridge/agentmeshkafka/` isole ; interface `Adapter` minimale §12.1 | Hypothèse |
+| 1 | `AgentMeshKafka` pas prêt comme validateur M4 | Probable | Élevé | Stabiliser AgentMeshKafka avant M4 ; mock intermédiaire ; M4 reportable 2-3 sem sans bloquer M5 | Probable |
+| 2 | Invariants I1-I5 trop abstraits pour fuzz direct | Probable | Moyen | Reformulation exécutable §6 ; revue ciblée M3 ; raffinement après M4 | Probable |
+| 3 | Drift TauGo ↔ révisions monographie | Probable | Moyen | Tag version épinglé dans `CLAUDE.md` et chaque `Profile` ; revue à chaque release monographie | Probable |
+| 4 | Scope creep vers framework agentique | Probable | Élevé | §3.3 anti-objectifs ; revue mensuelle stricte ; lignes interdites en CI *(§14.4)* | Probable |
+| 5 | Interface LLM fuit l'abstraction probabiliste dans `tau/*` | À vérifier | Moyen | Interface étroite §12.2 ; stub déterministe ; `arch_test.go` interdit imports concrets | À vérifier |
+| 6 | `ruvector.db` impose couplage RAG prématuré | Probable | Faible | Exclu V1 §3.2 ; étude séparée | Probable |
+| 7 | Verrou D-AUTORITÉ mal calibré → faux refus en cascade | Hypothèse | Moyen | Calibration empirique M4 ; `θ_auth_block` initial conservateur (0.85) ; corpus cas-limites | Hypothèse |
+| 8 | Calibration sensible au modèle LLM injecté → profils non-portables | Probable | Moyen | `model_llm_fingerprint` dans profil §11.3 ; matrice de profils par modèle | Probable |
+| 9 | Échéance I3 (2026-12-01) non respectée → modèle silencieusement périmé | Probable | Élevé | Garde CI `TestI3_DateRevisionRespectee` ; alerte 30 j avant péremption | Probable |
+| 10 | Couplage `AgentMeshKafka` rend TauGo non-portable | Hypothèse | Faible | `bridge/agentmeshkafka/` isole ; interface `Adapter` minimale §12.1 | Hypothèse |
 
 ---
 
 ## 19. Glossaire des termes contrôlés
 
-*Convention héritée `InteroperabiliteAgentique/CLAUDE.md` §1.1 : un concept = un terme constant ; pas de synonymie flottante.*
+*Convention héritée `InteroperabiliteAgentique/CLAUDE.md` §1.1 : un concept = un terme constant ; pas de synonymie flottante.*
 
 | Terme | Définition opérante | Renvoi |
 |---|---|---|
 | **τ (opérateur)** | Migration de l'instant de fixation des grandeurs d'interopérabilité (sens, autorité, support) de l'avant-interaction vers l'interaction | §4, III.8.3 |
-| **Échange** *(Exchange)* | Objet soumis à τ : initiateur, capacité, intention, attestation éventuelle | §9.1 |
-| **Régime** *(Regime)* | Sortie discrète de τ : `Deterministe | Probabiliste | Refus`. Jamais un comportement | §2.3 |
-| **Dimension** | Axe sur lequel τ se projette : D-SENS, D-AUTORITÉ, D-INVARIANT. Orthogonales en valeur sous contrainte I4 | §5, III.8.4 |
+| **Échange** *(Exchange)* | Objet soumis à τ : initiateur, capacité, intention, attestation éventuelle | §9.1 |
+| **Régime** *(Regime)* | Sortie discrète de τ : `Deterministe | Probabiliste | Refus`. Jamais un comportement | §2.3 |
+| **Dimension** | Axe sur lequel τ se projette : D-SENS, D-AUTORITÉ, D-INVARIANT. Orthogonales en valeur sous contrainte I4 | §5, III.8.4 |
 | **Invariant** | Proposition réfutable du modèle (I1-I5). Marqueur épistémique gradué | §6, III.8.5 |
 | **Frontière de validité** | 4 conditions classiques toutes violées simultanément. Hors frontière → `Refus` | §2.1, III.8.3.2 |
-| **Décision** *(Decision)* | Sortie de `Decide` : `Regime`, `Trace`, `Diagnostic`, `ProfileVersion`. Toujours instrumentée | §9.1, §10 |
+| **Décision** *(Decision)* | Sortie de `Decide` : `Regime`, `Trace`, `Diagnostic`, `ProfileVersion`. Toujours instrumentée | §9.1, §10 |
 | **Trace** | Instrumentation immuable d'une décision | §9.1, §10.3 |
-| **Profil** *(Profile)* | Calibration versionnée et opposable : seuils, poids, empreintes, `date_revision` | §11 |
+| **Profil** *(Profile)* | Calibration versionnée et opposable : seuils, poids, empreintes, `date_revision` | §11 |
 | **Drift** | Désynchronisation profil ↔ environnement (matériel, modèle, corpus) déclenchant recalibration | §11.4 |
-| **Attestation institutionnelle** | Référence opposable (RFC, juridiction) peuplant le pôle « exécution » de D-AUTORITÉ | §4.4, III.8.4.2.bis |
+| **Attestation institutionnelle** | Référence opposable (RFC, juridiction) peuplant le pôle « exécution » de D-AUTORITÉ | §4.4, III.8.4.2.bis |
 | **Sonde** *(Probe)* | Composante atomique d'un score de dimension. `[0,1]` | §5 |
 | **Métrique cardinale M(π)** | Taille de l'union des angles morts d'une pile composée. Borne pour I5 | §6.1, III.8.6.3 |
 | **CIA** | Calcul d'Intégration Agentique — programme de recherche dont TauGo est le livrable empirique | §1 |
 | **HGL** | Héritage des Garanties de Livraison — manuscrit-compagnon (`RechercheFondamentale.md`) qui mécanise formellement ce que TauGo éprouve | §3.2 |
-| **Anti-patron** | Usage qui dénature le modèle : prédictif, hors frontière, atemporel, clos | §7.2 |
+| **Anti-patron** | Usage qui dénature le modèle : prédictif, hors frontière, atemporel, clos | §7.2 |
 
 ---
 
@@ -901,16 +901,16 @@ Commande de référence : `go test -fuzz=FuzzI4_CoherenceContrainte -fuzztime=30
 2. Confirmer la fidélité des invariants I1-I5 reformulés §6 contre `Monographie.md` lignes ~5723-5737
 3. Rédiger / réviser `CLAUDE.md` héritant des conventions FibGo *(structure)* et InteroperabiliteAgentique *(rédaction)*
 4. Générer le squelette Clean Architecture *(M0 livrables, §16)*
-5. Configurer la CI : `golangci-lint`, `go test -race`, fuzz court, build reproductible byte-identique sur 3 OS
+5. Configurer la CI : `golangci-lint`, `go test -race`, fuzz court, build reproductible byte-identique sur 3 OS
 6. Premier commit signé sur `main`, premier tag `v0.0.1-alpha`
-7. Ouvrir issue M1 : dispatcher minimal deux régimes avec stub LLM déterministe
+7. Ouvrir issue M1 : dispatcher minimal deux régimes avec stub LLM déterministe
 
 ### 20.3 Document vivant
 
 *Toute déviation matérielle doit être justifiée par mise à jour de ce fichier — en premier, avant le code. Toute affirmation datée porte un marqueur explicite et est revérifiée à chaque révision substantielle.*
 
-**Prochaine revue planifiée** : clôture de M2 (trois dimensions calculables), pour ajuster sondes et pondérations sur retour empirique précoce. Date cible : *à vérifier — fonction du démarrage effectif.*
+**Prochaine revue planifiée** : clôture de M2 (trois dimensions calculables), pour ajuster sondes et pondérations sur retour empirique précoce. Date cible : *à vérifier — fonction du démarrage effectif.*
 
 ---
 
-*Fin du PRD V0.2 (refactorisé) — 2026-05-23. V0.1 = commit précédent ; V0 = commit `b771dd1`.*
+*Fin du PRD V0.2 (refactorisé) — 2026-05-23. V0.1 = commit précédent ; V0 = commit `b771dd1`.*

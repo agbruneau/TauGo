@@ -1,14 +1,14 @@
 # PRDPlanning — TauGo (Plan d'implémentation V1)
 
-> **Pour les agents exécutants** : ce plan est exécuté par **agent teams** *(cf. [`CLAUDE.md` §Agent Teams](CLAUDE.md))*. Chaque tâche est assignable à un sous-agent identifié dans la colonne « Agent ». Le coordinateur (thread principal) **dispatche, n'implémente pas**. Les étapes utilisent la syntaxe checkbox `- [ ]` pour le tracking — `superpowers:subagent-driven-development` ou `superpowers:executing-plans` pour la mécanique.
+> **Pour les agents exécutants** : ce plan est exécuté par **agent teams** *(cf. [`CLAUDE.md` §Agent Teams](CLAUDE.md))*. Chaque tâche est assignable à un sous-agent identifié dans la colonne « Agent ». Le coordinateur (thread principal) **dispatche, n'implémente pas**. Les étapes utilisent la syntaxe checkbox `- [ ]` pour le tracking — `superpowers:subagent-driven-development` ou `superpowers:executing-plans` pour la mécanique.
 
-**Objectif** : livrer TauGo V1 (chap. III.8 → kernel Go validé empiriquement contre `AgentMeshKafka`) en 7 milestones M0-M6, conformément au [`PRD.md` §16](PRD.md).
+**Objectif** : livrer TauGo V1 (chap. III.8 → kernel Go validé empiriquement contre `AgentMeshKafka`) en 7 milestones M0-M6, conformément au [`PRD.md` §16](PRD.md).
 
-**Architecture du programme** : pipeline strict M0 → M6 ; documentation théorique et lint éditorial parallélisables ; chaque milestone produit un livrable testable de bout en bout *(critère d'acceptation falsifiable)*.
+**Architecture du programme** : pipeline strict M0 → M6 ; documentation théorique et lint éditorial parallélisables ; chaque milestone produit un livrable testable de bout en bout *(critère d'acceptation falsifiable)*.
 
-**Tech stack** : Go 1.25+ · golangci-lint v1.64.8 · `gopter` (property-based) · `go test -fuzz` (I1-I5) · GitHub Actions (3 OS matrix) · Makefile · pas de framework (cf. PRD §3.3, §13).
+**Tech stack** : Go 1.25+ · golangci-lint v1.64.8 · `gopter` (property-based) · `go test -fuzz` (I1-I5) · GitHub Actions (3 OS matrix) · Makefile · pas de framework (cf. PRD §3.3, §13).
 
-**Référence canonique** : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8.
+**Référence canonique** : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8.
 
 ---
 
@@ -18,14 +18,14 @@
 
 | Agent | Rôle dans TauGo | Quand l'invoquer |
 |---|---|---|
-| `Plan` | Architecte logiciel | Avant chaque milestone : raffiner le sous-plan détaillé (M1+) ; toute décision d'architecture non triviale |
-| `ruflo-swarm:architect` | Architecte système | Design interfaces et contrats inter-couches ; ADR avant changement structurel |
+| `Plan` | Architecte logiciel | Avant chaque milestone : raffiner le sous-plan détaillé (M1+) ; toute décision d'architecture non triviale |
+| `ruflo-swarm:architect` | Architecte système | Design interfaces et contrats inter-couches ; ADR avant changement structurel |
 | `ruflo-swarm:coordinator` | Coordinateur swarm | Quand ≥ 3 agents tournent en parallèle sur tâches indépendantes |
-| `Explore` | Recherche read-only | Localiser patterns FibGo à calquer ; rechercher symboles dans la monographie |
-| `ruflo-core:researcher` | Pathfinder | Vérifier alignement théorie ↔ code (chap. III.8 ↔ Go) ; trouver le verbatim d'un invariant |
+| `Explore` | Recherche read-only | Localiser patterns FibGo à calquer ; rechercher symboles dans la monographie |
+| `ruflo-core:researcher` | Pathfinder | Vérifier alignement théorie ↔ code (chap. III.8 ↔ Go) ; trouver le verbatim d'un invariant |
 | `ruflo-core:coder` | Implémentation | Écriture TDD du code Go conforme aux conventions PRD §14 |
 | `ruflo-core:reviewer` | Revue de code | Gate avant merge — vérifie invariants, anti-patrons, étanchéité Clean Arch |
-| `understand-anything:project-scanner` | Inventaire | Avant M6 : scanner du repo pour rapport d'audit final |
+| `understand-anything:project-scanner` | Inventaire | Avant M6 : scanner du repo pour rapport d'audit final |
 | `understand-anything:architecture-analyzer` | Analyse architecture | Vérifier que les couches livrées correspondent à PRD §8 |
 | `general-purpose` | Tâches multi-étapes ouvertes | Recherche comparative inter-projets (FibGo vs FibRust patterns, etc.) |
 
@@ -53,9 +53,9 @@
 
 - **Le thread principal ne code pas**. Il dispatche, intègre, valide.
 - **Parallélisme par défaut** quand les tâches sont indépendantes (research vs implementation, par ex.).
-- **Sérialisation imposée** pour : commits, tags, intégration finale, décisions ADR.
-- **Briefing complet** à chaque agent : pas de référence implicite à la conversation principale ; chaque dispatch contient un contexte autoportant.
-- **Vérification systématique** : après chaque agent, le coordinateur lit le diff produit avant de relancer la suite. Ne pas faire confiance aveuglement à un rapport d'agent.
+- **Sérialisation imposée** pour : commits, tags, intégration finale, décisions ADR.
+- **Briefing complet** à chaque agent : pas de référence implicite à la conversation principale ; chaque dispatch contient un contexte autoportant.
+- **Vérification systématique** : après chaque agent, le coordinateur lit le diff produit avant de relancer la suite. Ne pas faire confiance aveuglement à un rapport d'agent.
 
 ---
 
@@ -79,11 +79,11 @@ M0  squelette + CI
  └──> [parallèle] docs/theory/{03..07}.md  rédigés au fil ; renvois chap. III.8
 ```
 
-**Parallélismes inter-milestone exploitables** :
+**Parallélismes inter-milestone exploitables** :
 
 | Parallélisme | Justification |
 |---|---|
-| M0 squelette + `docs/theory/03-operateur-tau.md` | Pas de dépendance code ; agent `ruflo-core:researcher` écrit les renvois pendant que `ruflo-core:coder` pose les fichiers |
+| M0 squelette + `docs/theory/03-operateur-tau.md` | Pas de dépendance code ; agent `ruflo-core:researcher` écrit les renvois pendant que `ruflo-core:coder` pose les fichiers |
 | M3 fuzz I1-I5 + début préparation mock AgentMeshKafka | Mock peut être stabilisé pendant que fuzz court tourne |
 | M5 calibration + ébauche M6 `README.md`, `CHANGELOG.md` | Documentation finale rédigeable sur état figé après M5 |
 
@@ -91,9 +91,9 @@ M0  squelette + CI
 
 # Milestone M0 — Squelette + CI (détail bite-sized)
 
-**Objectif** : `git init` opérationnel, premier commit signé vert, tag `v0.0.1-alpha`, `TestRefusHorsFrontiere` passe. Aucun comportement métier ; structure + gardes architecturales seulement.
+**Objectif** : `git init` opérationnel, premier commit signé vert, tag `v0.0.1-alpha`, `TestRefusHorsFrontiere` passe. Aucun comportement métier ; structure + gardes architecturales seulement.
 
-**Critère d'acceptation global** :
+**Critère d'acceptation global** :
 ```bash
 go build ./... && go test -race -short ./... && golangci-lint run ./...
 ```
@@ -101,12 +101,12 @@ go build ./... && go test -race -short ./... && golangci-lint run ./...
 
 ### Tâche M0.1 — Bootstrap module Go
 
-**Files :**
+**Files :**
 - Create: `go.mod`
 - Create: `.gitignore`
 - Create: `LICENSE` *(Apache-2.0 verbatim)*
 
-**Agent :** `ruflo-core:coder`
+**Agent :** `ruflo-core:coder`
 
 - [ ] **Étape 1 — Initialiser go.mod**
 
@@ -165,18 +165,18 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.2 — golangci-lint config (calque FibGo)
 
-**Files :**
+**Files :**
 - Create: `.golangci.yml`
 
-**Agent :** `Explore` (récupérer `.golangci.yml` FibGo) → `ruflo-core:coder` (adapter)
+**Agent :** `Explore` (récupérer `.golangci.yml` FibGo) → `ruflo-core:coder` (adapter)
 
 - [ ] **Étape 1 — Récupérer le `.golangci.yml` FibGo de référence**
 
-Briefing pour `Explore` : « Récupère le fichier `.golangci.yml` de `agbruneau/FibGo` (branche `main`) verbatim. Rapporte le contenu intégral. »
+Briefing pour `Explore` : « Récupère le fichier `.golangci.yml` de `agbruneau/FibGo` (branche `main`) verbatim. Rapporte le contenu intégral. »
 
 - [ ] **Étape 2 — Adapter pour TauGo**
 
-Conserver les 24 linters, complexité max 15/30, longueur 100 LOC / 50 statements. Ajuster les exclusions de path (`cmd/generate-golden/` à exclure des stricts ; `test/golden/` idem).
+Conserver les 24 linters, complexité max 15/30, longueur 100 LOC / 50 statements. Ajuster les exclusions de path (`cmd/generate-golden/` à exclure des stricts ; `test/golden/` idem).
 
 - [ ] **Étape 3 — Vérifier**
 
@@ -197,10 +197,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.3 — Makefile
 
-**Files :**
+**Files :**
 - Create: `Makefile`
 
-**Agent :** `ruflo-core:coder` (calque FibGo Makefile)
+**Agent :** `ruflo-core:coder` (calque FibGo Makefile)
 
 - [ ] **Étape 1 — Rédiger Makefile complet**
 
@@ -277,7 +277,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.4 — Squelette de packages internal/
 
-**Files :**
+**Files :**
 - Create: `internal/tau/doc.go`
 - Create: `internal/orchestration/doc.go`
 - Create: `internal/calibration/doc.go`
@@ -289,7 +289,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 - Create: `internal/metrics/doc.go`
 - Create: `internal/testutil/doc.go`
 
-**Agent :** `ruflo-core:coder`
+**Agent :** `ruflo-core:coder`
 
 - [ ] **Étape 1 — Écrire `internal/tau/doc.go`**
 
@@ -308,7 +308,7 @@ package tau
 
 - [ ] **Étape 2 — Écrire les autres `doc.go`** *(une ligne descriptive par package)*
 
-Exemple `internal/orchestration/doc.go` :
+Exemple `internal/orchestration/doc.go` :
 ```go
 // Package orchestration dispatches decisions across the deterministic
 // and probabilistic regimes. It owns the Decision and Trace types.
@@ -323,7 +323,7 @@ Idem pour `calibration`, `bridge/llm`, `bridge/agentmeshkafka`, `app`, `config`,
 go build ./...
 ```
 
-Attendu : pas d'erreur, pas de package buildé *(seulement des `doc.go`)*.
+Attendu : pas d'erreur, pas de package buildé *(seulement des `doc.go`)*.
 
 - [ ] **Étape 4 — Commit M0.4**
 
@@ -336,11 +336,11 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.5 — FrontierCheck + test
 
-**Files :**
+**Files :**
 - Create: `internal/tau/frontier.go`
 - Create: `internal/tau/frontier_test.go`
 
-**Agent :** `ruflo-core:coder` (TDD : test rouge d'abord)
+**Agent :** `ruflo-core:coder` (TDD : test rouge d'abord)
 
 - [ ] **Étape 1 — Écrire le test rouge**
 
@@ -392,7 +392,7 @@ func TestFrontierCheck_Inside_OneConditionMet_Refused(t *testing.T) {
 go test ./internal/tau/...
 ```
 
-Attendu : `undefined: FrontierCheck`.
+Attendu : `undefined: FrontierCheck`.
 
 - [ ] **Étape 3 — Implémenter FrontierCheck**
 
@@ -424,7 +424,7 @@ func (f FrontierCheck) Inside() bool {
 go test -race ./internal/tau/...
 ```
 
-Attendu : `ok internal/tau 0.123s`.
+Attendu : `ok internal/tau 0.123s`.
 
 - [ ] **Étape 5 — Commit M0.5**
 
@@ -442,10 +442,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.6 — Squelette `internal/tau/operator.go` (panic not implemented)
 
-**Files :**
+**Files :**
 - Create: `internal/tau/operator.go`
 
-**Agent :** `ruflo-core:coder`
+**Agent :** `ruflo-core:coder`
 
 - [ ] **Étape 1 — Écrire les types stubs et la signature Decide**
 
@@ -509,7 +509,7 @@ type Kernel interface {
 go build ./internal/tau/
 ```
 
-Attendu : pas d'erreur.
+Attendu : pas d'erreur.
 
 - [ ] **Étape 3 — Commit M0.6**
 
@@ -525,10 +525,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.7 — Architecture test (étanchéité des 4 couches)
 
-**Files :**
+**Files :**
 - Create: `internal/arch_test.go`
 
-**Agent :** `ruflo-core:coder`
+**Agent :** `ruflo-core:coder`
 
 - [ ] **Étape 1 — Écrire arch_test.go avec règles d'étanchéité**
 
@@ -595,7 +595,7 @@ func TestArchitectureLayering(t *testing.T) {
 go test -v ./internal/...
 ```
 
-Attendu : `TestArchitectureLayering` passe (avec `SKIP` pour les packages non encore peuplés).
+Attendu : `TestArchitectureLayering` passe (avec `SKIP` pour les packages non encore peuplés).
 
 - [ ] **Étape 3 — Commit M0.7**
 
@@ -612,10 +612,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.8 — `cmd/tau/main.go` squelette CLI
 
-**Files :**
+**Files :**
 - Create: `cmd/tau/main.go`
 
-**Agent :** `ruflo-core:coder`
+**Agent :** `ruflo-core:coder`
 
 - [ ] **Étape 1 — Écrire main.go minimal avec `--help`**
 
@@ -666,7 +666,7 @@ go build -o tau ./cmd/tau
 ./tau --version
 ```
 
-Attendus :
+Attendus :
 - `--help` → texte d'aide
 - `--version` → `tau 0.0.1-alpha (build dev)`
 
@@ -684,23 +684,23 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.9 — CI GitHub Actions (build + test + lint)
 
-**Files :**
+**Files :**
 - Create: `.github/workflows/ci.yml`
 - Create: `.github/workflows/coverage.yml`
 
-**Agent :** `Explore` (calque FibGo) → `ruflo-core:coder` (adapter)
+**Agent :** `Explore` (calque FibGo) → `ruflo-core:coder` (adapter)
 
 - [ ] **Étape 1 — Récupérer les workflows FibGo de référence**
 
-Briefing pour `Explore` : « Récupère `.github/workflows/ci.yml` et `.github/workflows/coverage.yml` de `agbruneau/FibGo` branche `main`. Rapporte verbatim. »
+Briefing pour `Explore` : « Récupère `.github/workflows/ci.yml` et `.github/workflows/coverage.yml` de `agbruneau/FibGo` branche `main`. Rapporte verbatim. »
 
 - [ ] **Étape 2 — Adapter `ci.yml` pour TauGo**
 
-Calque FibGo : matrice `{ubuntu-latest, macos-latest, windows-latest}` × Go `1.25.x`. Jobs : `lint`, `test (race, short)`, `build`. Cache `~/.cache/go-build`. Race detector activé sur Linux/macOS (CGO disponible).
+Calque FibGo : matrice `{ubuntu-latest, macos-latest, windows-latest}` × Go `1.25.x`. Jobs : `lint`, `test (race, short)`, `build`. Cache `~/.cache/go-build`. Race detector activé sur Linux/macOS (CGO disponible).
 
 - [ ] **Étape 3 — Adapter `coverage.yml`**
 
-Gate `MIN_COVERAGE=80` global. Upload à codecov (optionnel). Pour TauGo : ajouter étape « couverture par package » avec gate ≥ 90 % sur `tau/*` *(à activer dès M1 où le package a du code)*.
+Gate `MIN_COVERAGE=80` global. Upload à codecov (optionnel). Pour TauGo : ajouter étape « couverture par package » avec gate ≥ 90 % sur `tau/*` *(à activer dès M1 où le package a du code)*.
 
 - [ ] **Étape 4 — Vérifier syntaxe YAML**
 
@@ -709,7 +709,7 @@ Gate `MIN_COVERAGE=80` global. Upload à codecov (optionnel). Pour TauGo : ajout
 actionlint .github/workflows/*.yml
 ```
 
-Sinon : pousser une branche temporaire pour validation GitHub.
+Sinon : pousser une branche temporaire pour validation GitHub.
 
 - [ ] **Étape 5 — Commit M0.9**
 
@@ -725,11 +725,11 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.10 — README minimal + CHANGELOG
 
-**Files :**
+**Files :**
 - Create: `README.md`
 - Create: `CHANGELOG.md`
 
-**Agent :** `ruflo-core:researcher` (rédaction alignée monographie + PRD)
+**Agent :** `ruflo-core:researcher` (rédaction alignée monographie + PRD)
 
 - [ ] **Étape 1 — Rédiger `README.md` minimal**
 
@@ -800,10 +800,10 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.11 — `docs/theory/03-operateur-tau.md` (en parallèle de M0.5-M0.6)
 
-**Files :**
+**Files :**
 - Create: `docs/theory/03-operateur-tau.md`
 
-**Agent :** `ruflo-core:researcher` (alignement chap. III.8.3)
+**Agent :** `ruflo-core:researcher` (alignement chap. III.8.3)
 
 **Parallélisable** avec M0.5-M0.6.
 
@@ -853,7 +853,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 
 ### Tâche M0.12 — Validation finale M0 et tag
 
-**Agent :** thread principal (intégration), `ruflo-core:reviewer` (revue)
+**Agent :** thread principal (intégration), `ruflo-core:reviewer` (revue)
 
 - [ ] **Étape 1 — Lancer la suite complète localement**
 
@@ -861,11 +861,11 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
 make all
 ```
 
-Vérifier : build vert, tests passent, lint sans warning, `TestRefusHorsFrontiere` (renommé `TestFrontierCheck_*`) passe, `TestArchitectureLayering` passe.
+Vérifier : build vert, tests passent, lint sans warning, `TestRefusHorsFrontiere` (renommé `TestFrontierCheck_*`) passe, `TestArchitectureLayering` passe.
 
 - [ ] **Étape 2 — Briefing reviewer**
 
-Briefing pour `ruflo-core:reviewer` : « Revue intégrée du commit range `M0.1..HEAD`. Vérifier : (1) absence d'anti-patron (pas de `Predict*` exporté, pas d'import LLM concret dans `tau/`), (2) `arch_test.go` couvre les 4 règles d'étanchéité PRD §8.1, (3) FrontierCheck correspond verbatim au chap. III.8.3.2 (4 conditions, conjonction stricte), (4) conventions de code calquent FibGo (interfaces étroites, `t.Parallel()`, pas d'emoji). Rapport bref. »
+Briefing pour `ruflo-core:reviewer` : « Revue intégrée du commit range `M0.1..HEAD`. Vérifier : (1) absence d'anti-patron (pas de `Predict*` exporté, pas d'import LLM concret dans `tau/`), (2) `arch_test.go` couvre les 4 règles d'étanchéité PRD §8.1, (3) FrontierCheck correspond verbatim au chap. III.8.3.2 (4 conditions, conjonction stricte), (4) conventions de code calquent FibGo (interfaces étroites, `t.Parallel()`, pas d'emoji). Rapport bref. »
 
 - [ ] **Étape 3 — Tag `v0.0.1-alpha`**
 
@@ -892,21 +892,21 @@ git push origin v0.0.1-alpha
 
 Ouvrir GitHub Actions, confirmer les jobs `ci.yml` et `coverage.yml` verts sur 3 OS.
 
-**Sortie M0** : repo initialisé, CI verte, premier test métier vert, étanchéité gardée, première trace théorie ↔ code. M1 peut démarrer.
+**Sortie M0** : repo initialisé, CI verte, premier test métier vert, étanchéité gardée, première trace théorie ↔ code. M1 peut démarrer.
 
 ---
 
 # Milestone M1 — Dispatcher minimal + stub LLM (résumé)
 
-**Objectif** : `tau decide --input fixture.json` rend une `Decision` instrumentée avec `Regime ∈ {Deterministe, Probabiliste}`. Pas encore de dimensions calculables (M2) ; le régime est tiré d'un seuil naïf sur un score factice.
+**Objectif** : `tau decide --input fixture.json` rend une `Decision` instrumentée avec `Regime ∈ {Deterministe, Probabiliste}`. Pas encore de dimensions calculables (M2) ; le régime est tiré d'un seuil naïf sur un score factice.
 
-**Critère d'acceptation** :
+**Critère d'acceptation** :
 ```bash
 echo '{"id":"test-1","intent_description":"trivial echo"}' | ./tau decide
 # → JSON Decision avec Regime, Trace, ProfileVersion
 ```
 
-**Tâches de haut niveau** *(à détailler au démarrage de M1 par `Plan`)* :
+**Tâches de haut niveau** *(à détailler au démarrage de M1 par `Plan`)* :
 
 | # | Tâche | Agent |
 |---|---|---|
@@ -916,19 +916,19 @@ echo '{"id":"test-1","intent_description":"trivial echo"}' | ./tau decide
 | M1.4 | Injection LLM en `internal/app/` (config + factory) | `ruflo-core:coder` |
 | M1.5 | Commande `tau decide` avec parsing JSON stdin et sortie JSON | `ruflo-core:coder` |
 | M1.6 | Test E2E `cmd/tau` (TestEndToEnd_DecideDeterministe / TestEndToEnd_DecideProbabiliste) | `ruflo-core:coder` |
-| M1.7 | `TestDefaultLLMIsStub` (anti-patron : refuser appel LLM externe en test) | `ruflo-core:coder` |
+| M1.7 | `TestDefaultLLMIsStub` (anti-patron : refuser appel LLM externe en test) | `ruflo-core:coder` |
 | M1.8 | `TestDecisionAlwaysTraced`, `TestRefusImpliesDiagnostic`, `TestTraceImmutable` | `ruflo-core:coder` |
 | M1.9 | Revue + tag `v0.0.2-alpha` | thread principal + `ruflo-core:reviewer` |
 
-**Dépendances** : M0 complet. **Recherche préalable** : `Explore` localise `bigfft/pool.go` FibGo pour le pattern d'interface étroite ; `ruflo-core:researcher` confirme l'alignement PRD §10 / §12.2.
+**Dépendances** : M0 complet. **Recherche préalable** : `Explore` localise `bigfft/pool.go` FibGo pour le pattern d'interface étroite ; `ruflo-core:researcher` confirme l'alignement PRD §10 / §12.2.
 
 ---
 
 # Milestone M2 — Trois dimensions + gardes ontologique D-AUTORITÉ et I4 (résumé)
 
-**Objectif** : les sondes D-SENS, D-AUTORITÉ, D-INVARIANT calculent un score `[0, 1]`. La garde ontologique §4.4 et la garde I4 §6.1 sont actives. Le pseudo-algorithme PRD §10 est complet (étapes 1-7).
+**Objectif** : les sondes D-SENS, D-AUTORITÉ, D-INVARIANT calculent un score `[0, 1]`. La garde ontologique §4.4 et la garde I4 §6.1 sont actives. Le pseudo-algorithme PRD §10 est complet (étapes 1-7).
 
-**Critère d'acceptation** :
+**Critère d'acceptation** :
 ```bash
 go test -race ./... && \
   go test -run TestRefusOntologiqueDAUTORITE ./internal/tau/ && \
@@ -936,7 +936,7 @@ go test -race ./... && \
 ```
 …vert. Rapport `docs/empirical/M2-sample-decisions.md` avec ≥ 10 décisions tracées et leurs scores ventilés.
 
-**Tâches de haut niveau** :
+**Tâches de haut niveau** :
 
 | # | Tâche | Agent |
 |---|---|---|
@@ -952,17 +952,17 @@ go test -race ./... && \
 | M2.10 | Rapport `docs/empirical/M2-sample-decisions.md` | `ruflo-core:researcher` |
 | M2.11 | Revue + tag `v0.0.3-alpha` | thread principal + `ruflo-core:reviewer` |
 
-**Recherche préalable** : `Explore` extrait le pattern `atomic.Int64` du `bigfft/fft.go` FibGo ; `ruflo-core:researcher` valide les pondérations initiales contre PRD §5.
+**Recherche préalable** : `Explore` extrait le pattern `atomic.Int64` du `bigfft/fft.go` FibGo ; `ruflo-core:researcher` valide les pondérations initiales contre PRD §5.
 
 ---
 
 # Milestone M3 — Cinq invariants comme cibles fuzz (résumé)
 
-**Objectif** : `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5.
+**Objectif** : `go test -fuzz=. -fuzztime=30s ./internal/tau/invariants/` vert sur I1-I5.
 
-**Critère d'acceptation** : aucune panique, aucun crash sur 30 s/cible × 5 cibles. Rapport `docs/empirical/fuzz-summary.md` avec : nombre d'entrées explorées, couverture de la corpus, exceptions épinglées, marqueur statut.
+**Critère d'acceptation** : aucune panique, aucun crash sur 30 s/cible × 5 cibles. Rapport `docs/empirical/fuzz-summary.md` avec : nombre d'entrées explorées, couverture de la corpus, exceptions épinglées, marqueur statut.
 
-**Tâches de haut niveau** :
+**Tâches de haut niveau** :
 
 | # | Tâche | Agent |
 |---|---|---|
@@ -973,46 +973,46 @@ go test -race ./... && \
 | M3.5 | `internal/tau/invariants/i5_composition.go` + API d'agrégation M(π) (calcul V2) | `ruflo-core:coder` |
 | M3.6 | `internal/tau/invariants/fuzz_targets.go` — `FuzzI1` à `FuzzI5` | `ruflo-core:coder` |
 | M3.7 | Corpus initial fuzz (`testdata/fuzz/FuzzI*/*`) | `ruflo-core:researcher` |
-| M3.8 | Étape 8 du dispatcher : `EvaluateInvariants` sur la trace | `ruflo-core:coder` |
+| M3.8 | Étape 8 du dispatcher : `EvaluateInvariants` sur la trace | `ruflo-core:coder` |
 | M3.9 | `TestNoPredictiveAPI`, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` | `ruflo-core:coder` |
 | M3.10 | `docs/theory/05-invariants.md` + `docs/empirical/fuzz-summary.md` | `ruflo-core:researcher` |
 | M3.11 | Revue + tag `v0.0.4-alpha` | thread principal + `ruflo-core:reviewer` |
 
-**Recherche préalable** : `Explore` étudie les cibles fuzz FibGo (`bigfft/FuzzMul`, `bigfft/FuzzSqr`, `fibonacci/FuzzFastDoublingConsistency`) pour le pattern.
+**Recherche préalable** : `Explore` étudie les cibles fuzz FibGo (`bigfft/FuzzMul`, `bigfft/FuzzSqr`, `fibonacci/FuzzFastDoublingConsistency`) pour le pattern.
 
 ---
 
 # Milestone M4 — Adaptateur AgentMeshKafka + campagne empirique I4 (résumé)
 
-**Objectif** : trace empirique end-to-end ; rapport I4 sur ≥ 100 traces analysées.
+**Objectif** : trace empirique end-to-end ; rapport I4 sur ≥ 100 traces analysées.
 
-**Critère d'acceptation** :
+**Critère d'acceptation** :
 ```bash
 go test -race -tags=integration ./test/e2e/agentmeshkafka_test.go
 ```
-…vert (peut nécessiter Kafka local ou mock fidèle). Rapport `docs/empirical/I4-report.md` avec : nombre de cas incohérents détectés, faux positifs, faux négatifs, marqueur statut (Hypothèse → Probable visé).
+…vert (peut nécessiter Kafka local ou mock fidèle). Rapport `docs/empirical/I4-report.md` avec : nombre de cas incohérents détectés, faux positifs, faux négatifs, marqueur statut (Hypothèse → Probable visé).
 
-**Tâches de haut niveau** :
+**Tâches de haut niveau** :
 
 | # | Tâche | Agent |
 |---|---|---|
 | M4.1 | `internal/bridge/agentmeshkafka/adapter.go` + interface `Adapter` | `ruflo-core:coder` |
 | M4.2 | Mock fidèle (TestContainers ou Sarama mock) | `ruflo-core:coder` |
 | M4.3 | E2E `test/e2e/agentmeshkafka_test.go` | `ruflo-core:coder` |
-| M4.4 | Campagne empirique I4 : ingestion ≥ 100 traces réelles + classification | `ruflo-core:researcher` |
+| M4.4 | Campagne empirique I4 : ingestion ≥ 100 traces réelles + classification | `ruflo-core:researcher` |
 | M4.5 | Rapport `docs/empirical/I4-report.md` (Hypothèse → Probable si confirmé) | `ruflo-core:researcher` |
 | M4.6 | Rapport `docs/empirical/unmodeled.md` initial | `ruflo-core:researcher` |
 | M4.7 | Revue + tag `v0.0.5-alpha` | thread principal + `ruflo-core:reviewer` |
 
-**Risque #1** (PRD §18) : `AgentMeshKafka` peut ne pas être prêt. Plan de contingence : continuer avec mock seul ; reporter campagne empirique à M4.bis ; M5 peut démarrer en parallèle sur le stub LLM uniquement.
+**Risque #1** (PRD §18) : `AgentMeshKafka` peut ne pas être prêt. Plan de contingence : continuer avec mock seul ; reporter campagne empirique à M4.bis ; M5 peut démarrer en parallèle sur le stub LLM uniquement.
 
 ---
 
 # Milestone M5 — Calibration adaptative + drift (résumé)
 
-**Objectif** : `tau calibrate` produit un profil reproductible byte-identique sur corpus fixé ; drift détecté invalide le profil.
+**Objectif** : `tau calibrate` produit un profil reproductible byte-identique sur corpus fixé ; drift détecté invalide le profil.
 
-**Critère d'acceptation** :
+**Critère d'acceptation** :
 ```bash
 tau calibrate --corpus tests/calibration/golden-corpus.jsonl --output /tmp/p1.json
 tau calibrate --corpus tests/calibration/golden-corpus.jsonl --output /tmp/p2.json
@@ -1021,7 +1021,7 @@ sha256sum /tmp/p1.json /tmp/p2.json
 ```
 `TestCalibrationDeterministic` passe.
 
-**Tâches de haut niveau** :
+**Tâches de haut niveau** :
 
 | # | Tâche | Agent |
 |---|---|---|
@@ -1038,24 +1038,24 @@ sha256sum /tmp/p1.json /tmp/p2.json
 
 # Milestone M6 — Docs + typographie + release v0.1.0 (résumé)
 
-**Objectif** : release `v0.1.0`. Typographie française appliquée (U+00A0). Documentation complète. Tous critères de succès PRD §17 vérifiés.
+**Objectif** : release `v0.1.0`. Typographie française appliquée (U+00A0). Documentation complète. Tous critères de succès PRD §17 vérifiés.
 
-**Critère d'acceptation** : checklist PRD §17 verte sur 10/10 items. Audit textuel final : aucun emoji, aucune fabrication, aucune citation non sourçée.
+**Critère d'acceptation** : checklist PRD §17 verte sur 10/10 items. Audit textuel final : aucun emoji, aucune fabrication, aucune citation non sourçée.
 
-**Tâches de haut niveau** :
+**Tâches de haut niveau** :
 
 | # | Tâche | Agent |
 |---|---|---|
 | M6.1 | Typographie française dans `PRD.md`, `CLAUDE.md`, `PRDPlanning.md`, `docs/` | `ruflo-core:researcher` |
 | M6.2 | `docs/theory/06-conditions-validite.md`, `docs/theory/07-anti-patrons.md` | `ruflo-core:researcher` |
 | M6.3 | `docs/algorithms/dispatch.md` complet | `ruflo-core:researcher` |
-| M6.4 | ADRs : `0001-clean-architecture-4-layers.md`, `0002-go-1.25-toolchain.md`, `0003-llm-client-injection.md`, `0004-agentmeshkafka-empirical-bridge.md` | `ruflo-core:researcher` |
+| M6.4 | ADRs : `0001-clean-architecture-4-layers.md`, `0002-go-1.25-toolchain.md`, `0003-llm-client-injection.md`, `0004-agentmeshkafka-empirical-bridge.md` | `ruflo-core:researcher` |
 | M6.5 | `README.md` final (badges CI, exemples d'usage, schéma) | `ruflo-core:researcher` |
 | M6.6 | Cas BFSI anonymisé (`docs/empirical/case-study-bfsi.md`) | `ruflo-core:researcher` |
-| M6.7 | Audit final : `understand-anything:project-scanner` + `understand-anything:architecture-analyzer` | agents `understand-anything:*` |
+| M6.7 | Audit final : `understand-anything:project-scanner` + `understand-anything:architecture-analyzer` | agents `understand-anything:*` |
 | M6.8 | Revue finale + tag `v0.1.0` | thread principal + `ruflo-core:reviewer` |
 
-**Audit final** *(parallélisable)* :
+**Audit final** *(parallélisable)* :
 
 ```
 3 agents en parallèle :
@@ -1070,7 +1070,7 @@ sha256sum /tmp/p1.json /tmp/p2.json
 
 ## Annexe X.1 — Self-review du plan (à exécuter avant commit du plan)
 
-- ☐ **Couverture spec** : chaque section du PRD §1-§20 a-t-elle une tâche correspondante ?
+- ☐ **Couverture spec** : chaque section du PRD §1-§20 a-t-elle une tâche correspondante ?
   - §1-§3 (cadrage) → couvert par M0 docs + M6 README
   - §4 (opérateur τ) → M0.5 (FrontierCheck) + M0.6 (Kernel.Decide stub) + M2.5 (ontologique)
   - §5 (dimensions) → M2.2, M2.3, M2.4
@@ -1082,16 +1082,16 @@ sha256sum /tmp/p1.json /tmp/p2.json
   - §11 (calibration) → M2.7, M2.8, M5.1-M5.4
   - §12 (bridges) → M1.3, M1.4, M4.1
   - §13 (stack) → M0.1, M0.2, M0.3
-  - §14 (conventions) → appliquées partout ; lint via golangci-lint
+  - §14 (conventions) → appliquées partout ; lint via golangci-lint
   - §15 (tests) → chaque tâche TDD + M3 (fuzz) + M4 (e2e)
   - §16 (roadmap) → ce document est la décomposition de §16
   - §17 (critères de succès) → checklist M6.8
-  - §18 (risques) → noté en M4 contingence ; gardes CI partout
-  - §19 (glossaire) → maintenu dans PRD ; pas de tâche dédiée
+  - §18 (risques) → noté en M4 contingence ; gardes CI partout
+  - §19 (glossaire) → maintenu dans PRD ; pas de tâche dédiée
   - §20 (prochaines étapes) → M0 démarrage
-- ☐ **Placeholder scan** : pas de TBD, TODO, "à compléter" résiduel dans les tâches M0 *(M1-M6 résumés volontairement haut niveau)*
-- ☐ **Cohérence des types** : `Decision`, `Exchange`, `FrontierCheck`, `Kernel`, `Regime` cohérents entre M0.5, M0.6, M1.1, M1.2
-- ☐ **Anti-patrons gardés** :
+- ☐ **Placeholder scan** : pas de TBD, TODO, « à compléter » résiduel dans les tâches M0 *(M1-M6 résumés volontairement haut niveau)*
+- ☐ **Cohérence des types** : `Decision`, `Exchange`, `FrontierCheck`, `Kernel`, `Regime` cohérents entre M0.5, M0.6, M1.1, M1.2
+- ☐ **Anti-patrons gardés** :
   - #1 prédictif → `TestNoPredictiveAPI` en M3.9
   - #2 hors frontière → `TestFrontierCheck_*` en M0.5
   - #3 atemporel → `TestI3_DateRevisionRespectee`, `TestExpiredProfileRefuses` en M3.9, M5.6
@@ -1099,15 +1099,15 @@ sha256sum /tmp/p1.json /tmp/p2.json
 
 ## Annexe X.2 — Modes d'exécution disponibles
 
-À la clôture de chaque milestone, le coordinateur (thread principal) choisit :
+À la clôture de chaque milestone, le coordinateur (thread principal) choisit :
 
-1. **Subagent-driven** *(recommandé)* — `superpowers:subagent-driven-development` : un sous-agent frais par tâche, revue entre tâches, itération rapide. **Privilégier pour M0-M3.**
-2. **Inline execution** — `superpowers:executing-plans` : exécution dans la session courante avec checkpoints. **À envisager pour M4-M6 si le contexte théorique nécessite continuité.**
+1. **Subagent-driven** *(recommandé)* — `superpowers:subagent-driven-development` : un sous-agent frais par tâche, revue entre tâches, itération rapide. **Privilégier pour M0-M3.**
+2. **Inline execution** — `superpowers:executing-plans` : exécution dans la session courante avec checkpoints. **À envisager pour M4-M6 si le contexte théorique nécessite continuité.**
 
 ## Annexe X.3 — Mise à jour de ce plan
 
-Ce document est **vivant**. À l'ouverture de chaque milestone M1-M6, l'agent `Plan` produit un **sous-plan détaillé** par milestone, suivant la même granularité bite-sized que M0. Le sous-plan est commité dans `docs/superpowers/plans/YYYY-MM-DD-M{N}-<feature>.md`. Le présent `PRDPlanning.md` reste le **plan-cadre** et est mis à jour seulement pour : changement de séquence des milestones, changement de critère d'acceptation, changement d'agent assigné.
+Ce document est **vivant**. À l'ouverture de chaque milestone M1-M6, l'agent `Plan` produit un **sous-plan détaillé** par milestone, suivant la même granularité bite-sized que M0. Le sous-plan est commité dans `docs/superpowers/plans/YYYY-MM-DD-M{N}-<feature>.md`. Le présent `PRDPlanning.md` reste le **plan-cadre** et est mis à jour seulement pour : changement de séquence des milestones, changement de critère d'acceptation, changement d'agent assigné.
 
 ---
 
-*Plan V0.1 — 2026-05-23. Référence : `PRD.md` V0.2. Coordinateur : Claude Code thread principal. Exécutants : agent teams.*
+*Plan V0.1 — 2026-05-23. Référence : `PRD.md` V0.2. Coordinateur : Claude Code thread principal. Exécutants : agent teams.*

@@ -1,8 +1,8 @@
 # Algorithme de dispatch τ — V1
 
-**Date :** 2026-05-24
-**Statut :** Confirmé par construction
-**Renvois :** *(chap. III.8.3 / PRD §10)*
+**Date :** 2026-05-24
+**Statut :** Confirmé par construction
+**Renvois :** *(chap. III.8.3 / PRD §10)*
 
 ---
 
@@ -31,13 +31,13 @@ Exchange + Profile
    Decision{Regime, Diagnostic, Trace}
 ```
 
-**Positionnement dans la Clean Architecture :** le dispatcher réside dans `internal/orchestration/`
+**Positionnement dans la Clean Architecture :** le dispatcher réside dans `internal/orchestration/`
 (couche `orchestration`). Il appelle vers le bas `internal/tau/` (dimensions, invariants, frontier)
 et `internal/calibration/` (profil, seuils). Il ne remonte jamais vers `internal/app/` ni
 vers `internal/bridge/` — étanchéité gardée par `internal/arch_test.go`. *(chap. III.8.3)*
 
-**Entrée unique :** `tau.Exchange` — l'échange interopérabilité soumis à τ.
-**Sortie unique :** `tau.Decision` — régime (`Deterministe | Probabiliste | Refus`), diagnostic
+**Entrée unique :** `tau.Exchange` — l'échange interopérabilité soumis à τ.
+**Sortie unique :** `tau.Decision` — régime (`Deterministe | Probabiliste | Refus`), diagnostic
 éventuel, trace immuable complète.
 
 ---
@@ -87,84 +87,84 @@ SORTIE  : d Decision (toujours instrumentée)
 
 ### Étape 1 — Frontière *(Confirmé)*
 
-**Description :** `frontierFromExchange(x)` dérive un `tau.FrontierCheck` à partir des champs
+**Description :** `frontierFromExchange(x)` dérive un `tau.FrontierCheck` à partir des champs
 `x.Target.DiscoveryMode` et `x.Initiator` selon l'heuristique M2. `FrontierCheck.Inside()` est
-`true` si et seulement si les quatre conditions classiques sont simultanément tenues :
+`true` si et seulement si les quatre conditions classiques sont simultanément tenues :
 `UniversOuvert ∧ CompositionVariable ∧ PairProbabiliste ∧ CoutNonBorne`. *(chap. III.8.3.2)*
 
-**Garde :** `!frontier.Inside()` → `Refus` immédiat. Anti-patron #2 : aucun bypass de
+**Garde :** `!frontier.Inside()` → `Refus` immédiat. Anti-patron #2 : aucun bypass de
 `FrontierCheck.Inside()` n'est toléré.
 
-**Diagnostic en cas de refus :** `"hors frontière τ"`
+**Diagnostic en cas de refus :** `"hors frontière τ"`
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/tau/frontier.go` — type `FrontierCheck`, méthode `Inside()`
 - `internal/orchestration/dispatcher.go` lignes 97-100 — appel `frontierFromExchange`, garde
 
-**Test associé :** `TestRefusHorsFrontiere` (`internal/anti_patterns_test.go`)
+**Test associé :** `TestRefusHorsFrontiere` (`internal/anti_patterns_test.go`)
 
 ---
 
 ### Étape 2 — Garde ontologique D-AUTORITÉ *(Probable)*
 
-**Description :** `dimensions.ScoreDAuthority(ctx, x, dimensions.DefaultAuthorityWeights())`
+**Description :** `dimensions.ScoreDAuthority(ctx, x, dimensions.DefaultAuthorityWeights())`
 retourne un score `[0, 1]` encodant l'asymétrie de la chaîne de délégation (Searle 1995).
 Si `authScore.Value >= θ_auth_block` sans `AttestationInstitutionnelle`, l'échange est refusé
 sur le verrou ontologique I3. *(chap. III.8.5.3)*
 
-**Garde :** `authScore.Value >= d.thresholds.AuthBlock && x.AttestationInstitutionnelle == nil`
+**Garde :** `authScore.Value >= d.thresholds.AuthBlock && x.AttestationInstitutionnelle == nil`
 
-**Diagnostic en cas de refus :** `"I3 — verrou ontologique D-AUTORITÉ"`
+**Diagnostic en cas de refus :** `"I3 — verrou ontologique D-AUTORITÉ"`
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/tau/dimensions/dauthority.go` — `ScoreDAuthority`
 - `internal/orchestration/dispatcher.go` lignes 103-109 — garde étape 2
-- `internal/orchestration/thresholds.go` — `Thresholds.AuthBlock` (défaut : 0.85)
+- `internal/orchestration/thresholds.go` — `Thresholds.AuthBlock` (défaut : 0.85)
 
-**Test associé :** `TestRefusOntologiqueDAUTORITE`, `TestOntologicalGuardPassesWithAttestation`
+**Test associé :** `TestRefusOntologiqueDAUTORITE`, `TestOntologicalGuardPassesWithAttestation`
 (`internal/orchestration/guards_test.go`)
 
 ---
 
 ### Étape 3 — Garde péremption *(Confirmé)*
 
-**Description :** si un `Profile` a été fourni via `NewDispatcherWithProfile`, le dispatcher
+**Description :** si un `Profile` a été fourni via `NewDispatcherWithProfile`, le dispatcher
 compare la date courante (`d.now()`, horloge injectable) à `p.DateRevision`. La comparaison est
-strictement `After` : `today == dateRevision` n'est pas un refus ici. En revanche,
+strictement `After` : `today == dateRevision` n'est pas un refus ici. En revanche,
 `calibration.CheckDrift` utilise `>=` (un jour plus tôt), constituant une alerte précoce
 distincte — l'asymétrie est intentionnelle (voir `docs/algorithms/drift.md`).
 
-**Garde :** `d.profile != nil && !d.profile.DateRevision.IsZero() && d.now().After(d.profile.DateRevision)`
+**Garde :** `d.profile != nil && !d.profile.DateRevision.IsZero() && d.now().After(d.profile.DateRevision)`
 
-**Diagnostic en cas de refus :** `"profil périmé — veille requise"`
+**Diagnostic en cas de refus :** `"profil périmé — veille requise"`
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/orchestration/dispatcher.go` lignes 112-119 — garde étape 3
 - `internal/orchestration/dispatcher.go` lignes 47-51 — `NewDispatcherWithProfile`
 - `internal/calibration/drift.go` — `CheckDrift`, critère `DriftDateExpired`
 
-**Test associé :** `TestDispatcher_Step3_ExpiredProfileRefuses`,
+**Test associé :** `TestDispatcher_Step3_ExpiredProfileRefuses`,
 `TestDispatcher_Step3_NotExpiredProceeds`, `TestDispatcher_Step3_ZeroDateRevisionSkipsCheck`,
 `TestDispatcher_Step3_NilProfileSkipsCheck` (`internal/orchestration/dispatcher_expiry_test.go`),
 `TestI3_DateRevisionRespectee` (`internal/anti_patterns_test.go`)
 
-**Renvoi croisé :** `docs/algorithms/drift.md §2` — asymétrie `After` vs `>=`
+**Renvoi croisé :** `docs/algorithms/drift.md §2` — asymétrie `After` vs `>=`
 
 ---
 
 ### Étape 4 — Scores trois dimensions *(Probable)*
 
-**Description :** D-AUTORITÉ a déjà été calculée à l'étape 2 et est réutilisée. Les deux
-dimensions restantes sont calculées ici :
+**Description :** D-AUTORITÉ a déjà été calculée à l'étape 2 et est réutilisée. Les deux
+dimensions restantes sont calculées ici :
 
 - `dimensions.ScoreDSens(ctx, x, dimensions.DefaultSensWeights(), d.llm)` — lieu de fixation du
   sens sémantique, [0, 1]. Fait appel au client LLM injecté pour la sonde `S_reasoner_intent`.
 - `dimensions.ScoreDInvariant(ctx, x, dimensions.DefaultInvariantWeights())` — support des
   invariants d'intégration, [0, 1]. Entièrement déterministe.
 
-**Garde :** aucune à cette étape — les scores sont calculés et transmis aux étapes suivantes.
+**Garde :** aucune à cette étape — les scores sont calculés et transmis aux étapes suivantes.
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/tau/dimensions/dsens.go` — `ScoreDSens`
 - `internal/tau/dimensions/dauthority.go` — `ScoreDAuthority` (calculée étape 2, réutilisée)
 - `internal/tau/dimensions/dinvariant.go` — `ScoreDInvariant`
@@ -175,29 +175,29 @@ dimensions restantes sont calculées ici :
 
 ### Étape 5 — Garde cohérence I4 *(Hypothèse)*
 
-**Description :** I4 détecte la rupture silencieuse *(chap. III.7)* : un D-INVARIANT élevé
+**Description :** I4 détecte la rupture silencieuse *(chap. III.7)* : un D-INVARIANT élevé
 combiné à un D-SENS faible signale une configuration où les invariants d'intégration exigent
 un cadre que le sens sémantique ne peut pas ancrer. La combinaison est déclarée incohérente et
 le dispatcher refuse plutôt que de produire une décision non fondée.
 
-**Garde :** `invScore.Value >= d.thresholds.InvCoherence && sensScore.Value < d.thresholds.SensCoherence`
-(défauts : `InvCoherence = 0.50`, `SensCoherence = 0.50`)
+**Garde :** `invScore.Value >= d.thresholds.InvCoherence && sensScore.Value < d.thresholds.SensCoherence`
+(défauts : `InvCoherence = 0.50`, `SensCoherence = 0.50`)
 
-**Diagnostic en cas de refus :** `"I4 — combinaison incohérente détectée"`
+**Diagnostic en cas de refus :** `"I4 — combinaison incohérente détectée"`
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/orchestration/dispatcher.go` lignes 131-133 — garde étape 5
 - `internal/tau/invariants/i4_coherence.go` — `I4CoherenceCheck` (évaluation I4 autonome)
 
-**Test associé :** `TestI4_IncoherenceDetectee`, `TestI4_CoherentCombinationAccepted`
+**Test associé :** `TestI4_IncoherenceDetectee`, `TestI4_CoherentCombinationAccepted`
 (`internal/orchestration/guards_test.go`)
 
 ---
 
 ### Étape 6 — Composite τ_score *(Hypothèse sur les poids)*
 
-**Description :** les trois scores dimensionnels sont combinés en un scalaire `τ_score ∈ [0, 1]`
-par somme pondérée :
+**Description :** les trois scores dimensionnels sont combinés en un scalaire `τ_score ∈ [0, 1]`
+par somme pondérée :
 
 ```
 τ_score = w_s · D_SENS + w_a · D_AUTORITÉ + w_i · D_INVARIANT
@@ -206,7 +206,7 @@ par somme pondérée :
 Les poids par défaut M2 sont `(0.4, 0.3, 0.3)` — valeurs initiales PRD §11.1,
 statut `Hypothèse`, à corroborer par la calibration empirique M4-M5.
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/orchestration/dispatcher.go` lignes 136-139 — calcul composite
 - `internal/orchestration/dispatcher.go` lignes 14-20 — `defaultDimensionWeights`
 - `internal/calibration/weights.go` — type `Weights`, structure de poids calibrée
@@ -215,7 +215,7 @@ statut `Hypothèse`, à corroborer par la calibration empirique M4-M5.
 
 ### Étape 7 — Hystérèse et décision discrète *(Hypothèse sur le défaut)*
 
-**Description :** `τ_score` est mappé sur un régime discret par seuillage à double hystérèse :
+**Description :** `τ_score` est mappé sur un régime discret par seuillage à double hystérèse :
 
 ```
 τ_score >= θ_p  ⇒  Probabiliste
@@ -227,50 +227,50 @@ déclenche un `panic` interne (calque `bigfft/fermat.go` de FibGo). Le défaut `
 la zone d'hystérèse est un choix conservateur M2 — un mécanisme `LastRegime` basé sur
 `Decision.LastRegime` est prévu en V2 pour la persistance du dernier régime connu.
 
-**Statut du défaut :** `Hypothèse` — le choix `Deterministe` dans la bande `[θ_d, θ_p)` n'est
+**Statut du défaut :** `Hypothèse` — le choix `Deterministe` dans la bande `[θ_d, θ_p)` n'est
 pas encore validé empiriquement.
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/orchestration/dispatcher.go` lignes 142-145 — seuillage
 - `internal/orchestration/thresholds.go` — `DefaultThresholds()`, `Ordered()`
 - `internal/tau/operator.go` — constantes `Deterministe`, `Probabiliste`, `Refus`
 
-**Test associé :** `TestDispatcher_Decide_HysteresisDefaultsToDeterministe`
+**Test associé :** `TestDispatcher_Decide_HysteresisDefaultsToDeterministe`
 (`internal/orchestration/dispatcher_test.go`)
 
 ---
 
 ### Étape 8 — Évaluation des invariants *(Confirmé)*
 
-**Description :** `invariants.EvaluateInvariants(x, decision)` est appelé après la décision de
-régime. Son rôle est **exclusivement observationnel** : le `Regime` issu de l'étape 7 n'est jamais
+**Description :** `invariants.EvaluateInvariants(x, decision)` est appelé après la décision de
+régime. Son rôle est **exclusivement observationnel** : le `Regime` issu de l'étape 7 n'est jamais
 modifié. Si des violations sont détectées, leurs résumés sont annexés à
 `Trace.UnmodeledObservations`. Les violations à cette étape ne génèrent pas de `Refus` — elles
 signalent des observations non modélisées pour audit ultérieur. *(chap. III.8.5)*
 
-**Garde :** `statuses.AnyViolated()` → annexe dans `Trace.UnmodeledObservations` uniquement.
+**Garde :** `statuses.AnyViolated()` → annexe dans `Trace.UnmodeledObservations` uniquement.
 
-**Fichiers Go :**
+**Fichiers Go :**
 - `internal/tau/invariants/evaluator.go` — `EvaluateInvariants`, `Statuses`, `AnyViolated`, `Summary`
 - `internal/orchestration/dispatcher.go` lignes 159-166 — appel étape 8
 
-**Test associé :** `TestStep8_InvariantsEvaluated_NoViolation_TraceEmpty`,
+**Test associé :** `TestStep8_InvariantsEvaluated_NoViolation_TraceEmpty`,
 `TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched`,
 `TestStep8_RegimeUntouchedByEvaluation` (`internal/orchestration/dispatcher_invariants_test.go`)
 
-**Renvoi croisé :** `docs/theory/05-invariants.md`
+**Renvoi croisé :** `docs/theory/05-invariants.md`
 
 ---
 
 ## §4 Ordre des étapes — non arbitraire
 
-L'ordre des huit étapes est prescrit par PRD §10.1 ligne 539 :
+L'ordre des huit étapes est prescrit par PRD §10.1 ligne 539 :
 `frontière → ontologie → péremption → scores → cohérence → composite → hystérèse → invariants`.
 Chaque permutation brise au moins une garantie.
 
 | Permutation hypothétique | Ce qui casse |
 |---|---|
-| Ontologie (2) avant frontière (1) | `ScoreDAuthority` s'exécute pour des échanges hors du domaine τ. Résultat : calcul inutile, score potentiellement non borné sur entrée non valide. C1 n'est plus le filtre de premier rang. |
+| Ontologie (2) avant frontière (1) | `ScoreDAuthority` s'exécute pour des échanges hors du domaine τ. Résultat : calcul inutile, score potentiellement non borné sur entrée non valide. C1 n'est plus le filtre de premier rang. |
 | Péremption (3) avant ontologie (2) | Un profil périmé contient des seuils `AuthBlock` potentiellement obsolètes. Vérifier la péremption après l'ontologie signifie que la garde I3 a pu s'exécuter sur un `AuthBlock` invalide. |
 | Scores (4) avant péremption (3) | `ScoreDSens` appelle le client LLM (réseau / I/O). Effectuer ce travail coûteux pour ensuite refuser sur péremption est un gaspillage explicitement interdit (anti-patron #3). |
 | Cohérence I4 (5) avant scores (4) | Les scores `s` et `i` n'existent pas encore. La garde ne peut pas s'évaluer. |
@@ -286,7 +286,7 @@ Toute `Decision` porte une `Trace` construite par valeur (pas de pointeur partag
 `Dispatcher.Decide` retourné, la `Trace` ne doit pas être mutée par l'appelant — son contenu
 reflète l'état exact au moment de la décision.
 
-Champs de `tau.Trace` accumulés au fil des étapes :
+Champs de `tau.Trace` accumulés au fil des étapes :
 
 | Champ | Type | Rempli à l'étape |
 |---|---|---|
@@ -300,7 +300,7 @@ Champs de `tau.Trace` accumulés au fil des étapes :
 `tau.TraceThresholds` est un snapshot des seuils en vigueur au moment de l'appel — il reflète
 `Thresholds.Deterministe`, `Probabiliste`, `AuthBlock`, `SensCoherence`, `InvCoherence`.
 
-**Fichier Go :** `internal/tau/operator.go` — types `Trace`, `TraceThresholds`, `Decision`
+**Fichier Go :** `internal/tau/operator.go` — types `Trace`, `TraceThresholds`, `Decision`
 
 ---
 
@@ -317,13 +317,13 @@ Champs de `tau.Trace` accumulés au fil des étapes :
 | 7 — Hystérèse | `Deterministe` ou `Probabiliste` | `ExchangeID`, `TauScore`, `Frontier`, `Thresholds`, `DurationNs` | `TestDecisionAlwaysTraced`, `TestTraceImmutable` |
 | 8 — Invariants | régime inchangé | `UnmodeledObservations` (si violation) | `TestStep8_InvariantsEvaluated_ViolationDetected_TraceEnriched` |
 
-**Contrats vérifiés par les tests d'instrumentation :**
+**Contrats vérifiés par les tests d'instrumentation :**
 
-- `TestDecisionAlwaysTraced` : `Trace.ExchangeID == x.ID` et `DurationNs > 0` pour tout régime.
-- `TestTraceImmutable` : la mutation locale de la `Trace` retournée ne se propage pas à la
+- `TestDecisionAlwaysTraced` : `Trace.ExchangeID == x.ID` et `DurationNs > 0` pour tout régime.
+- `TestTraceImmutable` : la mutation locale de la `Trace` retournée ne se propage pas à la
   décision suivante.
-- `TestRefusImpliesDiagnostic` : `Regime == Refus ⟺ Diagnostic != ""`.
-- `TestUnmodeledObservationsReported` : `Statuses.Summary()` produit des lignes non vides
+- `TestRefusImpliesDiagnostic` : `Regime == Refus ⟺ Diagnostic != ""`.
+- `TestUnmodeledObservationsReported` : `Statuses.Summary()` produit des lignes non vides
   ancrées sur les bons préfixes invariants (`I1`, `I3`, etc.).
 
 ---
@@ -337,7 +337,7 @@ Champs de `tau.Trace` accumulés au fil des étapes :
 des heuristiques M2, marquées `placeholder` dans le code source
 (`internal/orchestration/dispatcher.go` lignes 171-183).
 
-Conséquence observée en M4 : environ 30 % des échanges du corpus empirique
+Conséquence observée en M4 : environ 30 % des échanges du corpus empirique
 `AgentMeshKafka` déclenchent un `Refus` à l'étape 1 via `Inside() == false`, classifiés en
 `OBS-002` dans `docs/empirical/unmodeled.md`. Ces refus reflètent la limite de l'heuristique,
 non une violation théorique. La calibration empirique M5 n'a pas encore affiné les règles de
@@ -368,13 +368,13 @@ pas implémenté en V1 — `Decision.LastRegime` est réservé pour V2.
 | M3 | 8 (évaluation invariants, observabilité) | `evaluator.go`, `dispatcher_invariants_test.go` |
 | M5 | 3 (garde péremption, `NewDispatcherWithProfile`, horloge injectable) | `dispatcher_expiry_test.go`, liens `drift.go` |
 
-Statut de toutes les étapes listées : `Confirmé` (implémentation testée, CI verte 3 OS).
+Statut de toutes les étapes listées : `Confirmé` (implémentation testée, CI verte 3 OS).
 
 ---
 
 ## §9 Anti-patrons et garde-fous
 
-Les étapes 1, 2 et 3 correspondent directement aux trois premiers anti-patrons de CLAUDE.md :
+Les étapes 1, 2 et 3 correspondent directement aux trois premiers anti-patrons de CLAUDE.md :
 
 | Anti-patron | Étape dispatcher | Garde test |
 |---|---|---|
@@ -386,7 +386,7 @@ L'anti-patron #1 (API prédictive exportée `Predict*/Expected*/Forecast*`) est 
 transversalement par `TestNoPredictiveAPI` (`internal/anti_patterns_test.go`) — il s'applique à
 tous les packages `tau/`, `orchestration/` et non à une étape spécifique.
 
-**Renvoi croisé :** `docs/theory/07-anti-patrons.md`
+**Renvoi croisé :** `docs/theory/07-anti-patrons.md`
 
 ---
 

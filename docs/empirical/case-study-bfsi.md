@@ -1,12 +1,12 @@
-# Cas d'étude — Secteur BFSI : virement interbancaire sous délégation
+# Cas d'étude — Secteur BFSI : virement interbancaire sous délégation
 
-> **Statut** : Probable — cas synthétique pédagogique inspiré de patterns BFSI publics.
+> **Statut** : Probable — cas synthétique pédagogique inspiré de patterns BFSI publics.
 > Ce document illustre l'application du dispatcher τ à une catégorie de transactions BFSI typique.
 > Il ne s'appuie sur aucun cas client réel, aucune donnée opérationnelle réelle, et aucune
 > institution identifiable. Aucun montant présenté ici n'est empirique.
-> Renvois : *(PRD §17 critère #1, §1.1, §4.4, §6, §10, chap. III.8)*
+> Renvois : *(PRD §17 critère #1, §1.1, §4.4, §6, §10, chap. III.8)*
 >
-> Daté : 2026-05-24. Pour les traces empiriques réelles, voir
+> Daté : 2026-05-24. Pour les traces empiriques réelles, voir
 > `docs/empirical/I4-report.md` (M4, corpus AgentMeshKafka).
 
 ---
@@ -18,9 +18,9 @@ Elle déploie un assistant agentique BFSI chargé d'initier des virements interb
 pour le compte de clients, sous délégation d'un orchestrateur humain supervisant de
 manière asynchrone.
 
-Le cadre réglementaire fictif combine :
-- **RGPD-like** (protection des données personnelles) ;
-- **LCBA** — Loi Concernant le Blanchiment d'Argent (fictif/générique) : seuil
+Le cadre réglementaire fictif combine :
+- **RGPD-like** (protection des données personnelles) ;
+- **LCBA** — Loi Concernant le Blanchiment d'Argent (fictif/générique) : seuil
   déclaratif fixé à 7 000 CAD dans ce scénario (valeur illustrative).
 
 L'agent agit avec `delegation_depth=2` (l'humain a délégué à un orchestrateur qui
@@ -62,13 +62,13 @@ opposable n'a été fournie.
 }
 ```
 
-**Points saillants** :
-- `human_in_loop=false` : supervision asynchrone uniquement — aucun humain dans la boucle synchrone.
-- `delegation_depth=2` : chaîne humain → orchestrateur → agent.
-- `discovery_mode=1` (DynamicMCP) : la capacité est résolue dynamiquement à l'exécution.
-- `contract_uri=""` : aucun contrat statique préenregistré.
-- `attestation_institutionnelle=null` : **point critique** — aucune attestation opposable fournie.
-- `lcba_threshold_breached=true` : le montant dépasse le seuil LCBA fictif (valeur illustrative).
+**Points saillants** :
+- `human_in_loop=false` : supervision asynchrone uniquement — aucun humain dans la boucle synchrone.
+- `delegation_depth=2` : chaîne humain → orchestrateur → agent.
+- `discovery_mode=1` (DynamicMCP) : la capacité est résolue dynamiquement à l'exécution.
+- `contract_uri=""` : aucun contrat statique préenregistré.
+- `attestation_institutionnelle=null` : **point critique** — aucune attestation opposable fournie.
+- `lcba_threshold_breached=true` : le montant dépasse le seuil LCBA fictif (valeur illustrative).
 
 ---
 
@@ -76,7 +76,7 @@ opposable n'a été fournie.
 
 ### Étape 1 — Vérification de frontière (`FrontierCheck`)
 
-Le dispatcher évalue `frontierFromExchange(x)` *(PRD §10, étape 1)* :
+Le dispatcher évalue `frontierFromExchange(x)` *(PRD §10, étape 1)* :
 
 | Condition | Valeur | Motif |
 |---|---|---|
@@ -92,7 +92,7 @@ violées *(chap. III.8.5.1)*. L'échange est dans la frontière τ. Le dispatche
 ### Étape 2 — Garde ontologique D-AUTORITÉ (I3) *(PRD §4.4, §6, chap. III.8.4)*
 
 Le dispatcher calcule `ScoreDAuthority(x)` avec les poids par défaut PRD §5.2
-(0.25 chacun — valeurs illustratives) :
+(0.25 chacun — valeurs illustratives) :
 
 | Sonde | Valeur | Motif |
 |---|---|---|
@@ -104,9 +104,9 @@ Le dispatcher calcule `ScoreDAuthority(x)` avec les poids par défaut PRD §5.2
 
 `D-AUTH = 0.875 >= AuthBlock = 0.85` **ET** `AttestationInstitutionnelle = nil`.
 
-La condition de la garde I3 est satisfaite *(PRD §6, I3)* :
+La condition de la garde I3 est satisfaite *(PRD §6, I3)* :
 
-> D-AUTORITÉ asymétrique (fait institutionnel — Searle 1995) ; sans
+> D-AUTORITÉ asymétrique (fait institutionnel — Searle 1995) ; sans
 > `AttestationInstitutionnelle` → refus ontologique. *(chap. III.8.4)*
 
 Le dispatcher retourne immédiatement **Refus I3**. Les étapes 3 à 8 ne sont pas atteintes.
@@ -142,14 +142,14 @@ Le dispatcher retourne immédiatement **Refus I3**. Les étapes 3 à 8 ne sont p
 }
 ```
 
-**Notes sur les valeurs illustratives** :
-- `tau_score=0` : normal — la garde I3 est préemptive ; D-SENS et D-INVARIANT ne sont
+**Notes sur les valeurs illustratives** :
+- `tau_score=0` : normal — la garde I3 est préemptive ; D-SENS et D-INVARIANT ne sont
   pas calculés (étape 2 coupe avant étape 4). Ce comportement est identique aux
   fixtures f04 de `M2-sample-decisions.md` — Confirmé.
-- `date_revision="2026-08-16T00:00:00Z"` : valeur illustrative (trimestrielle à partir
+- `date_revision="2026-08-16T00:00:00Z"` : valeur illustrative (trimestrielle à partir
   de 2026-05-16 — statut I3 Probable, veille trimestrielle). À vérifier en production.
-- `duration_ns=1` : plancher garanti par `durationNs()` sur Windows (résolution timer).
-- `profile_version="M3-default"` : valeur du dispatcher courant (`v0.0.x-alpha`).
+- `duration_ns=1` : plancher garanti par `durationNs()` sur Windows (résolution timer).
+- `profile_version="M3-default"` : valeur du dispatcher courant (`v0.0.x-alpha`).
   Probable — à confirmer en M4 après calibration.
 
 ---
@@ -157,23 +157,23 @@ Le dispatcher retourne immédiatement **Refus I3**. Les étapes 3 à 8 ne sont p
 ## §5 Interprétation
 
 τ ne prédit pas que le virement va échouer. τ refuse parce que le **fait institutionnel
-est absent** *(chap. III.8.4, Searle 1995)* : l'autorité déléguée à cet agent pour
+est absent** *(chap. III.8.4, Searle 1995)* : l'autorité déléguée à cet agent pour
 initier un virement LCBA-flaggé vers InstitutionΒ n'a pas été rendue opposable par
 une attestation.
 
-La distinction est fondamentale :
+La distinction est fondamentale :
 
 | Ce que τ n'affirme pas | Ce que τ affirme |
 |---|---|
-| « Ce virement va échouer » | « Je n'ai pas de fait institutionnel pour autoriser ceci » |
-| « Le client est frauduleux » | « La chaîne de délégation dépasse le seuil D-AUTORITÉ sans attestation » |
-| « InstitutionΒ est suspecte » | « `lcba_threshold_breached=true` aggrave l'exposition ; l'attestation est la seule sortie » |
+| « Ce virement va échouer » | « Je n'ai pas de fait institutionnel pour autoriser ceci » |
+| « Le client est frauduleux » | « La chaîne de délégation dépasse le seuil D-AUTORITÉ sans attestation » |
+| « InstitutionΒ est suspecte » | « `lcba_threshold_breached=true` aggrave l'exposition ; l'attestation est la seule sortie » |
 
 Le refus est une **décision pleine, instrumentée, opposable** *(PRD §7.3)* — pas un
 échec technique. Il invite l'institution à fournir une attestation conforme avant de
 réexécuter l'échange *(voir §7 variante V1)*.
 
-**Pourquoi D-AUTH = 0.875 franchit le seuil** : la combinaison `depth=2` (chaîne
+**Pourquoi D-AUTH = 0.875 franchit le seuil** : la combinaison `depth=2` (chaîne
 non triviale), `cross-org` (InstitutionΑ → InstitutionΒ), `no-human-anchor` et
 `dynamic-resolution` cumule 3,5 unités de contribution sur 4 possibles. Une chaîne
 plus courte ou un humain en boucle abaisserait D-AUTH sous 0.85 (voir §7 variantes).
@@ -185,8 +185,8 @@ plus courte ou un humain en boucle abaisserait D-AUTH sous 0.85 (voir §7 varian
 | # | Anti-patron | Situation dans ce cas | Résultat |
 |---|---|---|---|
 | **#2** | Bypass de `FrontierCheck.Inside()` | `Inside()=true` → frontière franchie, pas de refus prématuré | Conforme |
-| **#1** | Méthode `Predict*` exportée | τ ne dit pas « ça va échouer » — il dit « je refuse car fait institutionnel absent » | Conforme |
-| **#3** | Profil périmé toléré | `date_revision` vérifié à l'étape 3 ; profil valide au 2026-05-24 | Conforme (Probable) |
+| **#1** | Méthode `Predict*` exportée | τ ne dit pas « ça va échouer » — il dit « je refuse car fait institutionnel absent » | Conforme |
+| **#3** | Profil périmé toléré | `date_revision` vérifié à l'étape 3 ; profil valide au 2026-05-24 | Conforme (Probable) |
 | **#6** | Import LLM concret dans `tau/*` | Garde I3 s'exécute avant `ScoreDSens` qui appelle le LLM stub — pas d'appel LLM réel | Conforme |
 
 ---
@@ -195,7 +195,7 @@ plus courte ou un humain en boucle abaisserait D-AUTH sous 0.85 (voir §7 varian
 
 ### V1 — Attestation présente → Probabiliste (valeurs illustratives)
 
-Si l'opérateur humain fournit une attestation institutionnelle :
+Si l'opérateur humain fournit une attestation institutionnelle :
 
 ```json
 "attestation_institutionnelle": {
@@ -206,13 +206,13 @@ Si l'opérateur humain fournit une attestation institutionnelle :
 }
 ```
 
-La garde I3 ne se déclenche pas (`Attestation != nil`). Le calcul continue :
+La garde I3 ne se déclenche pas (`Attestation != nil`). Le calcul continue :
 - D-SENS (valeur illustrative) ≈ 0.880 (intent riche, DynamicMCP, pas de contrat).
 - D-INV (valeur illustrative) ≈ 0.450 (médiation dynamique, sans event_registry ni idempotency).
-- Garde I4 : D-INV(0.450) < InvCoherence(0.50) → ne se déclenche pas.
+- Garde I4 : D-INV(0.450) < InvCoherence(0.50) → ne se déclenche pas.
 - τ_score ≈ 0.4×0.880 + 0.3×0.875 + 0.3×0.450 ≈ **0.750** >= 0.65 → **Probabiliste**.
 
-Statut V1 : Probable — les sondes D-SENS dépendent du stub LLM ; à vérifier M4.
+Statut V1 : Probable — les sondes D-SENS dépendent du stub LLM ; à vérifier M4.
 
 ### V2 — Montant 200 CAD (LCBA non breached), depth=2, intra-org
 
@@ -222,15 +222,15 @@ Si le montant passe à 200 CAD et que l'opération reste intra-org
 contexte** directement — elles restent pilotées par `depth` et `discovery_mode`.
 D-AUTH reste 0.875 (valeur illustrative). L'attestation reste requise.
 
-Enseignement : τ évalue la **structure de délégation**, pas le contenu métier.
+Enseignement : τ évalue la **structure de délégation**, pas le contenu métier.
 Un virement de 200 CAD avec la même chaîne et sans attestation reçoit le même Refus I3.
 La conformité LCBA est une couche applicative en amont de τ.
 
-Statut V2 : Hypothèse — comportement structurel, non calibré sur données réelles.
+Statut V2 : Hypothèse — comportement structurel, non calibré sur données réelles.
 
 ### V3 — Humain direct (delegation_depth=0, human_in_loop=true)
 
-Si le virement est initié directement par l'humain (`delegation_depth=0`, `human_in_loop=true`) :
+Si le virement est initié directement par l'humain (`delegation_depth=0`, `human_in_loop=true`) :
 
 | Sonde | Valeur | Motif |
 |---|---|---|
@@ -240,38 +240,38 @@ Si le virement est initié directement par l'humain (`delegation_depth=0`, `huma
 | `A_dynamic_resolution` | 0.000 ou 1.0 | Selon `discovery_mode` (Static → 0) |
 | **D-AUTH** | **0.000** (Static) | Sous AuthBlock=0.85 |
 
-Frontière : `PairProbabiliste=false` (`HumanInLoop=true`), `CoutNonBorne=false`
+Frontière : `PairProbabiliste=false` (`HumanInLoop=true`), `CoutNonBorne=false`
 (`depth=0`) → `Inside()=false` → **Refus hors frontière τ** (étape 1).
 
 τ ne s'applique pas au cas humain direct — c'est une opération hors frontière agentique.
-Si `discovery_mode=DynamicMCP` et `delegation_depth=0` mais `human_in_loop=true` :
+Si `discovery_mode=DynamicMCP` et `delegation_depth=0` mais `human_in_loop=true` :
 `PairProbabiliste=false` suffit à rendre `Inside()=false` (toutes les 4 conditions
 doivent être vraies simultanément).
 
-Statut V3 : Confirmé — comportement déterministe par construction booléenne.
+Statut V3 : Confirmé — comportement déterministe par construction booléenne.
 
 ---
 
 ## §8 Limites du cas
 
-1. **Cas synthétique non généralisable** : aucune trace réelle d'InstitutionΑ n'existe.
-   Ce cas est pédagogique ; la seule source empirique disponible est `docs/empirical/I4-report.md`
+1. **Cas synthétique non généralisable** : aucune trace réelle d'InstitutionΑ n'existe.
+   Ce cas est pédagogique ; la seule source empirique disponible est `docs/empirical/I4-report.md`
    (M4, corpus AgentMeshKafka, 5 traces). (Hypothèse)
 
-2. **Juridiction simplifiée** : la LCBA fictive et le RGPD-like sont des simplifications
+2. **Juridiction simplifiée** : la LCBA fictive et le RGPD-like sont des simplifications
    grossières. Un déploiement réel nécessiterait une analyse juridique complète. (À vérifier)
 
-3. **Sondes V1 coarses** : les sondes D-SENS et D-INVARIANT de la version M3 ne lisent pas
+3. **Sondes V1 coarses** : les sondes D-SENS et D-INVARIANT de la version M3 ne lisent pas
    `lcba_threshold_breached` ni `destination_org` du contexte. La connexion entre
    données métier BFSI et dimensions τ passe par le calibrage M4-M5, pas par
    l'ingénierie directe des sondes. (Hypothèse)
 
-4. **D-AUTORITÉ insensible au montant** : comme montré en V2, τ évalue la structure de
+4. **D-AUTORITÉ insensible au montant** : comme montré en V2, τ évalue la structure de
    délégation, pas la valeur transactionnelle. Les contrôles de conformité métier
    (seuils LCBA, limites de virement) sont de la responsabilité de la couche applicative
    en amont du dispatcher. (Confirmé)
 
-5. **LLM stub** : les valeurs illustratives D-SENS supposent le stub FNV-1a (`stub:v0`).
+5. **LLM stub** : les valeurs illustratives D-SENS supposent le stub FNV-1a (`stub:v0`).
    Un backend LLM réel donnerait des valeurs de `S_reasoner_intent` différentes. (Hypothèse)
 
 ---
@@ -286,7 +286,7 @@ Statut V3 : Confirmé — comportement déterministe par construction booléenne
 | `docs/empirical/I4-report.md` | Corpus empirique M4 (seule source empirique réelle) |
 | Monographie | chap. III.8.4 (D-AUTORITÉ), chap. III.8.5 (invariants I1-I5) |
 
-*Note* : `docs/algorithms/dispatch.md` (cible M6.3) n'était pas encore créé au moment
+*Note* : `docs/algorithms/dispatch.md` (cible M6.3) n'était pas encore créé au moment
 de la rédaction de ce document. Les 8 étapes du dispatcher sont documentées dans
 `internal/orchestration/dispatcher.go` (commentaires godoc) et `PRD.md §10`.
 
@@ -296,17 +296,17 @@ de la rédaction de ce document. Les 8 étapes du dispatcher sont documentées d
 
 | Élément | Statut | Justification |
 |---|---|---|
-| Mécanisme τ — garde I3 préemptive | Confirmé | Construction booléenne déterministe ; couvert par `TestRefusI3AuthBlock` et fixture f04 |
-| Valeurs de seuils (AuthBlock=0.85) | Probable | Valeurs initiales PRD §11.1 ; calibration M4 non encore terminée |
-| Scores D-AUTH illustratifs (0.875) | Probable | Calcul analytique exact selon implémentation M3 ; dépend des poids PRD §5.2 |
-| Pertinence du scénario BFSI | Hypothèse | Synthétique ; aucune trace réelle disponible pour ce type de transaction |
-| Comportement V1 (attestation levant I3) | Probable | Analogue à f06 de M2-sample-decisions ; construction booléenne `Attestation != nil` |
-| Comportement V3 (hors frontière) | Confirmé | `Inside()` est booléen ; `HumanInLoop=true` → `PairProbabiliste=false` → refus étape 1 |
+| Mécanisme τ — garde I3 préemptive | Confirmé | Construction booléenne déterministe ; couvert par `TestRefusI3AuthBlock` et fixture f04 |
+| Valeurs de seuils (AuthBlock=0.85) | Probable | Valeurs initiales PRD §11.1 ; calibration M4 non encore terminée |
+| Scores D-AUTH illustratifs (0.875) | Probable | Calcul analytique exact selon implémentation M3 ; dépend des poids PRD §5.2 |
+| Pertinence du scénario BFSI | Hypothèse | Synthétique ; aucune trace réelle disponible pour ce type de transaction |
+| Comportement V1 (attestation levant I3) | Probable | Analogue à f06 de M2-sample-decisions ; construction booléenne `Attestation != nil` |
+| Comportement V3 (hors frontière) | Confirmé | `Inside()` est booléen ; `HumanInLoop=true` → `PairProbabiliste=false` → refus étape 1 |
 
-**Satisfait** : PRD §17 critère #1 — cas d'étude BFSI anonymisé documentant le
+**Satisfait** : PRD §17 critère #1 — cas d'étude BFSI anonymisé documentant le
 dispatch τ instrumenté sur un échange réaliste.
 
 ---
 
 *BFSI case study V0.1 — 2026-05-24. Aucune institution réelle. Aucun chiffre empirique.
-Marqueur global : Probable — cas synthétique pédagogique.*
+Marqueur global : Probable — cas synthétique pédagogique.*

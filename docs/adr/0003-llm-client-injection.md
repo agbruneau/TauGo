@@ -1,20 +1,20 @@
 # ADR-0003 — LLM client injecté via interface étroite
 
-*Statut : Accepté · Daté 2026-05-24 (rétroactif M1) · Auteurs : thread principal + ruflo-swarm:architect*
+*Statut : Accepté · Daté 2026-05-24 (rétroactif M1) · Auteurs : thread principal + ruflo-swarm:architect*
 
 ## Contexte
 
 La sonde `S_reasoner_intent` (dimension D-SENS, chap. III.8.3) nécessite d'interpréter
 l'intention sémantique d'un échange agentique. Cette opération est fondamentalement
-probabiliste : elle s'appuie sur un modèle de langage (LLM) pour produire un score
+probabiliste : elle s'appuie sur un modèle de langage (LLM) pour produire un score
 de sens `[0, 1]`.
 
-Or, l'anti-patron PRD §12.2 / §7.2.6 l'interdit explicitement :
+Or, l'anti-patron PRD §12.2 / §7.2.6 l'interdit explicitement :
 
 > Aucun import LLM concret (`anthropic`, `openai`, …) dans `internal/tau/*`
 > ou `internal/orchestration/*`.
 
-Cette interdiction est motivée par trois risques simultanés :
+Cette interdiction est motivée par trois risques simultanés :
 
 1. **Risque PRD §18 #5** — si le kernel τ importe un SDK LLM concret, il hérite
    de sa politique de retry, de ses timeouts et de ses conventions d'erreur.
@@ -28,13 +28,13 @@ Cette interdiction est motivée par trois risques simultanés :
    `internal/bridge/llm/stub.go` doit produire exactement les mêmes scores pour
    une entrée donnée, à des fins de golden tests et de benchmarks.
 
-La tension est donc : le kernel a besoin d'une capacité LLM, mais ne doit pas
+La tension est donc : le kernel a besoin d'une capacité LLM, mais ne doit pas
 connaître l'implémentation concrète.
 
 ## Décision
 
 TauGo adopte une **interface étroite `llm.Client`** définie dans
-`internal/bridge/llm/`, injectée par `internal/app/` :
+`internal/bridge/llm/`, injectée par `internal/app/` :
 
 ```go
 // Package llm fournit l'abstraction du client LLM injecté dans le kernel τ.
@@ -53,7 +53,7 @@ type Client interface {
 }
 ```
 
-Règles d'application :
+Règles d'application :
 
 1. **Injection en `internal/app/`** — `app/` est la seule couche autorisée à
    instancier un client LLM concret (Anthropic, OpenAI, ou autre).
@@ -68,17 +68,17 @@ Règles d'application :
 
 ## Conséquences
 
-**Positives :**
+**Positives :**
 - Le kernel τ est indépendant de tout fournisseur LLM. Remplacement d'Anthropic
   par un modèle local (ollama, llama.cpp) sans modification de `internal/tau/*`.
 - `make test` et `make fuzz` s'exécutent sans clé API ni accès réseau — contrainte
   CI satisfaite sur les 3 OS.
-- La calibration est reproductible : le stub déterministe garantit que deux exécutions
+- La calibration est reproductible : le stub déterministe garantit que deux exécutions
   de `make benchmark` sur le même corpus produisent des scores identiques.
 - L'interface à 2 méthodes (ISP — PRD §11.3) minimise la surface de contrat.
 
-**Négatives :**
-- Une couche d'indirection supplémentaire : `tau` → interface → `app` → SDK concret.
+**Négatives :**
+- Une couche d'indirection supplémentaire : `tau` → interface → `app` → SDK concret.
   Coût = ~1 allocation supplémentaire par appel LLM dans le chemin chaud.
 - Le stub doit être maintenu en synchronisation avec le comportement du LLM réel
   pour que les golden tests restent significatifs. Dérive possible si le modèle
@@ -86,7 +86,7 @@ Règles d'application :
 - L'injection par `app/` impose que les tests d'intégration (`test/e2e/`) soient
   sous build tag `integration` et fournissent leur propre implémentation concrète.
 
-**Neutres :**
+**Neutres :**
 - Le stub fait < 100 LOC — charge de maintenance négligeable.
 
 ## Alternatives rejetées
@@ -97,11 +97,11 @@ Règles d'application :
 
 2. **Plugin dynamique (DLL / `.so`)** — aurait isolé le code concret du kernel,
    mais introduit une complexité de chargement dynamique sans bénéfice pour V1.
-   Le build cross-platform (Linux/macOS/Windows) devient fragile. Rejet : complexité
+   Le build cross-platform (Linux/macOS/Windows) devient fragile. Rejet : complexité
    gratuite pour un projet n'ayant pas encore de cas d'usage de hot-swap en production.
 
 3. **Service LLM externe via gRPC** — isole totalement le LLM dans un processus
-   séparé. Overkill pour V1 ; ajoute latence et infrastructure réseau en test.
+   séparé. Overkill pour V1 ; ajoute latence et infrastructure réseau en test.
    Non écarté définitivement pour V2+ si le kernel devient distribué.
 
 ## Renvois
@@ -116,4 +116,4 @@ Règles d'application :
 - ADR-0001 (Clean Architecture — étanchéité que cette ADR renforce)
 - ADR-0005 (DTO — pattern analogue pour AgentMeshKafka)
 
-*Statut : Confirmé — stub actif depuis M1, aucune fuite LLM détectée par arch_test.*
+*Statut : Confirmé — stub actif depuis M1, aucune fuite LLM détectée par arch_test.*

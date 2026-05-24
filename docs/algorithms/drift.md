@@ -1,8 +1,8 @@
 # Détection de drift — Algorithme V1
 
-**Date :** 2026-05-24
-**Statut :** Probable
-**Renvois :** *(PRD §11.4)* · *(PRD §7.1 C3)* · *(PRD §10 étape 3)*
+**Date :** 2026-05-24
+**Statut :** Probable
+**Renvois :** *(PRD §11.4)* · *(PRD §7.1 C3)* · *(PRD §10 étape 3)*
 
 ---
 
@@ -12,7 +12,7 @@ Un profil de calibration encode l'environnement dans lequel il a été produit
 (architecture CPU, modèle LLM, corpus, date de révision). Dès que cet environnement change,
 les seuils calibrés peuvent ne plus être valides. `calibration.CheckDrift` invalide le profil
 de façon déterministe avant que le dispatcher ne l'utilise, en évaluant les cinq critères
-PRD §11.4. L'invalidation est immédiate : aucun fallback silencieux, aucun profil périmé
+PRD §11.4. L'invalidation est immédiate : aucun fallback silencieux, aucun profil périmé
 toléré *(anti-patron #3, CLAUDE.md)*.
 
 ---
@@ -29,7 +29,7 @@ toléré *(anti-patron #3, CLAUDE.md)*.
 
 Le critère 4 est le seul dont l'effet est un `Refus` sans appel dans le dispatcher
 *(PRD §10 étape 3)*. Les critères 1-3 et 5 déclenchent un rapport de health en V1
-(log seulement ; promotion à `Refus` ou recalibration en arrière-plan est réservée à V2).
+(log seulement ; promotion à `Refus` ou recalibration en arrière-plan est réservée à V2).
 
 ---
 
@@ -39,18 +39,18 @@ Le critère 4 est le seul dont l'effet est un `Refus` sans appel dans le dispatc
 
 `calibration.CheckDrift(current Profile, now time.Time, env Env) DriftReport`
 
-Pour chaque critère fingerprint (1-3) :
+Pour chaque critère fingerprint (1-3) :
 
 ```
 si Profile.XFingerprint != "" && env.CurrentXFingerprint != Profile.XFingerprint:
     ajouter critère + message de diagnostic à DriftReport
 ```
 
-La garde `!= ""` est cruciale : un profil sans fingerprint enregistré (cas premier démarrage,
+La garde `!= ""` est cruciale : un profil sans fingerprint enregistré (cas premier démarrage,
 `DefaultProfile()` retourne des chaînes vides pour CPU et corpus) ne déclenche pas de fausse
 alarme. Le dispatcher peut démarrer proprement avant la première calibration complète.
 
-Pour le critère date (4) :
+Pour le critère date (4) :
 
 ```
 si !now.Before(Profile.DateRevision):   // c.-à-d. now >= DateRevision
@@ -72,8 +72,8 @@ type DriftReport struct {
 
 ### 3.3 Composition des critères
 
-Tous les critères sont évalués indépendamment : un profil peut déclencher DriftCPU et
-DriftDateExpired simultanément. Le rapport agrège l'ensemble ; l'appelant décide de l'action.
+Tous les critères sont évalués indépendamment : un profil peut déclencher DriftCPU et
+DriftDateExpired simultanément. Le rapport agrège l'ensemble ; l'appelant décide de l'action.
 En V1, seul `DriftDateExpired` entraîne un `Refus` au niveau dispatcher *(PRD §10 étape 3)*.
 
 ---
@@ -88,7 +88,7 @@ exemple : "linux/amd64" · "darwin/arm64" · "windows/amd64"
 source  : runtime.GOOS + "/" + runtime.GOARCH
 ```
 
-Simplification V1 : l'identifiant d'architecture logicielle (`GOOS/GOARCH`) est suffisant pour
+Simplification V1 : l'identifiant d'architecture logicielle (`GOOS/GOARCH`) est suffisant pour
 détecter les changements de plateforme croisée. Un fingerprint `cpuid` réel (fréquence, nombre
 de coeurs logiques, jeu d'instructions) est différé à M6 si le besoin est confirmé empiriquement
 *(Hypothèse)*.
@@ -96,10 +96,10 @@ de coeurs logiques, jeu d'instructions) est différé à M6 si le besoin est con
 ### 4.2 LLM — `Profile.ModelLLMFingerprint`
 
 La valeur est fournie par l'appelant via `llm.Client.Fingerprint()`. Le package `calibration`
-n'importe pas `bridge/llm` (étanchéité Clean Architecture — `arch_test.go`). En mode stub :
-`"stub:v0"`. Avec un modèle réel : l'identifiant du modèle fourni par le client concret.
+n'importe pas `bridge/llm` (étanchéité Clean Architecture — `arch_test.go`). En mode stub :
+`"stub:v0"`. Avec un modèle réel : l'identifiant du modèle fourni par le client concret.
 
-`DefaultProfile()` pré-positionne `ModelLLMFingerprint = "stub:v0"` ; un changement de modèle
+`DefaultProfile()` pré-positionne `ModelLLMFingerprint = "stub:v0"` ; un changement de modèle
 dans `internal/app/` doit mettre à jour ce champ lors de la création du profil.
 
 ### 4.3 Corpus — `calibration.FingerprintCorpus(jsonlPath string) (string, error)`
@@ -110,7 +110,7 @@ calcul : sha256(contenu_fichier)
 ```
 
 Le même fichier produit toujours le même digest. Deux fichiers distincts produisent des digests
-distincts (collision SHA-256 : négligeable). L'invalidation détecte tout ajout, suppression ou
+distincts (collision SHA-256 : négligeable). L'invalidation détecte tout ajout, suppression ou
 modification d'entrée dans le corpus JSONL. Chemin vide dans `Env.CurrentCorpusFingerprint`
 désactive la vérification (usage programmatique sans corpus sur disque).
 
@@ -118,7 +118,7 @@ désactive la vérification (usage programmatique sans corpus sur disque).
 
 ## §5 Intégration au dispatcher
 
-Étape 3 du pseudo-algorithme PRD §10 :
+Étape 3 du pseudo-algorithme PRD §10 :
 
 ```
 CheckDrift(profil_courant, now, env)
@@ -127,15 +127,15 @@ CheckDrift(profil_courant, now, env)
 ```
 
 Le diagnostic textuel canonique pour la péremption est `"profil périmé — veille requise"`
-*(PRD §10 + §17 critère #10)*. Ce libellé est stable : le modifier sans ADR constitue une rupture
+*(PRD §10 + §17 critère #10)*. Ce libellé est stable : le modifier sans ADR constitue une rupture
 de contrat opposable.
 
-**Critères 1, 2, 3, 5 en V1 :** le rapport est émis via `slog.Warn` mais n'interrompt pas le
+**Critères 1, 2, 3, 5 en V1 :** le rapport est émis via `slog.Warn` mais n'interrompt pas le
 traitement. La promotion à `Refus` (ou recalibration automatique en arrière-plan) est réservée à V2,
 conditionnée à un ADR définissant la politique exacte *(À vérifier — choix de politique non arrêté)*.
 
-**Veille active I3 :** la CI alerte à 30 jours avant péremption de `DateRevision`
-(`today + 30 >= DateRevision` → avertissement build). Lien : CLAUDE.md §Directives #8.
+**Veille active I3 :** la CI alerte à 30 jours avant péremption de `DateRevision`
+(`today + 30 >= DateRevision` → avertissement build). Lien : CLAUDE.md §Directives #8.
 
 ---
 
@@ -155,7 +155,7 @@ conditionnée à un ADR définissant la politique exacte *(À vérifier — choi
 | Affirmation | Marqueur | Source |
 |---|---|---|
 | SHA-256 corpus détecte tout changement de fichier | Confirmé | `TestFingerprintCorpus_DifferentFilesDistinct` |
-| `DriftCPU` GOOS/GOARCH suffisant en V1 | Probable | Commentaire `drift.go` ; besoin cpuid non démontré |
+| `DriftCPU` GOOS/GOARCH suffisant en V1 | Probable | Commentaire `drift.go` ; besoin cpuid non démontré |
 | Fingerprint vide → pas de fausse alarme | Confirmé | `TestCheckDrift_EmptyFingerprintsSkipped` |
 | Promotion critères 1-3 à Refus pertinente en V2 | Hypothèse | Signal empirique requis avant ADR |
 | Fenêtre glissante améliorera la détection de dérive statistique | À vérifier | Distribution scores non mesurée (M4 déféré) |
