@@ -85,12 +85,11 @@ func EvaluateInvariants(x tau.Exchange, dec tau.Decision) Statuses {
 	}
 }
 
-// === STUBS TEMPORAIRES — supprimés en M3.2 à M3.6 ===
+// === STUBS TEMPORAIRES — supprimés en M3.3 à M3.6 ===
 // Chaque évaluateur est remplacé par sa vraie implémentation dans la tâche
 // dédiée. Les stubs renvoient NotApplicable pour permettre la compilation
 // du package skeleton avant l'écriture des vraies évaluations.
 
-func EvaluateI2(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI3(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI4(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI5(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
