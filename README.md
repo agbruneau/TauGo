@@ -5,7 +5,7 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/agbruneau/taugo.svg)](https://pkg.go.dev/github.com/agbruneau/taugo)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-> **État** — `v0.1.0` taggé · `v0.1.1-pre` livré *(refactor consolidation post-audit, 2026-05-24, commit `2cf560c`)*. Tag `v0.1.1` à apposer après revue humaine. Source du refactor : [`AUDIT.md`](AUDIT.md) · [`AUDITPlan.md`](AUDITPlan.md).
+> **État** — `v0.1.0` taggé · `v0.1.1-pre` livré *(refactor consolidation post-audit, 2026-05-24, commit `2cf560c`)*. Tag `v0.1.1` à apposer après revue humaine. Source du refactor (archivée) : [`docs/archive/audits/`](docs/archive/audits/) · index [`docs/archive/README.md`](docs/archive/README.md).
 
 ---
 
@@ -276,7 +276,7 @@ Tous les milestones M0-M6 ont été livrés sous tag `v0.1.0` (2026-05-24).
 
 ### Refactor v0.1.1-pre *(2026-05-24, commit `2cf560c`)*
 
-Consolidation post-audit orchestrée par Agent teams selon [`AUDITPlan.md`](AUDITPlan.md) — 42 tâches, 4 vagues parallèles, 72 fichiers modifiés (+4199/-347 LOC).
+Consolidation post-audit orchestrée par Agent teams selon [`docs/archive/audits/2026-05-24-AUDITPlan-v0.1.1.md`](docs/archive/audits/2026-05-24-AUDITPlan-v0.1.1.md) — 42 tâches, 4 vagues parallèles, 72 fichiers modifiés (+4199/-347 LOC).
 
 **Highlights** :
 - **P0-01 fermé** : nouvelle garde `TestArchNoConcreteLLMInDomain` (anti-patron #6 désormais en CI).
@@ -318,10 +318,8 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 
 - [`PRD.md`](PRD.md) — spécification canonique V0.2 (911 l., 20 sections, glossaire)
 - [`CLAUDE.md`](CLAUDE.md) — conventions d'ingénierie, agent teams, anti-patrons
-- [`PRDPlanning.md`](PRDPlanning.md) — plan d'exécution M0-M6 par agent teams
-- [`AUDIT.md`](AUDIT.md) — audit consolidé v0.1.0 → v0.1.1
-- [`AUDITPlan.md`](AUDITPlan.md) — plan refactor 42 tâches
 - [`CHANGELOG.md`](CHANGELOG.md) — historique Keep-a-Changelog
+- [`docs/archive/`](docs/archive/) — plan-cadre M0-M6 et audit v0.1.1 archivés (cf. [`docs/archive/README.md`](docs/archive/README.md))
 
 ### Théorie (renvois chap. III.8)
 
@@ -406,4 +404,4 @@ Cette pratique est conforme à la politique éditoriale du projet (`CLAUDE.md §
 
 ---
 
-*TauGo v0.1.1-pre — 2026-05-24. Référence canonique : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8. Spec complète : [`PRD.md`](PRD.md). Refactor v0.1.1 : [`AUDIT.md`](AUDIT.md) · [`AUDITPlan.md`](AUDITPlan.md).*
+*TauGo v0.1.1-pre — 2026-05-24. Référence canonique : `agbruneau/InteroperabiliteAgentique` v2.4.3, chap. III.8. Spec complète : [`PRD.md`](PRD.md). Refactor v0.1.1 archivé : [`docs/archive/audits/`](docs/archive/audits/).*
