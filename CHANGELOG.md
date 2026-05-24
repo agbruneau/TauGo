@@ -4,6 +4,66 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 ## [Non publié]
 
+## [0.1.0] — 2026-05-24
+
+**Première release publique V1.** Tous les critères de succès PRD §17 (10 items) sont opposables par test ou artefact. Six milestones M0-M6 livrés en cascade. Verdict de revue intégrée finale : APPROVE.
+
+### Synthèse des six milestones
+
+| # | Livrable | Tag | Statut |
+|---|---|---|---|
+| M0 | Squelette + CI 3 OS + arch_test 4 couches + FrontierCheck | `v0.0.1-alpha` | ✓ |
+| M1 | Dispatcher minimal + stub LLM déterministe + sous-commande `tau decide` | `v0.0.2-alpha` | ✓ |
+| M2 | Trois dimensions D-SENS/D-AUTORITÉ/D-INVARIANT + gardes ontologique et I4 | `v0.0.3-alpha` | ✓ |
+| M3 | Cinq invariants I1-I5 + fuzz targets + étape 8 dispatcher | `v0.0.4-alpha` | ✓ |
+| M4 | Bridge AgentMeshKafka (DTO neutre, ADR-0005) + campagne empirique I4 (Régime B) | `v0.0.5-alpha` | ✓ |
+| M5 | Calibration adaptative byte-identique + drift + étape 3 dispatcher | `v0.0.6-alpha` | ✓ |
+| M6 | Docs alignées monographie + typographie française + ADRs 0001-0004 + release | `v0.1.0` | ✓ |
+
+### Critères de succès PRD §17 — 10/10
+
+1. ✓ Dispatch τ instrumenté sur cas BFSI anonymisé — `docs/empirical/case-study-bfsi.md` (312 l.)
+2. ✓ Cinq invariants fuzz ≥ 30 s sans panique — `make fuzz` (CI), smoke local 5 s vert
+3. ✓ Trace E2E via AgentMeshKafka — `make e2e` (FileAdapter mock, Régime B, PRD §18 risque #1 réalisé)
+4. ✓ Build reproductible byte-identique — `make build-reproducible` deux runs → sha256 identique (`5883002eaec677303d503fe4afd279f3eb6fd5db37af4140235a98f680f7ef82`)
+5. ✓ Couverture ≥ 80 % global, ≥ 90 % `tau/*` — `tau/dimensions` 96.1 %, `tau/invariants` 97.1 %, packages internes ≥ 87 %
+6. ✓ Renvois chap. III.8 dans tous les `docs/` — vérifié grep
+7. ✓ Aucun emoji, fabrication, citation non sourcée — audit textuel M6.7
+8. ✓ Trois OS supportés — matrice CI `ubuntu-latest × macos-latest × windows-latest`
+9. ✓ Quatre anti-patrons gardés — `TestNoPredictiveAPI` (#1), `TestFrontierCheck_*` (#2), `TestI3_DateRevisionRespectee` + `TestExpiredProfileRefuses` (#3), `TestUnmodeledObservationsReported` + `TestStep8_*` (#4)
+10. ✓ Profil calibration byte-identique — `TestCalibrationDeterministic` + `TestCalibrate_GoldenCorpus_FixedHash` (hash pinné `d753245b87933f97c6324f54df1572fab7cc68c52bc49baa1b891ab97abff6c7`)
+
+### Ajouté en M6
+
+- **Typographie française canonique** (CLAUDE.md §14.1) appliquée à tous les `.md` du repo : espaces insécables U+00A0 avant `:` `;` `?` `!` `»` et après `«`, guillemets `« … »` dans la prose. Script idempotent `scripts/typography-fr.py` checked-in. 24 fichiers, 983 lignes touchées.
+- `docs/theory/06-conditions-validite.md` (124 l.) : renvoi chap. III.8.6 — conditions C1/C2/C3 conjonctives.
+- `docs/theory/07-anti-patrons.md` (121 l.) : renvoi chap. III.8.7 — 4 anti-patrons et leurs gardes par test.
+- `docs/algorithms/dispatch.md` (407 l.) : pseudo-algorithme PRD §10 documenté en 8 étapes (1 frontière, 2 ontologique, 3 péremption, 4 scores, 5 cohérence I4, 6 composite, 7 hystérèse, 8 invariants).
+- `docs/adr/0001-clean-architecture-4-layers.md` (107 l.) : ADR rétroactive M0.
+- `docs/adr/0002-go-1.25-toolchain.md` (96 l.) : ADR rétroactive M0.
+- `docs/adr/0003-llm-client-injection.md` (119 l.) : ADR rétroactive M1, avec clarification M6.7 (autorisation `tau/dimensions → bridge/llm.Client` car interface).
+- `docs/adr/0004-agentmeshkafka-empirical-bridge.md` (126 l.) : ADR rétroactive M4, bi-régime A/B.
+- `docs/empirical/case-study-bfsi.md` (312 l.) : cas BFSI anonymisé démontrant la garde I3 préemptive (PRD §17 #1).
+- `README.md` final (343 l.) : badges CI/coverage/go-ref/Apache-2.0, doctrine, anti-objectifs, quick start, schéma ASCII des 4 couches, exemples d'usage (`tau decide`, `tau calibrate`, `make fuzz`, `make e2e`), tableau M0-M6, statut I1-I5.
+- `docs/superpowers/plans/2026-05-24-M6-release-v0.1.0.md` (1 130 l.) : sous-plan détaillé M6 (11 tâches M6.0-M6.10).
+- `internal/tau/dimensions/*_test.go` : tests `TestDefault{Sens,Authority,Invariant}Weights_StructureAndSum` + branches probes étendues (couverture 83.1 % → 96.1 %).
+- `.golangci.yml` : `gochecknoglobals` activé (CLAUDE.md anti-patron #7) ; `//nolint:gochecknoglobals` chirurgicaux sur les globaux read-only documentés (`I3PerimptionLimite`, `defaultDimensionWeights`, `defaultThresholds`, `intents`, `buildTimestamp`).
+
+### Corrigé en M6
+
+- PRD §12.1 : signature `Adapter.Stream` corrigée — retourne `<-chan AgentMeshExchange` (DTO neutre) au lieu de `<-chan tau.Exchange` (cf. ADR-0005). Synchronisation finale code ↔ PRD.
+- M3 reviewer obs : `EvaluateI2` zero-residue couvert, godoc `i5_composition.go` justifie la vitesse FuzzI5, commentaire `TestUnmodeledObservationsReported` référence `TestStep8_*`.
+- M4 reviewer obs (NB1-NB4) : commentaire arch dans `empirical_i4_test.go`, godoc `TestAdapter_StreamSignature` zero-value, godoc `OtherRefusal` ventilation M4-bis, godoc `StreamAsTauExchanges` comportement ctx vs errs.
+- M5 reviewer obs (OBS-1/OBS-2) : commentaires asymétrie date-révision drift vs dispatcher, commentaire `simulate()` renvoyant à PRD §4.
+
+### Notes finales
+
+- **Posture épistémique** : I1 Probable, I2 Confirmé par construction, I3 Probable (daté 2026-05-16, revue 2026-12-01), I4 Hypothèse (campagne empirique synthétique M4 inconclusive — cf. `docs/empirical/I4-report.md`), I5 Probable (bornes algébriques `max(|Aᵢ|) ≤ M(π) ≤ Σ|Aⱼ|`).
+- **Régime empirique B actif** : AgentMeshKafka indisponible (PRD §18 risque #1 réalisé). Mock + corpus synthétique reproductible. Bascule Régime A documentée dans `docs/empirical/I4-regime.md`.
+- **Audit M6.7** : DÉVIANT_MINEUR sur architecture (A1 `cmd/generate-corpus → bridge` accepté comme outil interne ; A2 `tau/dimensions → bridge/llm` accepté car interface, clarifié ADR-0003). APPROVE_WITH_CONCERNS sur PRD §17, devenu APPROVE après fixes (OBS-1 couverture, OBS-3 gochecknoglobals).
+- **Compteurs** : 86 commits sur `main` depuis `aabda39` ; 7 tags (`v0.0.1-alpha` → `v0.1.0`) ; 159 tests + 5 cibles fuzz ; 25 documents Markdown sous `docs/` ; 5 ADRs.
+- **Pré-V2** : la mécanisation Lean 4 des invariants (HGL — `agbruneau/InteroperabiliteAgentique/RechercheFondamentale.md`) sera traitée dans un dépôt compagnon à créer. Le TUI Bubble Tea (`tau-stack`) et le calcul effectif de `M(π)` sur piles réelles sont V3.
+
 ## [0.0.6-alpha] — 2026-05-24
 
 M5 : calibration adaptative reproductible byte-identique (PRD §17 critère #10), détection de drift sur les 5 critères PRD §11.4, persistance JSON canonique avec `current.json` (symlink + fallback Windows), CLI `tau calibrate`, étape 3 dispatcher (refus profil périmé — anti-patron #3). Revue intégrée : APPROVE.
