@@ -90,7 +90,6 @@ func EvaluateInvariants(x tau.Exchange, dec tau.Decision) Statuses {
 // dédiée. Les stubs renvoient NotApplicable pour permettre la compilation
 // du package skeleton avant l'écriture des vraies évaluations.
 
-func EvaluateI1(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI2(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI3(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
 func EvaluateI4(_ tau.Exchange, _ tau.Decision) Status { return NotApplicable }
