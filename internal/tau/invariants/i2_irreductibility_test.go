@@ -64,3 +64,38 @@ func TestEvaluateI2_NotApplicableOnRefusFrontiere(t *testing.T) {
 		t.Fatalf("EvaluateI2 = %v, want NotApplicable", got)
 	}
 }
+
+// TestEvaluateI2_ZeroResiduOnInsideFrontier covers the zero-residue branch of
+// EvaluateI2: a static exchange (HumanInLoop=true, DelegationDepth=0, Static)
+// produces Residu(x)==nil, so I2 must be Violated — the invariant requires a
+// non-empty migrating residue to hold.
+func TestEvaluateI2_ZeroResiduOnInsideFrontier(t *testing.T) {
+	t.Parallel()
+	// Static exchange: all four frontier conditions collapsed to false.
+	// Residu(x) will be empty.
+	x := tau.Exchange{
+		ID:                "e-static",
+		IntentDescription: "static call",
+		DiscoveredAt:      time.Now().UTC(),
+		Initiator: tau.Principal{
+			ID:              "human-1",
+			HumanInLoop:     true,
+			DelegationDepth: 0,
+		},
+		Target: tau.Capability{
+			ID:            "static-tool",
+			DiscoveryMode: tau.Static,
+		},
+	}
+	r := invariants.Residu(x)
+	if len(r) != 0 {
+		t.Fatalf("precondition: Residu must be empty for static exchange, got %v", r)
+	}
+	dec := tau.Decision{
+		Regime: tau.Deterministe,
+		Trace:  tau.Trace{ExchangeID: x.ID},
+	}
+	if got := invariants.EvaluateI2(x, dec); got != invariants.Violated {
+		t.Fatalf("EvaluateI2 with zero-residue = %v, want Violated", got)
+	}
+}
