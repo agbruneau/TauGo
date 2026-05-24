@@ -10,6 +10,20 @@ import (
 	"github.com/agbruneau/taugo/internal/tau"
 )
 
+// TestSelectLLM_RealBackend_Panics asserts that NewDispatcher panics when
+// TAUGO_LLM_BACKEND=real. The real backend is not implemented until M5+;
+// the panic is a deliberate sentinel that prevents silent CI regressions
+// (see PRD §15.4 and selectLLM inline comment).
+func TestSelectLLM_RealBackend_Panics(t *testing.T) {
+	t.Setenv("TAUGO_LLM_BACKEND", "real")
+	defer func() {
+		if r := recover(); r == nil {
+			t.Fatal("expected panic from selectLLM with TAUGO_LLM_BACKEND=real, got none")
+		}
+	}()
+	app.NewDispatcher() // must panic
+}
+
 // TestDefaultLLMIsStub — guards the anti-patron: in CI / default mode, no
 // external LLM service may be called. The Dispatcher must always use
 // llm.Stub unless TAUGO_LLM_BACKEND=real is set explicitly.
