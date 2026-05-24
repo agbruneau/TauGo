@@ -7,11 +7,8 @@ import (
 	"github.com/agbruneau/taugo/internal/orchestration"
 )
 
-// Default thresholds for M1. Calibration in M5 will override these.
-var defaultThresholds = orchestration.Thresholds{
-	Deterministe: 0.35,
-	Probabiliste: 0.65,
-}
+// defaultThresholds uses M2 values. Calibration in M5 will override these.
+var defaultThresholds = orchestration.DefaultThresholds()
 
 // NewDispatcher constructs the production Dispatcher.
 // Default LLM: deterministic Stub (PRD §15.4).

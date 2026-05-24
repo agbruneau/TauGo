@@ -122,6 +122,12 @@ linters-settings:
       - Deterministe  # French regime name from τ operator spec
       - Refus         # French regime name from τ operator spec
       - agentmeshkafka # Product name, not a misspelling
+      - combinaison   # French: diagnostic string I4 guard (PRD §6.1)
+      - incohérente   # French: diagnostic string I4 guard
+      - détectée      # French: diagnostic string I4 guard
+      - frontière     # French: diagnostic string frontier check
+      - verrou        # French: diagnostic string I3 guard (ontological lock)
+      - ontologique   # French: diagnostic string I3 guard
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source

@@ -49,12 +49,16 @@ const (
 	regimeProbabiliste = 2.0
 )
 
-// TestEndToEnd_DecideDeterministe — intent "creative generation" hashes
-// (FNV-1a 32-bit) to 0.262, below the 0.35 Deterministe threshold.
+// TestEndToEnd_DecideDeterministe — composite tau_score falls in the
+// hysteresis zone (Deterministe default) for an exchange with static
+// contract URI. Intent "creative generation" hashes (FNV-1a 32-bit) to
+// 0.262 (S_reasoner_intent). ContractURI lowers D-SENS; resulting composite
+// is in [0.35, 0.65) => Deterministe (M2 hysteresis default).
 func TestEndToEnd_DecideDeterministe(t *testing.T) {
 	t.Parallel()
 	bin := buildCLI(t)
-	dec := runDecide(t, bin, `{"id":"t1","intent_description":"creative generation"}`)
+	input := `{"id":"t1","intent_description":"creative generation","initiator":{"id":"agent","organization":"org-a","delegation_depth":1},"target":{"id":"svc","discovery_mode":1,"contract_uri":"https://api.example.com/v1"}}`
+	dec := runDecide(t, bin, input)
 	r, _ := dec["regime"].(float64)
 	if r != regimeDeterministe {
 		t.Fatalf("regime = %v, want %v (Deterministe). Full decision: %v", r, regimeDeterministe, dec)
@@ -65,12 +69,14 @@ func TestEndToEnd_DecideDeterministe(t *testing.T) {
 	}
 }
 
-// TestEndToEnd_DecideProbabiliste — intent "hello world" hashes
-// (FNV-1a 32-bit) to 0.807, above the 0.65 Probabiliste threshold.
+// TestEndToEnd_DecideProbabiliste — composite tau_score >= 0.65 for an
+// exchange with dynamic discovery and no contract. Intent "hello world"
+// hashes (FNV-1a 32-bit) to 0.807 (S_reasoner_intent), keeping D-SENS high.
 func TestEndToEnd_DecideProbabiliste(t *testing.T) {
 	t.Parallel()
 	bin := buildCLI(t)
-	dec := runDecide(t, bin, `{"id":"t2","intent_description":"hello world"}`)
+	input := `{"id":"t2","intent_description":"hello world","initiator":{"id":"agent","organization":"org-a","delegation_depth":1},"target":{"id":"svc","discovery_mode":1}}`
+	dec := runDecide(t, bin, input)
 	r, _ := dec["regime"].(float64)
 	if r != regimeProbabiliste {
 		t.Fatalf("regime = %v, want %v (Probabiliste). Full decision: %v", r, regimeProbabiliste, dec)
