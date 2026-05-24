@@ -3,6 +3,7 @@ package main_test
 import (
 	"bytes"
 	"encoding/json"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -80,5 +81,70 @@ func TestEndToEnd_DecideProbabiliste(t *testing.T) {
 	r, _ := dec["regime"].(float64)
 	if r != regimeProbabiliste {
 		t.Fatalf("regime = %v, want %v (Probabiliste). Full decision: %v", r, regimeProbabiliste, dec)
+	}
+}
+
+// TestEndToEnd_Calibrate_ProducesValidProfile verifies that `tau calibrate`
+// writes a non-empty JSON file with expected top-level keys, and that two
+// runs with the same seed and fixed --created-at produce byte-identical output
+// (PRD §17 criterion #10).
+func TestEndToEnd_Calibrate_ProducesValidProfile(t *testing.T) {
+	t.Parallel()
+	bin := buildCLI(t)
+
+	// Locate mini-corpus relative to module root via __FILE__.
+	_, thisFile, _, _ := runtime.Caller(0)
+	moduleRoot := filepath.Join(filepath.Dir(thisFile), "..", "..")
+	corpus := filepath.Join(moduleRoot, "internal", "calibration", "testdata", "mini-corpus.jsonl")
+
+	tmp := t.TempDir()
+	out1 := filepath.Join(tmp, "p1.json")
+	out2 := filepath.Join(tmp, "p2.json")
+
+	runCalibrateCLI(t, bin, corpus, out1)
+	runCalibrateCLI(t, bin, corpus, out2)
+
+	// Assert non-empty and valid JSON with expected keys.
+	data, err := os.ReadFile(out1)
+	if err != nil {
+		t.Fatalf("read output: %v", err)
+	}
+	if len(data) == 0 {
+		t.Fatal("calibrate produced empty output")
+	}
+	var profile map[string]any
+	if unmarshalErr := json.Unmarshal(data, &profile); unmarshalErr != nil {
+		t.Fatalf("output is not valid JSON: %v\nraw: %s", unmarshalErr, data)
+	}
+	for _, key := range []string{"thresholds", "weights", "date_revision", "version_monographie"} {
+		if _, ok := profile[key]; !ok {
+			t.Errorf("missing key %q in profile", key)
+		}
+	}
+
+	// Assert byte-identical output (determinism, PRD §17 #10).
+	data2, err := os.ReadFile(out2)
+	if err != nil {
+		t.Fatalf("read second output: %v", err)
+	}
+	if !bytes.Equal(data, data2) {
+		t.Fatalf("two runs with same seed produced different output\nrun1:\n%s\nrun2:\n%s", data, data2)
+	}
+}
+
+// runCalibrateCLI invokes `tau calibrate` with fixed flags for reproducibility.
+func runCalibrateCLI(t *testing.T, bin, corpus, output string) {
+	t.Helper()
+	cmd := exec.Command(bin, "calibrate",
+		"--corpus", corpus,
+		"--output", output,
+		"--date-revision", "2026-11-23",
+		"--seed", "42",
+		"--created-at", "1970-01-01T00:00:00Z",
+	)
+	var stderr bytes.Buffer
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("tau calibrate failed: %v\nstderr: %s", err, stderr.String())
 	}
 }

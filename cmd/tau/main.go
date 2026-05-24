@@ -26,6 +26,9 @@ func main() {
 		case "decide":
 			runDecide()
 			return
+		case "calibrate":
+			runCalibrate(os.Args[2:])
+			return
 		}
 	}
 	flag.Usage = func() {
