@@ -1,5 +1,9 @@
 # TauGo — Kernel exécutable Go de l'opérateur τ
 
+### ▶ [Dashboard interactif en ligne — agbruneau.github.io/TauGo](https://agbruneau.github.io/TauGo/)
+
+Graphe de connaissance navigable du dépôt : **303 nœuds, 816 arêtes, 12 couches, tour pédagogique 12 étapes** *(généré par `understand-anything`, à jour 2026-05-29)*.
+
 > **Références canoniques** :
 > - **Monographie** *(théorie)* — [`agbruneau/InteroperabiliteAgentique`](https://github.com/agbruneau/InteroperabiliteAgentique) (v2.4.3, chap. III.8)
 > - **Dashboard interactif** *(graphe de connaissance)* — [`https://agbruneau.github.io/TauGo/`](https://agbruneau.github.io/TauGo/) — 303 nœuds, 816 arêtes, 12 couches, tour pédagogique 12 étapes (généré par `understand-anything`, régénéré 2026-05-29).

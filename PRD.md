@@ -935,6 +935,29 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 
 ---
 
+## 20.2 Dette technique identifiée — golden corpus de calibration *(audit 2026-05-29, C1-01)*
+
+**Amélioration planifiée pour une prochaine itération** (non corrigée dans le lot d'audit ; ne pas viser avant décision/ADR).
+
+**Constat [Confirmé].** `tests/calibration/golden-corpus.jsonl` (200 lignes) est sérialisé dans le **schéma `Exchange`** (`intent_description` + `expected_regime` en PascalCase « Deterministe/Probabiliste/Refus »), et **non** dans le schéma `CorpusEntry` attendu par `calibration.Calibrate`. `CorpusEntry` (`internal/calibration/calibrate.go`) requiert des **scores de dimensions pré-calculés** (`sens_score`, `authority_score`, `invariant_score`) et un `labeled_regime` parmi **quatre** valeurs minuscules : `deterministe`, `probabiliste`, `refus_authority`, `refus_i4`. Le golden n'a aucun score (0/200) ni `labeled_regime` (0/200).
+
+**Conséquence.** `cmd/tau/calibrate.go:loadCorpus` décode chaque ligne en `CorpusEntry` quasi vide (scores = 0,0 ; `LabeledRegime` vide) **sans** `migrate()` ni `Validate()`. `countAgreement` reste donc à ~0 pour tous les points de grille → le grid search retombe au plancher conservateur → **profil dégénéré** (p. ex. `deterministe = 0,10`). Le hash épinglé `goldenCorpusCanonicalHash = d753245b…` encode ce profil vacant : `TestCalibrate_GoldenCorpus_FixedHash` et `TestCalibrationDeterministic` (§17 #10) sont byte-identiques **mais valident un no-op depuis M5**.
+
+**Portée.** Le runtime `Kernel.Decide` n'est **pas** affecté : il utilise `DefaultProfile()`, jamais un profil calibré. Défaut confiné à la commande `tau calibrate` et à son test golden. Sévérité : **Majeur** (latent, niveau fonctionnalité), non critique.
+
+**Plan de résolution :**
+1. **ADR dédié** — le golden est immuable (§15.3, CLAUDE.md directive #6) : sa régénération + le re-pin du hash exigent une ADR. ADR-0011 étant réservée HGL/Lean (§20.1), prévoir **ADR-0012**.
+2. **Générateur `CorpusEntry`** — étendre `cmd/generate-corpus` (ou convertisseur dédié) pour, à partir des 200 `Exchange` : (a) calculer `sens_score`/`authority_score`/`invariant_score` via `dimensions.ScoreDSens`/`ScoreDAuthority`/`ScoreDInvariant` (stub LLM déterministe) ; (b) dériver `labeled_regime` en 4 valeurs en exécutant le dispatcher (`Decide`) et en mappant le diagnostic de refus vers `refus_authority` vs `refus_i4`.
+3. **Régénérer** `tests/calibration/golden-corpus.jsonl` au schéma `CorpusEntry` (déterministe, seed figé).
+4. **Re-pin** `goldenCorpusCanonicalHash` dans `test/e2e/calibration_determinism_test.go` (profil désormais non dégénéré).
+5. **Normaliser la casse** des régimes dans `validRegimes`/`migrate` (fixer la casse canonique ; tolérer ou rejeter explicitement le PascalCase).
+6. **Réappliquer la validation CLI** (C1-01 / WP-A différé) : `cmd/tau/calibrate.go:loadCorpus` délègue à `calibration.LoadCorpus` (migrate + Validate) ; corpus invalide → exit ≠ 0. Tests gardiens `TestRunCalibrate_CorpusInvalidRegime_NonZero` + `TestRunCalibrate_CorpusLegacyExpectedRegime_Migre`.
+7. **Actualiser** `CHANGELOG.md` : la « byte-identité de calibration confirmée » (M5, §17 #10) portait sur un profil dégénéré.
+
+Détail d'audit : [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md) (C1-01).
+
+—
+
 *Fin du PRD V0.3 — 2026-05-24. V0.2 = 2026-05-23 (refactorisé) ; V0.1 = commit précédent ; V0 = commit `b771dd1`. Alignement post-refactor v0.1.1-pre (commit `2cf560c`).*
 
 *2026-05-29 — alignement post-audit de régression v0.1.2-pre : survente couverture/débits corrigée (couverture globale 89,2 % `-coverpkg` ; débits fuzz distingués fonction-propriété vs moteur), arborescence resynchronisée (`generate-corpus`, `config`/`metrics` retirés, `tests/calibration/golden-corpus.jsonl`).*
