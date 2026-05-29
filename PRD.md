@@ -859,7 +859,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 | 7 | Aucun emoji, aucune fabrication, aucune citation non sourçée | Audit textuel M6 |
 | 8 | Trois OS supportés (Linux/macOS/Windows) | `go build` cross-compile vert (Makefile `build-all`) ; matrix CI historique retirée v0.1.2 |
 | 9 | Quatre anti-patrons gardés par tests *(§7.2)* | `TestNoPredictiveAPI`, `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)*, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` |
-| 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` |
+| 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` *(réserve audit 2026-05-29 : la byte-identité porte sur un profil **dégénéré** — golden en mauvais schéma, cf. §20.2)* |
 
 ---
 
