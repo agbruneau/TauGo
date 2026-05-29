@@ -1,5 +1,7 @@
 # M2 — Décisions de référence (10 échantillons)
 
+> **Note v0.1.1 (format de sortie mis à jour)** : `regime` est désormais une *string* PascalCase (`"Refus"` | `"Deterministe"` | `"Probabiliste"`) et non un entier ; `app.NewDispatcher` injecte un profil par défaut (`DefaultProfile()`, version 0.1.0, `date_revision` 2026-12-01). Les exemples ci-dessous datent de v0.0.3-alpha (2026-05-23) et conservent l'ancien format (`regime` entier, `profile_version` vide) à titre historique — ils ne sont pas régénérés.
+
 > Généré le 2026-05-23 avec `tau decide` + dispatcher M2 (`v0.0.3-alpha`).
 > Profil : M2-default (seuils PRD §11.1 initiaux, poids PRD §5.1-5.3).
 > LLM backend : `stub:v0` (FNV-1a déterministe).

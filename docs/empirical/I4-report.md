@@ -23,7 +23,7 @@ Corpus utilisé :
 | Profil de calibration | `M3-default` |
 | Horodatage d'exécution | 2026-05-24T11:27:43Z |
 
-Le corpus est **gelé** — le SHA-256 ci-dessus est la référence d'audit. Toute ré-exécution doit produire des résultats identiques sur le même profil.
+Le corpus est **gelé** — le SHA-256 ci-dessus est la référence d'audit (byte-identique vérifié). Le **payload de classification** des résultats (comptes et classes I4 du §3) est déterministe et stable sur le même profil. En revanche, l'artefact `internal/bridge/agentmeshkafka/testdata/empirical-i4-results.json` **n'est pas byte-stable** : il embarque un champ `timestamp` reflétant l'horloge murale d'exécution, donc une ré-exécution change cet octet sans changer la classification. Correctif technique suivi en I2-02 (exclure le `timestamp` du fichier suivi ou le sortir du suivi git).
 
 ---
 

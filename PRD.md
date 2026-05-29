@@ -100,7 +100,7 @@ func (k *Kernel) Decide(ctx context.Context, x Exchange) (Decision, error)
 
 - Bibliothèque Go `internal/tau/` — dispatcher, frontière (méthode `Exchange.FrontierCheck()`), opérateur τ formalisé
 - Trois dimensions calculables, sondes nommées, métriques `[0,1]`, **scores ventilés** exposés dans `Trace.{DSens, DAuthority, DInvariant}` *(v0.1.1, ADR-0008)*
-- Cinq invariants I1-I5 sous forme de cibles fuzz `FuzzI*` (débits 1.1 M à 9.5 M exec/s, 0 crash)
+- Cinq invariants I1-I5 sous forme de cibles fuzz `FuzzI*` (débits 1.1 M à 9.5 M exec/s *[À vérifier]* — métrique du **débit de la fonction-propriété scalaire isolée** ; le **débit du moteur** `go test -fuzz` mesuré sur ce poste (Windows, `CGO_ENABLED=0`, Go 1.26.3) est ~1,4 M exec/s pour I1-I4 et ~1,1 M/s pour I5. 0 crash sur ~200 M exécutions cumulées (30 s/cible))
 - Calibration adaptative — pattern FibGo : `atomic.Int64`, profils versionnés byte-identique, invalidation par drift ; **`Profile.Weights` appliqués au runtime** *(v0.1.1, T-017)*
 - Adaptateur `AgentMeshKafka` (FileAdapter livré M4, KafkaAdapter en V0.2) — validateur empirique end-to-end avec DTO neutre *(ADR-0005)*
 - `app.NewDispatcher()` charge `calibration.DefaultProfile()` par défaut → garde de péremption active sur chemin CLI *(v0.1.1, P0-02)*
@@ -331,7 +331,7 @@ Clean Architecture, **quatre couches strictes**, calque structurel de FibGo. Dé
 ```
 cmd/
   tau/                           # CLI principale
-  generate-golden/               # oracle indépendant (V1.1)
+  generate-corpus/               # génération de corpus de calibration
 internal/
   app/                           # lifecycle, dispatch top-level, injection LLM
   tau/                           # CŒUR : opérateur τ
@@ -349,7 +349,8 @@ docs/
   algorithms/                    # dispatch, calibration, drift
   adr/                           # 0001-clean-arch, 0002-go-1.25, 0003-llm-injection, 0004-agentmeshkafka
   empirical/                     # I4-report, unmodeled, fuzz-summary
-test/{e2e, golden}/
+test/e2e/                        # scénarios end-to-end (AgentMeshKafka)
+tests/calibration/golden-corpus.jsonl   # golden corpus de calibration (répertoire tests/, distinct de test/)
 CLAUDE.md · README.md · LICENSE · Makefile · .golangci.yml · go.mod
 ```
 
@@ -357,10 +358,10 @@ CLAUDE.md · README.md · LICENSE · Makefile · .golangci.yml · go.mod
 
 | Couche | Packages | Importe | N'importe PAS |
 |---|---|---|---|
-| **1 Présentation** | `cmd/tau`, `internal/app` | `orchestration`, `config`, `errors` | `tau/*`, `bridge/*` directement |
-| **2 Orchestration** | `orchestration` | `tau`, `calibration`, `errors`, `metrics` | `bridge/*` directement (passe par interfaces injectées en `app`) |
-| **3 Domaine** | `tau`, `tau/dimensions`, `tau/invariants` | `errors`, `metrics` | `orchestration`, `bridge`, `app`, `cmd` |
-| **4 Infrastructure** | `bridge/*`, `calibration` *(persistance)* | `errors`, `metrics` | `tau/*`, `orchestration` |
+| **1 Présentation** | `cmd/tau`, `internal/app` | `orchestration`, `errors` | `tau/*`, `bridge/*` directement |
+| **2 Orchestration** | `orchestration` | `tau`, `calibration`, `errors` | `bridge/*` directement (passe par interfaces injectées en `app`) |
+| **3 Domaine** | `tau`, `tau/dimensions`, `tau/invariants` | `errors` | `orchestration`, `bridge`, `app`, `cmd` |
+| **4 Infrastructure** | `bridge/*`, `calibration` *(persistance)* | `errors` | `tau/*`, `orchestration` |
 
 **Gardes architecturales** *(M0)* — `internal/arch_test.go` interdit :
 
@@ -775,7 +776,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 | **Unit** | Chaque fonction publique, sonde, score | `go test` standard | ≥ 80 % / package |
 | **Property-based** | Pureté, monotonie, idempotence | `gopter` (calque FibGo) | Toutes les propriétés algébriques déclarées |
 | **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en local (`make fuzz`) ; 24 h sur demande (`go test -fuzz=... -fuzztime=24h`) |
-| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-golden/` | Immuable sans ADR |
+| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-corpus/` | Immuable sans ADR |
 | **Architecture** | Étanchéité des couches *(§8.1)* | `internal/arch_test.go` | 100 % des règles |
 | **E2E** *(M4+)* | Via `AgentMeshKafka` | `test/e2e/` | ≥ 1 scénario par régime |
 | **Empirique I4** *(M4+)* | Détection combinaisons incohérentes sur traces réelles | `docs/empirical/I4-report.md` | Campagne dédiée |
@@ -828,7 +829,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 | **M4** | Adaptateur `AgentMeshKafka` + campagne empirique I4 | Trace end-to-end ; rapport `docs/empirical/I4-report.md` avec ≥ 100 traces analysées |
 | **M5** | Calibration adaptative + persistance versionnée + détection de drift | `tau calibrate` reproductible byte-identique sur corpus fixé ; `TestCalibrationDeterministic` passe |
 | **M6** | Documentation alignée monographie + typographie française + release `v0.1.0` | Tag, `CHANGELOG.md`, `README.md`, `docs/theory/` complet avec renvois III.8 |
-| **v0.1.1-pre** | Refactor consolidation post-audit — 42 tâches T-001..T-040, 4 ADRs (0006-0009), packages `thresholds`/`errors`/`testutil` peuplés, Trace ventilée, anti-patron #6 désormais gardé, gate CI per-package actif | Commit `2cf560c`, couverture 92.1 %, 14 packages verts, AUDIT.md/AUDITPlan.md archivés |
+| **v0.1.1-pre** | Refactor consolidation post-audit — 42 tâches T-001..T-040, 4 ADRs (0006-0009), packages `thresholds`/`errors`/`testutil` peuplés, Trace ventilée, anti-patron #6 désormais gardé, gate CI per-package actif | Commit `2cf560c`, couverture 92,1 % *(moyenne per-package pondérée — méthode v0.1.1 ; cf. §17 pour la mesure `-coverpkg` 89,2 %)*, 14 packages verts, AUDIT.md/AUDITPlan.md archivés |
 | **v0.1.2-pre** | Retrait complet outillage CI/CD (ADR-0010) — projet *pure-local*. Suppression `.github/workflows/{ci,coverage}.yml`, cibles Make CI-only retirées (`fuzz-long`, `e2e`, `e2e-calibration`, `empirical-i4`, `build-reproducible`), doc alignée (README, CLAUDE, PRD, CHANGELOG) | 2026-05-24 ; gates CI deviennent objectifs locaux (§15.3), veille I3 bascule en cron externe / check manuel |
 
 **Livrables M0 minimaux** : `go.mod` · `Makefile` · `.golangci.yml` · ~~`.github/workflows/{ci,coverage}.yml`~~ *(historique — retiré v0.1.2, ADR-0010)* · `internal/tau/operator.go` *(panic `not implemented`)* · `internal/tau/frontier.go` + test · `internal/arch_test.go` · `cmd/tau/main.go` *(squelette)* · `docs/theory/03-operateur-tau.md` · `LICENSE` · `CHANGELOG.md`.
@@ -845,7 +846,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 
 ## 17. Critères de succès V1
 
-*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.2-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0010 présents, anti-patrons §7.2 #1-7 tous gardés par tests locaux — exécutés via `make test` depuis le retrait CI v0.1.2, couverture globale 92.1 %, build reproductible).*
+*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.2-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0010 présents, anti-patrons §7.2 #1-7 tous gardés par tests locaux — exécutés via `make test` depuis le retrait CI v0.1.2, build reproductible). **Couverture globale 89,2 %** (mesure `go test -coverpkg=./...`, dénominateur incluant `internal/thresholds` et `examples/quickstart` à 0 %) ; le 92,1 % antérieur était une moyenne per-package pondérée (méthode v0.1.1), non une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu (`tau` 100 % / `dimensions` 98,7 % / `invariants` 92,7 %).*
 
 | # | Critère | Vérification |
 |---|---|---|
@@ -935,3 +936,5 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 ---
 
 *Fin du PRD V0.3 — 2026-05-24. V0.2 = 2026-05-23 (refactorisé) ; V0.1 = commit précédent ; V0 = commit `b771dd1`. Alignement post-refactor v0.1.1-pre (commit `2cf560c`).*
+
+*2026-05-29 — alignement post-audit de régression v0.1.2-pre : survente couverture/débits corrigée (couverture globale 89,2 % `-coverpkg` ; débits fuzz distingués fonction-propriété vs moteur), arborescence resynchronisée (`generate-corpus`, `config`/`metrics` retirés, `tests/calibration/golden-corpus.jsonl`).*

@@ -42,7 +42,7 @@ deux implémentations :
 
 - **`cmd/generate-corpus/`** — génère un corpus synthétique reproductible (seed
   fixe, 100 échanges couvrant I1-I5 et les 5 cas de refus). Ce corpus est
-  checked-in dans `test/golden/corpus/`.
+  checked-in dans `cmd/generate-corpus/testdata/`.
 
 La conversion `AgentMeshExchange → tau.Exchange` est hébergée en `internal/app/agentmesh.go`
 (cf. ADR-0005 pour la justification DTO).
@@ -120,7 +120,9 @@ La règle ADR-0001 s'applique intégralement : `bridge/agentmeshkafka` n'import
 - `cmd/generate-corpus/` (générateur corpus synthétique)
 - `docs/empirical/I4-regime.md` (distinction Régime A / Régime B)
 - `docs/empirical/I4-report.md` (campagne M4 — statut I4 Hypothèse)
-- `test/golden/corpus/` (corpus checked-in)
+- `cmd/generate-corpus/testdata/` (corpus synthétique checked-in)
+
+> **Note d'exactitude (2026-05-29, post-audit v0.1.2-pre)** : le chemin `test/golden/corpus/` cité au M4 n'existe pas dans le dépôt. Le corpus synthétique généré par `cmd/generate-corpus` est checked-in sous `cmd/generate-corpus/testdata/` ; le golden de calibration vit sous `tests/calibration/golden-corpus.jsonl` (répertoire `tests/`, distinct de `test/e2e/`). Voir [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](../archive/audits/2026-05-29-AUDIT-v0.1.2-pre/) (finding A6-02).
 
 *Statut : Confirmé (branche contingence Régime A active). Bascule Régime B conditionnée
 à la disponibilité d'AgentMeshKafka — aucune date fixée à ce jour.*

@@ -120,6 +120,8 @@ d'usage est déférée. V0.1.1 couvre :
   utiliser `errors.As` pour inspecter les champs, et `errors.Is` uniquement
   pour les sentinels reconnus.
 
+> **Note d'exactitude (2026-05-29, post-audit v0.1.2-pre)** : `*RefusError` n'implémente ni méthode `Is(error) bool` ni `Unwrap()` (cf. ligne « RefusError has no Unwrap » ci-dessus). En conséquence, un `*RefusError` *produit à l'exécution* (Diagnostic identique mais autre adresse) ne « matche » PAS un sentinel via `errors.Is` : seule l'identité de pointeur réussit. Le commentaire « Sentinel errors for use with errors.Is » et l'alternative rejetée #4 décrivent donc l'intention de design, non un matching par Diagnostic effectif. Ajouter une méthode `Is` comparant le `Diagnostic` est une suite technique (finding Q5-01) — ne pas présupposer cette matchabilité tant qu'elle n'est pas implémentée. Voir [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](../archive/audits/2026-05-29-AUDIT-v0.1.2-pre/).
+
 ## Alternatives rejetées
 
 1. **Erreurs sentinelles globales pures (`var ErrFoo = errors.New("foo")`)** —

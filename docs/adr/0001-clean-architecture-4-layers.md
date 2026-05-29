@@ -7,7 +7,7 @@
 PRD §8.1 prescrit une disposition en couches unidirectionnelles pour TauGo :
 
 ```
-cmd/{tau, generate-golden}/
+cmd/{tau, generate-corpus}/
 internal/
   app/                      # lifecycle, injection LLM concret
   orchestration/            # dispatcher, Decision, Trace (immuables)
@@ -57,6 +57,8 @@ Règles négatives explicites (gardées par `arch_test.go`) :
 
 Toute suppression d'une règle `arch_test.go` nécessite une ADR préalable. L'absence
 d'ADR constitue un motif de rejet de la PR.
+
+> **Note d'exactitude (2026-05-29, post-audit v0.1.2-pre)** : la disposition M0 ci-dessus prévoyait `internal/config` et `internal/metrics` comme couches transverses. À ce jour ces deux packages sont vides (aucun symbole exporté) et ne constituent plus des couches actives ; les dépendances transverses réelles passent par `internal/{thresholds, errors, testutil}`. La table reste consignée telle qu'au M0. Voir [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](../archive/audits/2026-05-29-AUDIT-v0.1.2-pre/) (finding A6-03).
 
 ## Conséquences
 

@@ -190,7 +190,7 @@ echo '{"id":"e-in","intent_description":"creative generation with open capabilit
   | ./tau decide
 ```
 
-Codes de sortie : `0` = succès, `2` = entrée invalide, `3` = Refus, `4` = erreur interne.
+Codes de sortie : `0` = succès *(y compris un `Refus`, qui est une `Decision` normale)*, `2` = entrée invalide, `3` = erreur interne de `Decide`, `4` = erreur d'encodage.
 
 Sortie JSON v0.1.1 :
 
@@ -295,7 +295,7 @@ Consolidation post-audit orchestrée par Agent teams selon [`docs/archive/audits
 - **Profile.Weights injecté** au runtime à l'étape 6 du dispatcher.
 - **Packages ajoutés** : `internal/thresholds` ([ADR-0006](docs/adr/0006-types-valeur-transverses.md)), `internal/errors` peuplé ([ADR-0009](docs/adr/0009-types-erreurs-typees.md)), `internal/testutil.BuildExchange`.
 - **4 ADRs nouvelles** : 0006 thresholds transverses · 0007 hystérèse V1 · 0008 Trace ventilée · 0009 erreurs typées.
-- **Couverture globale** : 92.1 % *(était 90.9 %)*. Anti-patrons §7.2 : 7/7 gardés *(était 6/7)*.
+- **Couverture** : 89,2 % en mesure `go test -coverpkg=./...` *(dénominateur global incluant `internal/thresholds` et `examples/quickstart` à 0 %)*. Le 92,1 % antérieur était une moyenne per-package pondérée *(méthode v0.1.1)*, pas une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu *(tau 100 % / dimensions 98,7 % / invariants 92,7 %)*. Anti-patrons §7.2 : 7/7 gardés *(était 6/7)*.
 
 ### Refactor v0.1.2-pre *(2026-05-24, retrait CI/CD)*
 
@@ -316,13 +316,15 @@ Détail complet : [`CHANGELOG.md`](CHANGELOG.md) section v0.1.2-pre.
 
 Marqueurs épistémiques conformes à `InteroperabiliteAgentique/CLAUDE.md §1.4`. Détail et conditions de réfutation : [`docs/theory/05-invariants.md`](docs/theory/05-invariants.md) *(chap. III.8.5)*.
 
-| # | Énoncé court | Statut | Cible fuzz | Débit smoke |
+| # | Énoncé court | Statut | Cible fuzz | Débit fonction-propriété scalaire *[À vérifier]* (cf. note) |
 |---|---|---|---|---|
 | I1 | τ conserve la grandeur (déplace `t_fix`, pas le contenu) | Probable | `FuzzI1_Conservation` | ~8.6 M exec/s |
 | I2 | Résidu migrant non vide, non recâblable hors ligne | Confirmé | `FuzzI2_Irreductibilite` | ~8.6 M exec/s |
 | I3 | D-AUTORITÉ asymétrique (fait institutionnel — Searle 1995) ; sans `AttestationInstitutionnelle` → refus ontologique. Veille trimestrielle ; date 2026-05-16. Lit `Trace.DAuthority` ventilé depuis v0.1.1. | Probable | `FuzzI3_AsymetrieAutorite` | ~8.2 M exec/s |
 | I4 | `i ≈ pendant ⟹ s ≈ pendant` ; configuration incohérente → refus. Détecte le bypass silencieux via scores ventilés depuis v0.1.1. | Hypothèse | `FuzzI4_CoherenceContrainte` | ~9.5 M exec/s |
 | I5 | Pile composée hérite de la conjonction ; `M(π) >= max(|Ai|)`. `BoundsHold` optimisé -46 % ns/op en v0.1.1. | Probable | `FuzzI5_CompositionConjonctive` | ~1.1 M exec/s |
+
+**Méthodologie débit** *([À vérifier])* — la colonne ci-dessus rapporte le débit de la **fonction-propriété scalaire isolée** (smoke 5 s, autre hôte). Ce n'est **pas** le débit du moteur `go test -fuzz`, qui mesure ~1,4 M exec/s (I1-I4) et ~1,1 M/s (I5) sur ce poste *(Windows, `CGO_ENABLED=0`, Go 1.26.3)* ; le débit I5 ~1,1 M/s est **confirmé**. 0 crash sur ~200 M exécutions cumulées (30 s/cible).
 
 I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les clés `Context` qui pilotent D-INVARIANT au-dessus du seuil `θ_inv`. v0.1.1 rend la détection ventilée opérationnelle ; corroboration empirique différée à M7. Voir [`docs/empirical/I4-report.md`](docs/empirical/I4-report.md).
 
@@ -376,6 +378,7 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 ### Archives
 
 - [`docs/archive/plans-m0-m6/`](docs/archive/plans-m0-m6/) — plans détaillés M1-M6 archivés v0.1.1 (9 824 LOC)
+- [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/) — audit de régression v0.1.2-pre (2026-05-29) ; rapport principal [`RAPPORT_FINAL.md`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/RAPPORT_FINAL.md), 6 axes (01..06) + `00_bootstrap` + `CONVENTIONS`. Verdict : 0 critique, 10 majeur, 16 mineur, 15 informatif — kernel sain, fragilités épistémiques/documentaires corrigées dans ce lot.
 
 ---
 
@@ -422,3 +425,4 @@ Cette pratique est conforme à la politique éditoriale du projet (`CLAUDE.md §
 ---
 
 *TauGo v0.1.2-pre — 2026-05-24. Références canoniques : [`agbruneau/InteroperabiliteAgentique`](https://github.com/agbruneau/InteroperabiliteAgentique) v2.4.3 (chap. III.8) · Dashboard interactif [`agbruneau.github.io/TauGo`](https://agbruneau.github.io/TauGo/). Spec complète : [`PRD.md`](PRD.md). Refactor v0.1.1 archivé : [`docs/archive/audits/`](docs/archive/audits/).*
+*2026-05-29 — alignement post-audit de régression v0.1.2-pre (survente couverture/débits corrigée, arborescence resynchronisée, anti-patrons doc 4→7).*

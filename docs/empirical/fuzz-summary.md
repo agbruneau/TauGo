@@ -47,7 +47,7 @@ make fuzz-long →  -fuzztime=24h  ×  5 cibles  ×  Linux  (nightly, post-M4)
 
 Campagne smoke locale (5 s, Windows, 24 workers). *À vérifier* : résultats CI 30 s non encore produits au tag `v0.0.4-alpha`.
 
-| Cible | Invariant testé | Énoncé court | Statut | Entrées explorées | Crashes | Findings |
+| Cible | Invariant testé | Énoncé court | Statut | Entrées explorées *[À vérifier]* | Crashes | Findings |
 |---|---|---|---|---|---|---|
 | `FuzzI1_Conservation` | I1 | τ conserve la grandeur (ExchangeID) | *Probable* | 8 600 000 | 0 | Aucun |
 | `FuzzI2_Irreductibilite` | I2 | Résidu migrant non vide, non recâblable hors ligne | *Confirmé par construction* | 8 600 000 | 0 | Aucun |
@@ -56,6 +56,8 @@ Campagne smoke locale (5 s, Windows, 24 workers). *À vérifier* : résultats C
 | `FuzzI5_CompositionConjonctive` | I5 | `BoundsHold` sur toute `Pile` bien formée | *Probable* | 701 000 | 0 | Bug réel détecté (voir §4) |
 
 **Légende Findings** : un *finding* désigne un contre-exemple qui a fait échouer la propriété testée. « Aucun » signifie que la propriété a tenu sur toutes les entrées explorées.
+
+**Note de méthodologie — deux débits distincts** *[À vérifier]* : il faut distinguer deux métriques. (1) Le **débit de la fonction-propriété scalaire isolée** — la propriété évaluée sans le moteur de mutation — d'où dérivent les ordres de grandeur ~8,2-9,5 M exec/s annoncés ailleurs (CLAUDE.md, smoke 5 s sur un autre hôte). (2) Le **débit du moteur `go test -fuzz`** (mutation incluse), mesuré ~1,4 M exec/s pour I1-I4 et ~1,1 M/s pour I5 sur ce poste (Windows, `CGO_ENABLED=0`, Go 1.26.3) ; I5 ~1,1 M/s est confirmé. Les comptes « Entrées explorées » ci-dessus relèvent de la première mesure (smoke initial) et n'ont pas été re-mesurés comme débit moteur — d'où le marqueur *[À vérifier]*. Le débit moteur est l'indicateur opérationnel pertinent pour `make fuzz`. Aucun crash observé sur ~200 M exécutions cumulées (30 s/cible).
 
 ---
 

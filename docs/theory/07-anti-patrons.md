@@ -2,7 +2,7 @@
 
 *Document de renvoi croisé. Le verbatim canonique vit dans `agbruneau/InteroperabiliteAgentique` v2.4.3, `Monographie.md` chap. III.8.7.*
 
-*Statut global : 4 anti-patrons gardés par test au tag `v0.1.0`. Confirmé. Daté 2026-05-24.*
+*Statut global : 4 anti-patrons théoriques (chap. III.8.7) gardés par test ; 3 gardes d'ingénierie additionnelles (cf. `CLAUDE.md` §Anti-patrons interdits) portent le total à 7. Confirmé. Daté 2026-05-29.*
 
 ---
 
@@ -86,7 +86,21 @@ Un `Kernel.Decide` silencieux face à des observations non modélisées est plus
 - **Rapport mensuel** : `docs/empirical/unmodeled.md` (M4) — catalogue des observations non modélisées collectées sur traces AgentMeshKafka.
 - **Cas de refus** : observation non modélisée à fort impact → `Refus("usage clos potentiel")` *(PRD §7.3)*.
 
-*Confirmé pour la garde. A vérifier pour le seuil « fort impact » (non calibré, M4). *(chap. III.8.7.4, PRD §7.2 #4, CLAUDE.md §Anti-patrons interdits #5)*
+*Confirmé pour la garde. A vérifier pour le seuil « fort impact » (non calibré, M4). *(chap. III.8.7.4, PRD §7.2 #4, CLAUDE.md §Anti-patrons interdits #4)*
+
+---
+
+## Gardes d'ingénierie additionnelles *(hors monographie — `CLAUDE.md` §Anti-patrons interdits)*
+
+La Monographie (chap. III.8.7) définit **quatre** anti-patrons d'usage théoriques (AP#1-AP#4 ci-dessus). TauGo en ajoute **trois** gardes d'ingénierie, propres à l'implémentation Go et non issues de la monographie, qui portent le total gardé à **7** *(cf. `CLAUDE.md` §Anti-patrons interdits)* :
+
+| # | Garde d'ingénierie | Mécanisme |
+|---|---|---|
+| **#5** | Citation, chiffre, API ou DOI fabriqué dans `docs/` | Revue PR : affirmation datée sans marqueur d'incertitude → rejet |
+| **#6** | Import LLM concret (`anthropic`, `openai`, …) dans `internal/tau/*` ou `internal/orchestration/*` | `TestArchNoConcreteLLMInDomain` (`internal/arch_test.go` ; walk AST) |
+| **#7** | Globaux mutables non synchronisés dans `internal/tau/*` | linter `gochecknoglobals` + revue PR |
+
+Ces trois gardes ne sont **pas** des anti-patrons au sens de la monographie : ce sont des disciplines d'implémentation imposées par TauGo. Le verbatim théorique reste à quatre anti-patrons (chap. III.8.7). *(Renvoi : `CLAUDE.md` §Anti-patrons interdits #5-#7.)*
 
 ---
 
@@ -119,3 +133,4 @@ Tous les tests passent en `-race` sur Linux/macOS (CI). Windows sans CGO : test
 
 **Aligné monographie** : v2.4.3 (2026-05-21).
 **Daté** : 2026-05-24.
+**Révisé** : 2026-05-29 — alignement post-audit de régression v0.1.2-pre (réconciliation 4 anti-patrons théoriques + 3 gardes d'ingénierie = 7 ; cf. `docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`).

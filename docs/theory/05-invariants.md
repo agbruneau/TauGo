@@ -222,7 +222,7 @@ Les reformulations exécutables du PRD §6.1 sont fidèles au verbatim de la Mon
 
 **I2** : la reformulation PRD est fidèle. Le verbatim dit « résidu de sens, d'autorité et de support » ; le PRD condense en `Residu(x)` avec notation ensembliste correcte. Cohérent.
 
-**I3** : la reformulation PRD capture la garde opérationnelle (`D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus`) et la clause de péremption. La clause ontologique (Searle 1995, nature du fait institutionnel) est documentée dans `docs/theory/04-dimensions.md` §D-AUTORITÉ et non redupliquée — acceptable par discipline de périmètre. La date de veille PRD (`date_revision ≤ 2027-01-01`) est plus conservative que la date de revérification PRD §6.2 (`2026-12-01`) : cohérence à vérifier lors de la revue de profil M3.
+**I3** : la reformulation PRD capture la garde opérationnelle (`D-AUTORITÉ(x) ≥ θ_auth_block ∧ Attestation == nil ⇒ Refus`) et la clause de péremption. La clause ontologique (Searle 1995, nature du fait institutionnel) est documentée dans `docs/theory/04-dimensions.md` §D-AUTORITÉ et non redupliquée — acceptable par discipline de périmètre. L'asymétrie entre les deux dates est **assumée**, non un défaut : `I3PerimptionLimite()` (`internal/tau/invariants/i3_authority_asymmetry.go`) fixe le plafond ontologique absolu à **2027-01-01**, tandis que `calibration.DefaultProfile()` porte une `DateRevision` plus précoce à **2026-12-01**. La date de profil (plus conservative) déclenche donc le refus pour péremption *avant* le plafond théorique : la veille de profil arrive en premier, ce qui est l'effet recherché (re-calibrer ou re-dérouler la veille I3 un mois avant la borne dure). *(Écart confirmé par lecture du code ; cf. audit 2026-05-29.)*
 
 **I4** : la reformulation PRD inverse la présentation du verbatim pour la rendre exécutable : le verbatim énonce `i ≈ pendant ⟹ s ≈ pendant` (direction contrainte) ; PRD §6.1 traduit en `D-INVARIANT(x) ≥ θ_inv ∧ D-SENS(x) < θ_sens ⇒ Refus(I4)` (détection de la violation). L'inversion est correcte et intentionnelle.
 
@@ -236,3 +236,4 @@ Les reformulations exécutables du PRD §6.1 sont fidèles au verbatim de la Mon
 
 **Aligné monographie** : v2.4.3 (2026-05-21).
 **Daté** : 2026-05-24.
+**Révisé** : 2026-05-29 — alignement post-audit de régression v0.1.2-pre (asymétrie I3 DateRevision 2026-12-01 vs I3PerimptionLimite 2027-01-01 documentée comme voulue ; cf. `docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`).
