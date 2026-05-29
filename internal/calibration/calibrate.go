@@ -64,7 +64,7 @@ func (e *CorpusEntry) Validate() error {
 	}
 	if _, ok := validRegimes[e.LabeledRegime]; !ok {
 		return &taugoerrors.CalibrationError{
-			Cause: fmt.Errorf("ExpectedRegime invalide : %q", e.LabeledRegime),
+			Cause: fmt.Errorf("LabeledRegime invalide : %q", e.LabeledRegime),
 		}
 	}
 	return nil

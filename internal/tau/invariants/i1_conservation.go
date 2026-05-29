@@ -18,7 +18,7 @@ func Conserve(x tau.Exchange, dec tau.Decision) bool {
 //   - Refus("hors frontière τ"): NotApplicable — τ has not operated.
 //   - All other regimes: Held if Conserve(x, dec) holds, Violated otherwise.
 func EvaluateI1(x tau.Exchange, dec tau.Decision) Status {
-	if dec.Regime == tau.Refus && dec.Diagnostic == "hors frontière τ" {
+	if dec.Regime == tau.Refus && dec.Diagnostic == tau.DiagFrontiereFranchie {
 		return NotApplicable
 	}
 	if Conserve(x, dec) {

@@ -64,8 +64,14 @@ func discoveryModeFromString(s string) tau.DiscoveryMode {
 
 // StreamAsTauExchanges adapts a bridge Adapter to the kernel's typed input.
 // It starts adapter.Stream and transforms each AgentMeshExchange to tau.Exchange
-// in a goroutine. Errors from the adapter are forwarded on errOut. Both output
+// in a goroutine. Errors from the adapter are forwarded on errc. Both output
 // channels are closed when the source stream drains or ctx is canceled.
+//
+// Error delivery is best-effort (lossy): errc is a bounded buffered channel and
+// sends on it are non-blocking. If the consumer does not drain errc fast enough,
+// non-fatal adapter errors may be dropped rather than block the conversion loop.
+// Callers needing exhaustive error capture must consume errc promptly; the
+// exchange stream (the load-bearing output) is never sacrificed to error delivery.
 //
 // Cancellation: when ctx is canceled, the conversion goroutine drains the
 // adapter's error channel before returning so the adapter goroutine is never

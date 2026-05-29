@@ -55,9 +55,25 @@ var archRules = []rule{
 		"github.com/agbruneau/taugo/internal/bridge",
 		"github.com/agbruneau/taugo/internal/app",
 		"github.com/agbruneau/taugo/internal/errors",
-		"github.com/agbruneau/taugo/internal/metrics",
-		"github.com/agbruneau/taugo/internal/config",
 		"github.com/agbruneau/taugo/internal/testutil",
+	}},
+	// ADR-0009: internal/errors is a transverse leaf — typed error families with
+	// no taugo dependencies. It must not import any application-layer package.
+	{from: "github.com/agbruneau/taugo/internal/errors", deny: []string{
+		"github.com/agbruneau/taugo/internal/tau",
+		"github.com/agbruneau/taugo/internal/orchestration",
+		"github.com/agbruneau/taugo/internal/bridge",
+		"github.com/agbruneau/taugo/internal/calibration",
+		"github.com/agbruneau/taugo/internal/app",
+		"github.com/agbruneau/taugo/internal/thresholds",
+	}},
+	// internal/testutil is a transverse test leaf: it builds tau value types only.
+	// It must not reach into the orchestration/bridge/calibration/app layers.
+	{from: "github.com/agbruneau/taugo/internal/testutil", deny: []string{
+		"github.com/agbruneau/taugo/internal/orchestration",
+		"github.com/agbruneau/taugo/internal/bridge",
+		"github.com/agbruneau/taugo/internal/calibration",
+		"github.com/agbruneau/taugo/internal/app",
 	}},
 }
 

@@ -42,7 +42,9 @@ func (e *DispatchError) Error() string {
 func (e *DispatchError) Unwrap() error { return e.Cause }
 
 // RefusError signals a Refus de premier rang (PRD §7.3).
-// The Diagnostic field matches the sentinel strings below verbatim.
+// The Diagnostic field matches the sentinel strings below verbatim, and the
+// Is method (see below) makes errors.Is(refus, ErrFrontiereFranchie) succeed
+// when the Diagnostic equals that sentinel's message.
 type RefusError struct {
 	Stage      int    // étape où le refus est émis (1, 2, 3 ou 5)
 	Diagnostic string // sentinel diagnostic, ex. "hors frontière τ"
@@ -52,6 +54,16 @@ type RefusError struct {
 func (e *RefusError) Error() string {
 	return fmt.Sprintf("refus at stage %d (exchange=%s): %s",
 		e.Stage, e.ExchangeID, e.Diagnostic)
+}
+
+// Is reports whether target is a sentinel matching this refusal's Diagnostic.
+// A RefusError carries no wrapped cause, so it cannot rely on Unwrap; instead
+// it matches a sentinel by comparing the Diagnostic field to the sentinel's
+// message verbatim. The package sentinels (ErrFrontiereFranchie, …) hold the
+// exact Diagnostic strings emitted by the dispatcher, so errors.Is(refus,
+// ErrFrontiereFranchie) is true whenever refus.Diagnostic == its message.
+func (e *RefusError) Is(target error) bool {
+	return target != nil && e.Diagnostic == target.Error()
 }
 
 // CalibrationError signals a failure during calibration corpus load,

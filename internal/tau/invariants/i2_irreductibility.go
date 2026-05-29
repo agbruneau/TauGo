@@ -70,7 +70,7 @@ func Recablage(x tau.Exchange, removed []string) tau.FrontierCheck {
 //
 // PRD §6.1 I2. Status: Confirmed by construction.
 func EvaluateI2(x tau.Exchange, dec tau.Decision) Status {
-	if dec.Regime == tau.Refus && dec.Diagnostic == "hors frontière τ" {
+	if dec.Regime == tau.Refus && dec.Diagnostic == tau.DiagFrontiereFranchie {
 		return NotApplicable
 	}
 	r := Residu(x)

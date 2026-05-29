@@ -77,7 +77,15 @@ func (at *AtomicThresholds) Snapshot() Thresholds {
 	}
 }
 
-// SetTuning atomically updates all thresholds in one coordinated call.
+// SetTuning updates every threshold from t. Each individual Store is atomic,
+// but SetTuning is NOT a single atomic transaction: the six Stores happen in
+// sequence, so a concurrent Snapshot may observe a partially-updated state
+// (some fields from t, some from the previous value). Callers requiring an
+// all-or-nothing view must add external synchronization.
+//
+// NOTE: AtomicThresholds is not yet wired into the dispatcher; it is a
+// forward-looking primitive for hot-reload tuning (cf. FibGo bigfft pattern).
+//
 // Panics if the ordering invariant Deterministe <= Probabiliste would be violated.
 func (at *AtomicThresholds) SetTuning(t Thresholds) {
 	if t.Deterministe > t.Probabiliste {

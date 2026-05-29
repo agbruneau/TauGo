@@ -55,6 +55,35 @@ func TestRefusError_ErrorMessage(t *testing.T) {
 	}
 }
 
+func TestRefusError_Is_MatchesDiagnosticSentinel(t *testing.T) {
+	t.Parallel()
+
+	cases := []struct {
+		name       string
+		diagnostic string
+		sentinel   error
+		want       bool
+	}{
+		{"frontiere_matches", "hors frontière τ", taugerrors.ErrFrontiereFranchie, true},
+		{"peremption_matches", "profil périmé — veille requise", taugerrors.ErrPeremptionProfile, true},
+		{"incoherence_matches", "I4 — combinaison incohérente détectée", taugerrors.ErrIncoherenceI4, true},
+		{"verrou_matches", "I3 — verrou ontologique D-AUTORITÉ", taugerrors.ErrVerrouOntologique, true},
+		{"frontiere_does_not_match_peremption", "hors frontière τ", taugerrors.ErrPeremptionProfile, false},
+		{"verrou_does_not_match_incoherence", "I3 — verrou ontologique D-AUTORITÉ", taugerrors.ErrIncoherenceI4, false},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			err := &taugerrors.RefusError{Stage: 1, ExchangeID: "ex-is", Diagnostic: tc.diagnostic}
+			if got := stderrors.Is(err, tc.sentinel); got != tc.want {
+				t.Fatalf("errors.Is(RefusError{Diagnostic:%q}, %q) = %v, want %v",
+					tc.diagnostic, tc.sentinel, got, tc.want)
+			}
+		})
+	}
+}
+
 func TestCalibrationError_ErrorMessage(t *testing.T) {
 	t.Parallel()
 

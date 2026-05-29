@@ -131,7 +131,7 @@ func BenchmarkI5_Aggregate(b *testing.B) {
 	}
 }
 
-// BenchmarkI5_BoundsHold measures BoundsHold (includes Aggregate) on the same pile.
+// BenchmarkI5_BoundsHold measures the single-pass BoundsHold (no call to Aggregate) on the same pile.
 func BenchmarkI5_BoundsHold(b *testing.B) {
 	p := makeLargePile(10, 50)
 	b.ResetTimer()

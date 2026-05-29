@@ -69,32 +69,29 @@ func TestEvaluateI4_RefusalForI4_Held(t *testing.T) {
 	}
 }
 
-// TestEvaluateI4_IncoherentNonRefused_Violated is the V1 limitation test:
-// without ventilated scores in the Trace, EvaluateI4 cannot detect a bypassed
-// guard from a non-Refus decision. This test documents the current Held
-// verdict (status Hypothèse) and will be updated in M5 when scores are
-// available in the Trace.
-func TestEvaluateI4_IncoherentNonRefused_Violated(t *testing.T) {
+// TestEvaluateI4_NoVentilatedScores_Held pins the fallback verdict: when the
+// Trace carries no ventilated dimension scores (DSens / DInvariant nil),
+// EvaluateI4 cannot recompute IsIncoherent and returns Held by construction.
+// The ventilated-bypass detection delivered by ADR-0008 is exercised by
+// TestEvaluateI4_DetecteByPassSilencieux (internal/orchestration); this test
+// only documents the score-absent fallback.
+func TestEvaluateI4_NoVentilatedScores_Held(t *testing.T) {
 	t.Parallel()
-	// A Probabiliste decision where the (s, i) pair was incoherent but the
-	// dispatcher's guard was somehow bypassed. V1 cannot observe this because
-	// Trace does not carry ventilated dimension scores. EvaluateI4 returns Held
-	// by construction (Hypothèse) — this test documents that limitation.
+	// A Probabiliste decision whose Trace omits ventilated scores: only the
+	// aggregate TauScore proxy is present, so IsIncoherent cannot be applied.
 	dec := tau.Decision{
 		Regime: tau.Probabiliste,
 		Trace: tau.Trace{
-			ExchangeID: "e-i4-bypass",
+			ExchangeID: "e-i4-no-ventilated",
 			TauScore:   0.75,
 		},
 	}
-	// V1: Held (cannot detect from Decision alone without ventilated scores).
-	// M5 will update this to Violated when Trace.DSens / Trace.DInvariant are
-	// available and IsIncoherent can be called directly.
+	// Without DSens / DInvariant, EvaluateI4 falls back to Held.
 	got := invariants.EvaluateI4(tau.Exchange{}, dec)
 	if got != invariants.Held {
 		t.Fatalf(
-			"EvaluateI4(Probabiliste bypass) = %v, want Held "+
-				"(V1 limitation: ventilated scores absent from Trace — update in M5)",
+			"EvaluateI4(Probabiliste, no ventilated scores) = %v, want Held "+
+				"(ventilated scores absent from Trace — fallback verdict)",
 			got,
 		)
 	}
