@@ -1,28 +1,8 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "b7292831df96e0bf2d6c18982de8ba9462e7a9bb",
-  "generatedAt": "2026-05-24T22:03:57.597Z",
+  "gitCommitHash": "7fb3e1115164f7125bbceaa8a7a1b41cd30af1c1",
+  "generatedAt": "2026-05-29T12:18:24.265Z",
   "files": {
-    ".github/workflows/ci.yml": {
-      "filePath": ".github/workflows/ci.yml",
-      "contentHash": "c7349d32096c69bd989c8a03e2db17af180fe55937a04f9aa2e0e157e8e2f5cb",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 143,
-      "hasStructuralAnalysis": true
-    },
-    ".github/workflows/coverage.yml": {
-      "filePath": ".github/workflows/coverage.yml",
-      "contentHash": "9a8d958a2b5d71ec54bb9f93bfb47e99e03b559f30781216f47d8c39af1c22b8",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 86,
-      "hasStructuralAnalysis": true
-    },
     ".golangci.yml": {
       "filePath": ".golangci.yml",
       "contentHash": "176cc506b6f95f16c071710a2854ae882eb4b11391d8f8dc15e178da48e79fb9",
@@ -33,34 +13,54 @@
       "totalLines": 175,
       "hasStructuralAnalysis": true
     },
-    ".understand-anything/.understandignore": {
-      "filePath": ".understand-anything/.understandignore",
-      "contentHash": "b68cfd4d0f0f4c1c10fb2c23c36b3da75382371afac5dcdd3668babbead26498",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 50,
-      "hasStructuralAnalysis": false
-    },
     "CHANGELOG.md": {
       "filePath": "CHANGELOG.md",
-      "contentHash": "986ef68d915368f9a0baa0966ec84edeb1daae46abd11dd5902eaebdbadc4db5",
+      "contentHash": "adcc0dfd2934c79096968014ade44a9c7728fb926b6e3c4f10828264e2f5ef29",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 336,
+      "totalLines": 381,
       "hasStructuralAnalysis": true
     },
     "CLAUDE.md": {
       "filePath": "CLAUDE.md",
-      "contentHash": "b3969fb6543145c58293be44ce95817312b67613559fead6e2dc57c405ae03de",
+      "contentHash": "c3dcb6e7ea6309bc956f41c9a76237d832627f1965d29c988806b7c332aea056",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 306,
+      "totalLines": 320,
+      "hasStructuralAnalysis": true
+    },
+    "Makefile": {
+      "filePath": "Makefile",
+      "contentHash": "813c6cd86df60f21f7b2ff94d40924f6201b69538a5bb5d66f4af4d7f5b4970b",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 48,
+      "hasStructuralAnalysis": true
+    },
+    "PRD.md": {
+      "filePath": "PRD.md",
+      "contentHash": "bea18c1c325084c2ab956570f5f243c9fa5dadb5ec3d9b6104618fa236240e7e",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 941,
+      "hasStructuralAnalysis": true
+    },
+    "README.md": {
+      "filePath": "README.md",
+      "contentHash": "56630ef9ccfa39f43d3c4ecf7dc4e1528729d518d590f9072b1137f5ccbc95bd",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 429,
       "hasStructuralAnalysis": true
     },
     "cmd/generate-corpus/doc.go": {
@@ -313,6 +313,70 @@
       "totalLines": 326,
       "hasStructuralAnalysis": true
     },
+    "cmd/generate-corpus/main.go": {
+      "filePath": "cmd/generate-corpus/main.go",
+      "contentHash": "74d9c4a458f38b48a197516ba51f838618716ed8034d745fbf54f69e278a10d6",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "run",
+          "params": [
+            "args",
+            "stdout"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 52
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "flag",
+          "specifiers": [
+            "flag"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/app",
+          "specifiers": [
+            "app"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 72,
+      "hasStructuralAnalysis": true
+    },
     "cmd/generate-corpus/main_test.go": {
       "filePath": "cmd/generate-corpus/main_test.go",
       "contentHash": "bde8cadaa81f921ac6f81b92b4016fef8b405bd7ddc5470a779cca16ad9ec744",
@@ -551,33 +615,54 @@
       "totalLines": 371,
       "hasStructuralAnalysis": true
     },
-    "cmd/generate-corpus/main.go": {
-      "filePath": "cmd/generate-corpus/main.go",
-      "contentHash": "74d9c4a458f38b48a197516ba51f838618716ed8034d745fbf54f69e278a10d6",
+    "cmd/generate-corpus/testdata/synthetic-corpus-120-seed42-balanced.jsonl": {
+      "filePath": "cmd/generate-corpus/testdata/synthetic-corpus-120-seed42-balanced.jsonl",
+      "contentHash": "a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 121,
+      "hasStructuralAnalysis": false
+    },
+    "cmd/tau/calibrate.go": {
+      "filePath": "cmd/tau/calibrate.go",
+      "contentHash": "aa65cc4f615f005fd1e901aa03921cdbf19d1c73778683c76f637ade2e762f5c",
       "functions": [
         {
-          "name": "main",
-          "params": [],
-          "exported": false,
-          "lineCount": 3
-        },
-        {
-          "name": "run",
+          "name": "runCalibrate",
           "params": [
-            "args",
-            "stdout"
+            "args"
           ],
           "returnType": "int",
           "exported": false,
-          "lineCount": 52
+          "lineCount": 77
+        },
+        {
+          "name": "parseDateRev",
+          "params": [
+            "s"
+          ],
+          "returnType": "(time.Time, error)",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "loadCorpus",
+          "params": [
+            "path"
+          ],
+          "returnType": "([]calibration.CorpusEntry, error)",
+          "exported": false,
+          "lineCount": 18
         }
       ],
       "classes": [],
       "imports": [
         {
-          "source": "context",
+          "source": "encoding/json",
           "specifiers": [
-            "context"
+            "json"
           ]
         },
         {
@@ -593,37 +678,27 @@
           ]
         },
         {
-          "source": "io",
-          "specifiers": [
-            "io"
-          ]
-        },
-        {
           "source": "os",
           "specifiers": [
             "os"
           ]
         },
         {
-          "source": "github.com/agbruneau/taugo/internal/app",
+          "source": "time",
           "specifiers": [
-            "app"
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/calibration",
+          "specifiers": [
+            "calibration"
           ]
         }
       ],
       "exports": [],
-      "totalLines": 72,
+      "totalLines": 123,
       "hasStructuralAnalysis": true
-    },
-    "cmd/generate-corpus/testdata/synthetic-corpus-120-seed42-balanced.jsonl": {
-      "filePath": "cmd/generate-corpus/testdata/synthetic-corpus-120-seed42-balanced.jsonl",
-      "contentHash": "a91d60cd9815d8183df57bfcf16bbe77d36360c4ed36e33fced9f12f70fd68ee",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 121,
-      "hasStructuralAnalysis": false
     },
     "cmd/tau/calibrate_test.go": {
       "filePath": "cmd/tau/calibrate_test.go",
@@ -801,81 +876,6 @@
       "totalLines": 237,
       "hasStructuralAnalysis": true
     },
-    "cmd/tau/calibrate.go": {
-      "filePath": "cmd/tau/calibrate.go",
-      "contentHash": "aa65cc4f615f005fd1e901aa03921cdbf19d1c73778683c76f637ade2e762f5c",
-      "functions": [
-        {
-          "name": "runCalibrate",
-          "params": [
-            "args"
-          ],
-          "returnType": "int",
-          "exported": false,
-          "lineCount": 77
-        },
-        {
-          "name": "parseDateRev",
-          "params": [
-            "s"
-          ],
-          "returnType": "(time.Time, error)",
-          "exported": false,
-          "lineCount": 6
-        },
-        {
-          "name": "loadCorpus",
-          "params": [
-            "path"
-          ],
-          "returnType": "([]calibration.CorpusEntry, error)",
-          "exported": false,
-          "lineCount": 18
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "encoding/json",
-          "specifiers": [
-            "json"
-          ]
-        },
-        {
-          "source": "flag",
-          "specifiers": [
-            "flag"
-          ]
-        },
-        {
-          "source": "fmt",
-          "specifiers": [
-            "fmt"
-          ]
-        },
-        {
-          "source": "os",
-          "specifiers": [
-            "os"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/calibration",
-          "specifiers": [
-            "calibration"
-          ]
-        }
-      ],
-      "exports": [],
-      "totalLines": 123,
-      "hasStructuralAnalysis": true
-    },
     "cmd/tau/decide_test.go": {
       "filePath": "cmd/tau/decide_test.go",
       "contentHash": "93521ac2cd58f38f3a70e00a4f91c397c84c17fbdf882706a999a2df12161453",
@@ -962,6 +962,96 @@
         "TestRunDecide_ValidExchange_RegimeIsSet"
       ],
       "totalLines": 100,
+      "hasStructuralAnalysis": true
+    },
+    "cmd/tau/main.go": {
+      "filePath": "cmd/tau/main.go",
+      "contentHash": "4862e6334907936676e3531b9c34f2b5c0c56d9d59f7013a403eddb0c4e1223a",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "runMain",
+          "params": [
+            "args",
+            "in",
+            "out",
+            "stderr"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "printUsage",
+          "params": [
+            "w"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "runDecide",
+          "params": [
+            "in",
+            "out"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 18
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "encoding/json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/app",
+          "specifiers": [
+            "app"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 82,
       "hasStructuralAnalysis": true
     },
     "cmd/tau/main_test.go": {
@@ -1099,96 +1189,6 @@
       "totalLines": 172,
       "hasStructuralAnalysis": true
     },
-    "cmd/tau/main.go": {
-      "filePath": "cmd/tau/main.go",
-      "contentHash": "97cd3fd684e457b8286d71505297adc28b01b9446e303eb49fcc836f693bac61",
-      "functions": [
-        {
-          "name": "main",
-          "params": [],
-          "exported": false,
-          "lineCount": 3
-        },
-        {
-          "name": "runMain",
-          "params": [
-            "args",
-            "in",
-            "out",
-            "stderr"
-          ],
-          "returnType": "int",
-          "exported": false,
-          "lineCount": 19
-        },
-        {
-          "name": "printUsage",
-          "params": [
-            "w"
-          ],
-          "exported": false,
-          "lineCount": 14
-        },
-        {
-          "name": "runDecide",
-          "params": [
-            "in",
-            "out"
-          ],
-          "returnType": "int",
-          "exported": false,
-          "lineCount": 18
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "context",
-          "specifiers": [
-            "context"
-          ]
-        },
-        {
-          "source": "encoding/json",
-          "specifiers": [
-            "json"
-          ]
-        },
-        {
-          "source": "fmt",
-          "specifiers": [
-            "fmt"
-          ]
-        },
-        {
-          "source": "io",
-          "specifiers": [
-            "io"
-          ]
-        },
-        {
-          "source": "os",
-          "specifiers": [
-            "os"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/app",
-          "specifiers": [
-            "app"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        }
-      ],
-      "exports": [],
-      "totalLines": 82,
-      "hasStructuralAnalysis": true
-    },
     "cmd/tau/runmain_test.go": {
       "filePath": "cmd/tau/runmain_test.go",
       "contentHash": "d7933d2c71a8bd02033bf6e25887e075825c26282a1b999216feb20d0fbb7cd2",
@@ -1267,12 +1267,12 @@
     },
     "docs/adr/0001-clean-architecture-4-layers.md": {
       "filePath": "docs/adr/0001-clean-architecture-4-layers.md",
-      "contentHash": "bdcd99c825f29b7da24c938e28903d5be5b374d76392a61202200f6b873889bb",
+      "contentHash": "e1da10516435b0b1cfee7d4a84097cb467d3c2c5a883f63fdc961c8ebb2fd1f4",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 108,
+      "totalLines": 110,
       "hasStructuralAnalysis": true
     },
     "docs/adr/0002-go-1.25-toolchain.md": {
@@ -1297,12 +1297,12 @@
     },
     "docs/adr/0004-agentmeshkafka-empirical-bridge.md": {
       "filePath": "docs/adr/0004-agentmeshkafka-empirical-bridge.md",
-      "contentHash": "a74ae5e41c74bf9a7e7b0d8eefa9dc6d963500cccd95e700e6389885f5364bcf",
+      "contentHash": "c2dba4add3f8ed7a1feae9039d04dc8327f2079775044951e0b34ebc1ab5a4f3",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 127,
+      "totalLines": 129,
       "hasStructuralAnalysis": true
     },
     "docs/adr/0005-agentmeshkafka-dto.md": {
@@ -1347,12 +1347,22 @@
     },
     "docs/adr/0009-types-erreurs-typees.md": {
       "filePath": "docs/adr/0009-types-erreurs-typees.md",
-      "contentHash": "65d33068b60508dd49a9a4b1627dded6a80f7fe70cef8724b81d6b1156261b45",
+      "contentHash": "b9902f876e451c7903d87dbc7d5ed5d5ad6098e97caff2b6466a2ce997b02b58",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 158,
+      "totalLines": 160,
+      "hasStructuralAnalysis": true
+    },
+    "docs/adr/0010-retrait-ci-cd-pure-local.md": {
+      "filePath": "docs/adr/0010-retrait-ci-cd-pure-local.md",
+      "contentHash": "5ccfe752838c3bfeed68a542c5b1645a9894fd7cca790837eb98500f341e7a59",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 137,
       "hasStructuralAnalysis": true
     },
     "docs/algorithms/calibration.md": {
@@ -1385,6 +1395,26 @@
       "totalLines": 162,
       "hasStructuralAnalysis": true
     },
+    "docs/archive/PRDPlanning-m0-m6.md": {
+      "filePath": "docs/archive/PRDPlanning-m0-m6.md",
+      "contentHash": "78fcc5eadc0c17c882676321a7da02268c167121aad5290663886c67f6f3e11a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1114,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/README.md": {
+      "filePath": "docs/archive/README.md",
+      "contentHash": "53ffb59b5c8d6d62e40c6b81be2c3017c3c1b3bcb1f70858931f51d95e8fc925",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 17,
+      "hasStructuralAnalysis": true
+    },
     "docs/archive/audits/2026-05-24-AUDIT-v0.1.0-to-v0.1.1.md": {
       "filePath": "docs/archive/audits/2026-05-24-AUDIT-v0.1.0-to-v0.1.1.md",
       "contentHash": "ba675a39767cd972cf40f491d8f5f02a0088968d3fed2fc099a4bcbdabdc1907",
@@ -1403,6 +1433,96 @@
       "imports": [],
       "exports": [],
       "totalLines": 788,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/00_bootstrap.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/00_bootstrap.md",
+      "contentHash": "409500f9ad1a3d95c77f7b1cfb78bdf499d894a183ece4e2866f5868453544c8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md",
+      "contentHash": "4d0a712590d76f4e4fc26297c5402ed1aea6aad6905380f91ed1449da055ec21",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 74,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/02_invariants_epistemique.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/02_invariants_epistemique.md",
+      "contentHash": "335af2146b37a5f92b3b802865667ac088a87e97eca03657d51a5010f0c98d79",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 123,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/03_concurrence.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/03_concurrence.md",
+      "contentHash": "4a578a831818f4332f269806d64c26bd5af3b33e952426c367fab9da59c11e9f",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 99,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/04_performance.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/04_performance.md",
+      "contentHash": "c0967da344b3bc54f969b78dbf442b70172b93be3a99ec109858135e6dbb2fd9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 92,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/05_idiomatique.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/05_idiomatique.md",
+      "contentHash": "d3a9c99db5e0c673d0475d31af07a872f6254d3989d4fe633b53610bfbe90db7",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 73,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/06_architecture_tests.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/06_architecture_tests.md",
+      "contentHash": "f0ad53ae1c293fa5392360a6b598f64b29cc7d4704e4626c77dbf9588798f7c9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 161,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/CONVENTIONS.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/CONVENTIONS.md",
+      "contentHash": "86f7cf67542d69bded16e2a3f6577807a3b5cca0845e12a0d885691054210632",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 28,
+      "hasStructuralAnalysis": true
+    },
+    "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/RAPPORT_FINAL.md": {
+      "filePath": "docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/RAPPORT_FINAL.md",
+      "contentHash": "ede83f7ecba39a8b5e66fb98dde6592424e9212f3e69a6efab21b97292a611f0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 174,
       "hasStructuralAnalysis": true
     },
     "docs/archive/plans-m0-m6/2026-05-23-M1-dispatcher-stub-llm.md": {
@@ -1475,24 +1595,34 @@
       "totalLines": 25,
       "hasStructuralAnalysis": true
     },
-    "docs/archive/PRDPlanning-m0-m6.md": {
-      "filePath": "docs/archive/PRDPlanning-m0-m6.md",
-      "contentHash": "78fcc5eadc0c17c882676321a7da02268c167121aad5290663886c67f6f3e11a",
+    "docs/empirical/I4-regime.md": {
+      "filePath": "docs/empirical/I4-regime.md",
+      "contentHash": "e4c7bb39ff9199fa440e0e9a1a3dca1a062a1c1bcedb57a1557b18fd9ce50e39",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 1114,
+      "totalLines": 54,
       "hasStructuralAnalysis": true
     },
-    "docs/archive/README.md": {
-      "filePath": "docs/archive/README.md",
-      "contentHash": "9276af2af8796a26fa19ee2a984c1db23019534c57df941aec66283a1c5d7c0e",
+    "docs/empirical/I4-report.md": {
+      "filePath": "docs/empirical/I4-report.md",
+      "contentHash": "b74cb6355e458ca95841cb1adecaee9c8410eb2934ec170f97722437e89a80d8",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 16,
+      "totalLines": 152,
+      "hasStructuralAnalysis": true
+    },
+    "docs/empirical/M2-sample-decisions.md": {
+      "filePath": "docs/empirical/M2-sample-decisions.md",
+      "contentHash": "f312025d64b2028e9bd9680c7a3be0dcbb3b5493c3e07ee4d3921126ee459779",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 400,
       "hasStructuralAnalysis": true
     },
     "docs/empirical/case-study-bfsi.md": {
@@ -1507,42 +1637,12 @@
     },
     "docs/empirical/fuzz-summary.md": {
       "filePath": "docs/empirical/fuzz-summary.md",
-      "contentHash": "189ae39ade97db50bc9b094818136fc1b6a400b2e5ce74b8da47a0bdb6dabfa8",
+      "contentHash": "de7fbe9930c583e624e42fc7eb0b4d4e5277bfb659811c58ef318177e4ac0ba2",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 219,
-      "hasStructuralAnalysis": true
-    },
-    "docs/empirical/I4-regime.md": {
-      "filePath": "docs/empirical/I4-regime.md",
-      "contentHash": "e4c7bb39ff9199fa440e0e9a1a3dca1a062a1c1bcedb57a1557b18fd9ce50e39",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 54,
-      "hasStructuralAnalysis": true
-    },
-    "docs/empirical/I4-report.md": {
-      "filePath": "docs/empirical/I4-report.md",
-      "contentHash": "9395368a3d7683b17467b2204a69869e454814c173429c13e52e416416b53863",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 152,
-      "hasStructuralAnalysis": true
-    },
-    "docs/empirical/M2-sample-decisions.md": {
-      "filePath": "docs/empirical/M2-sample-decisions.md",
-      "contentHash": "137790f6954c607c3217c8ac577ba006f28087acf6c70d71525c408925611ca6",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 398,
+      "totalLines": 221,
       "hasStructuralAnalysis": true
     },
     "docs/empirical/unmodeled.md": {
@@ -1577,12 +1677,12 @@
     },
     "docs/theory/05-invariants.md": {
       "filePath": "docs/theory/05-invariants.md",
-      "contentHash": "0c26a9449a8ad3fc26d91b613e31468998781748f07375a86be357733ed8dde1",
+      "contentHash": "a08256590fc4d72e66c1b2f32d7685d9f6f52c138ff98fd0467c84ae0632fc00",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 239,
+      "totalLines": 240,
       "hasStructuralAnalysis": true
     },
     "docs/theory/06-conditions-validite.md": {
@@ -1597,12 +1697,75 @@
     },
     "docs/theory/07-anti-patrons.md": {
       "filePath": "docs/theory/07-anti-patrons.md",
-      "contentHash": "3497c80504e37b4af3067e6d6ef68352830f456f89e46bbecbbb5a2d413cd75b",
+      "contentHash": "c0321ab946b23e69ec75fa56de890ddbe6e494f682b644e10b8347612ef0f1cb",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 122,
+      "totalLines": 137,
+      "hasStructuralAnalysis": true
+    },
+    "examples/quickstart/main.go": {
+      "filePath": "examples/quickstart/main.go",
+      "contentHash": "0f3f015dd1e865349d2ca8ac280a9aa9b6c9285ad7aff3c9c70c45267835cf68",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 130
+        },
+        {
+          "name": "printScore",
+          "params": [
+            "label",
+            "s"
+          ],
+          "exported": false,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "encoding/json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/app",
+          "specifiers": [
+            "app"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 163,
       "hasStructuralAnalysis": true
     },
     "go.mod": {
@@ -1728,6 +1891,68 @@
         "TestUnmodeledObservationsReported"
       ],
       "totalLines": 142,
+      "hasStructuralAnalysis": true
+    },
+    "internal/app/agentmesh.go": {
+      "filePath": "internal/app/agentmesh.go",
+      "contentHash": "e251b8e78052566498d569decbc0dae50d8cb9fdad711d223e19460aea925be5",
+      "functions": [
+        {
+          "name": "ToTauExchange",
+          "params": [
+            "x"
+          ],
+          "returnType": "tau.Exchange",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "discoveryModeFromString",
+          "params": [
+            "s"
+          ],
+          "returnType": "tau.DiscoveryMode",
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "StreamAsTauExchanges",
+          "params": [
+            "ctx",
+            "adapter",
+            "topics"
+          ],
+          "returnType": "(exchanges <-chan tau.Exchange, errc <-chan error)",
+          "exported": true,
+          "lineCount": 49
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/bridge/agentmeshkafka",
+          "specifiers": [
+            "agentmeshkafka"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [
+        "ToTauExchange",
+        "StreamAsTauExchanges"
+      ],
+      "totalLines": 124,
       "hasStructuralAnalysis": true
     },
     "internal/app/agentmesh_test.go": {
@@ -1897,66 +2122,70 @@
       "totalLines": 278,
       "hasStructuralAnalysis": true
     },
-    "internal/app/agentmesh.go": {
-      "filePath": "internal/app/agentmesh.go",
-      "contentHash": "e251b8e78052566498d569decbc0dae50d8cb9fdad711d223e19460aea925be5",
+    "internal/app/app.go": {
+      "filePath": "internal/app/app.go",
+      "contentHash": "273fb8bccb21f6bd58fa5b1562b0b45d21f2c572a3abd2eb562d7b97ea1b0b3f",
       "functions": [
         {
-          "name": "ToTauExchange",
-          "params": [
-            "x"
-          ],
-          "returnType": "tau.Exchange",
+          "name": "NewDispatcher",
+          "params": [],
+          "returnType": "*orchestration.Dispatcher",
           "exported": true,
-          "lineCount": 28
+          "lineCount": 8
         },
         {
-          "name": "discoveryModeFromString",
+          "name": "selectLLM",
           "params": [
-            "s"
+            "provider"
           ],
-          "returnType": "tau.DiscoveryMode",
+          "returnType": "(llm.Client, error)",
           "exported": false,
-          "lineCount": 14
-        },
-        {
-          "name": "StreamAsTauExchanges",
-          "params": [
-            "ctx",
-            "adapter",
-            "topics"
-          ],
-          "returnType": "(exchanges <-chan tau.Exchange, errc <-chan error)",
-          "exported": true,
-          "lineCount": 49
+          "lineCount": 16
         }
       ],
       "classes": [],
       "imports": [
         {
-          "source": "context",
+          "source": "fmt",
           "specifiers": [
-            "context"
+            "fmt"
           ]
         },
         {
-          "source": "github.com/agbruneau/taugo/internal/bridge/agentmeshkafka",
+          "source": "os",
           "specifiers": [
-            "agentmeshkafka"
+            "os"
           ]
         },
         {
-          "source": "github.com/agbruneau/taugo/internal/tau",
+          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
           "specifiers": [
-            "tau"
+            "llm"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/calibration",
+          "specifiers": [
+            "calibration"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/errors",
+          "specifiers": [
+            "customerrors"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/orchestration",
+          "specifiers": [
+            "orchestration"
           ]
         }
       ],
       "exports": [
-        "ToTauExchange",
-        "StreamAsTauExchanges"
+        "NewDispatcher"
       ],
-      "totalLines": 124,
+      "totalLines": 50,
       "hasStructuralAnalysis": true
     },
     "internal/app/app_test.go": {
@@ -2048,72 +2277,6 @@
         "TestDefaultLLMIsStub"
       ],
       "totalLines": 179,
-      "hasStructuralAnalysis": true
-    },
-    "internal/app/app.go": {
-      "filePath": "internal/app/app.go",
-      "contentHash": "273fb8bccb21f6bd58fa5b1562b0b45d21f2c572a3abd2eb562d7b97ea1b0b3f",
-      "functions": [
-        {
-          "name": "NewDispatcher",
-          "params": [],
-          "returnType": "*orchestration.Dispatcher",
-          "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "selectLLM",
-          "params": [
-            "provider"
-          ],
-          "returnType": "(llm.Client, error)",
-          "exported": false,
-          "lineCount": 16
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "fmt",
-          "specifiers": [
-            "fmt"
-          ]
-        },
-        {
-          "source": "os",
-          "specifiers": [
-            "os"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
-          "specifiers": [
-            "llm"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/calibration",
-          "specifiers": [
-            "calibration"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/errors",
-          "specifiers": [
-            "customerrors"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/orchestration",
-          "specifiers": [
-            "orchestration"
-          ]
-        }
-      ],
-      "exports": [
-        "NewDispatcher"
-      ],
-      "totalLines": 50,
       "hasStructuralAnalysis": true
     },
     "internal/app/doc.go": {
@@ -2296,6 +2459,99 @@
       "totalLines": 203,
       "hasStructuralAnalysis": true
     },
+    "internal/bridge/agentmeshkafka/adapter.go": {
+      "filePath": "internal/bridge/agentmeshkafka/adapter.go",
+      "contentHash": "5e7ef0d0236cfab8a9445dc6c814311c8f81848a20f9d227dc6c8bdbe770bef4",
+      "functions": [],
+      "classes": [
+        {
+          "name": "AgentMeshExchange",
+          "methods": [],
+          "properties": [
+            "ID",
+            "IntentDescription",
+            "DiscoveredAt",
+            "Initiator",
+            "Target",
+            "AttestationInstitutionnelle",
+            "Context",
+            "SourceTopic",
+            "SourceOffset",
+            "SourcePartition"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "AgentMeshPrincipal",
+          "methods": [],
+          "properties": [
+            "ID",
+            "HumanInLoop",
+            "Organization",
+            "DelegationDepth"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "AgentMeshCapability",
+          "methods": [],
+          "properties": [
+            "ID",
+            "DiscoveryMode",
+            "ContractURI"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "AgentMeshAttestation",
+          "methods": [],
+          "properties": [
+            "Emetteur",
+            "Reference",
+            "Marqueur",
+            "AssertedAt"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "Adapter",
+          "methods": [
+            "Stream",
+            "Close"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        }
+      ],
+      "exports": [
+        "AgentMeshExchange",
+        "AgentMeshPrincipal",
+        "AgentMeshCapability",
+        "AgentMeshAttestation",
+        "Adapter"
+      ],
+      "totalLines": 62,
+      "hasStructuralAnalysis": true
+    },
     "internal/bridge/agentmeshkafka/adapter_test.go": {
       "filePath": "internal/bridge/agentmeshkafka/adapter_test.go",
       "contentHash": "c718760671f35a17d14494f0bab72a0cb8ed3d092bde346d9606bf9aed94c552",
@@ -2402,97 +2658,71 @@
       "totalLines": 172,
       "hasStructuralAnalysis": true
     },
-    "internal/bridge/agentmeshkafka/adapter.go": {
-      "filePath": "internal/bridge/agentmeshkafka/adapter.go",
-      "contentHash": "5e7ef0d0236cfab8a9445dc6c814311c8f81848a20f9d227dc6c8bdbe770bef4",
-      "functions": [],
+    "internal/bridge/agentmeshkafka/classifier.go": {
+      "filePath": "internal/bridge/agentmeshkafka/classifier.go",
+      "contentHash": "e7966b6c20a8d6610ae0aed1bc5ed57a1ada60d6cfed07ae7c1c23cf208bcf70",
+      "functions": [
+        {
+          "name": "ClassifyI4",
+          "params": [
+            "d"
+          ],
+          "returnType": "I4Class",
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "EmpiricalI4Summary",
+          "params": [
+            "decisions"
+          ],
+          "returnType": "EmpiricalI4Stats",
+          "exported": true,
+          "lineCount": 37
+        }
+      ],
       "classes": [
         {
-          "name": "AgentMeshExchange",
+          "name": "EmpiricalDecision",
           "methods": [],
           "properties": [
-            "ID",
-            "IntentDescription",
-            "DiscoveredAt",
-            "Initiator",
-            "Target",
-            "AttestationInstitutionnelle",
-            "Context",
-            "SourceTopic",
-            "SourceOffset",
-            "SourcePartition"
+            "RegimeStr",
+            "Diagnostic",
+            "DSensValue",
+            "DInvariantValue",
+            "SensCoherence",
+            "InvCoherence",
+            "UnmodeledObservations"
+          ],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "EmpiricalI4Stats",
+          "methods": [],
+          "properties": [
+            "Total",
+            "I4CoherentAccepted",
+            "I4IncoherentRefused",
+            "I4FalsePositive",
+            "I4FalseNegative",
+            "OtherRefusal",
+            "Unmodeled",
+            "Sensitivity",
+            "Specificity"
           ],
           "exported": true,
           "lineCount": 13
-        },
-        {
-          "name": "AgentMeshPrincipal",
-          "methods": [],
-          "properties": [
-            "ID",
-            "HumanInLoop",
-            "Organization",
-            "DelegationDepth"
-          ],
-          "exported": true,
-          "lineCount": 6
-        },
-        {
-          "name": "AgentMeshCapability",
-          "methods": [],
-          "properties": [
-            "ID",
-            "DiscoveryMode",
-            "ContractURI"
-          ],
-          "exported": true,
-          "lineCount": 5
-        },
-        {
-          "name": "AgentMeshAttestation",
-          "methods": [],
-          "properties": [
-            "Emetteur",
-            "Reference",
-            "Marqueur",
-            "AssertedAt"
-          ],
-          "exported": true,
-          "lineCount": 6
-        },
-        {
-          "name": "Adapter",
-          "methods": [
-            "Stream",
-            "Close"
-          ],
-          "properties": [],
-          "exported": true,
-          "lineCount": 9
         }
       ],
-      "imports": [
-        {
-          "source": "context",
-          "specifiers": [
-            "context"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        }
-      ],
+      "imports": [],
       "exports": [
-        "AgentMeshExchange",
-        "AgentMeshPrincipal",
-        "AgentMeshCapability",
-        "AgentMeshAttestation",
-        "Adapter"
+        "EmpiricalDecision",
+        "ClassifyI4",
+        "EmpiricalI4Stats",
+        "EmpiricalI4Summary"
       ],
-      "totalLines": 62,
+      "totalLines": 150,
       "hasStructuralAnalysis": true
     },
     "internal/bridge/agentmeshkafka/classifier_test.go": {
@@ -2566,73 +2796,6 @@
         "TestEmpiricalI4Stats_SensitivityOmitemptySiNil"
       ],
       "totalLines": 251,
-      "hasStructuralAnalysis": true
-    },
-    "internal/bridge/agentmeshkafka/classifier.go": {
-      "filePath": "internal/bridge/agentmeshkafka/classifier.go",
-      "contentHash": "e7966b6c20a8d6610ae0aed1bc5ed57a1ada60d6cfed07ae7c1c23cf208bcf70",
-      "functions": [
-        {
-          "name": "ClassifyI4",
-          "params": [
-            "d"
-          ],
-          "returnType": "I4Class",
-          "exported": true,
-          "lineCount": 25
-        },
-        {
-          "name": "EmpiricalI4Summary",
-          "params": [
-            "decisions"
-          ],
-          "returnType": "EmpiricalI4Stats",
-          "exported": true,
-          "lineCount": 37
-        }
-      ],
-      "classes": [
-        {
-          "name": "EmpiricalDecision",
-          "methods": [],
-          "properties": [
-            "RegimeStr",
-            "Diagnostic",
-            "DSensValue",
-            "DInvariantValue",
-            "SensCoherence",
-            "InvCoherence",
-            "UnmodeledObservations"
-          ],
-          "exported": true,
-          "lineCount": 17
-        },
-        {
-          "name": "EmpiricalI4Stats",
-          "methods": [],
-          "properties": [
-            "Total",
-            "I4CoherentAccepted",
-            "I4IncoherentRefused",
-            "I4FalsePositive",
-            "I4FalseNegative",
-            "OtherRefusal",
-            "Unmodeled",
-            "Sensitivity",
-            "Specificity"
-          ],
-          "exported": true,
-          "lineCount": 13
-        }
-      ],
-      "imports": [],
-      "exports": [
-        "EmpiricalDecision",
-        "ClassifyI4",
-        "EmpiricalI4Stats",
-        "EmpiricalI4Summary"
-      ],
-      "totalLines": 150,
       "hasStructuralAnalysis": true
     },
     "internal/bridge/agentmeshkafka/doc.go": {
@@ -2822,98 +2985,6 @@
       "totalLines": 203,
       "hasStructuralAnalysis": true
     },
-    "internal/bridge/agentmeshkafka/file_adapter_test.go": {
-      "filePath": "internal/bridge/agentmeshkafka/file_adapter_test.go",
-      "contentHash": "deb93748ef68e00f919b1b67e91263bf88bf1e7e2227d410b5fe87a01e222472",
-      "functions": [
-        {
-          "name": "newFA",
-          "params": [
-            "t",
-            "path"
-          ],
-          "returnType": "*agentmeshkafka.FileAdapter",
-          "exported": false,
-          "lineCount": 9
-        },
-        {
-          "name": "TestFileAdapter_ReadsGoldenJSONL",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 26
-        },
-        {
-          "name": "TestFileAdapter_ContextCancellation_StopsStream",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 25
-        },
-        {
-          "name": "TestFileAdapter_CloseIsIdempotent",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 11
-        },
-        {
-          "name": "TestFileAdapter_MalformedLine_ReportsError_ContinuesStream",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 34
-        },
-        {
-          "name": "TestFileAdapter_MissingFile_ConstructorError",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 7
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "context",
-          "specifiers": [
-            "context"
-          ]
-        },
-        {
-          "source": "testing",
-          "specifiers": [
-            "testing"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/bridge/agentmeshkafka",
-          "specifiers": [
-            "agentmeshkafka"
-          ]
-        }
-      ],
-      "exports": [
-        "TestFileAdapter_ReadsGoldenJSONL",
-        "TestFileAdapter_ContextCancellation_StopsStream",
-        "TestFileAdapter_CloseIsIdempotent",
-        "TestFileAdapter_MalformedLine_ReportsError_ContinuesStream",
-        "TestFileAdapter_MissingFile_ConstructorError"
-      ],
-      "totalLines": 138,
-      "hasStructuralAnalysis": true
-    },
     "internal/bridge/agentmeshkafka/file_adapter.go": {
       "filePath": "internal/bridge/agentmeshkafka/file_adapter.go",
       "contentHash": "e2bf158b72adb627b30c6a3951ab73a72ea580561881c0bd7f2364f9421b1a75",
@@ -3036,6 +3107,98 @@
       "totalLines": 113,
       "hasStructuralAnalysis": true
     },
+    "internal/bridge/agentmeshkafka/file_adapter_test.go": {
+      "filePath": "internal/bridge/agentmeshkafka/file_adapter_test.go",
+      "contentHash": "deb93748ef68e00f919b1b67e91263bf88bf1e7e2227d410b5fe87a01e222472",
+      "functions": [
+        {
+          "name": "newFA",
+          "params": [
+            "t",
+            "path"
+          ],
+          "returnType": "*agentmeshkafka.FileAdapter",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "TestFileAdapter_ReadsGoldenJSONL",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "TestFileAdapter_ContextCancellation_StopsStream",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "TestFileAdapter_CloseIsIdempotent",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 11
+        },
+        {
+          "name": "TestFileAdapter_MalformedLine_ReportsError_ContinuesStream",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 34
+        },
+        {
+          "name": "TestFileAdapter_MissingFile_ConstructorError",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/bridge/agentmeshkafka",
+          "specifiers": [
+            "agentmeshkafka"
+          ]
+        }
+      ],
+      "exports": [
+        "TestFileAdapter_ReadsGoldenJSONL",
+        "TestFileAdapter_ContextCancellation_StopsStream",
+        "TestFileAdapter_CloseIsIdempotent",
+        "TestFileAdapter_MalformedLine_ReportsError_ContinuesStream",
+        "TestFileAdapter_MissingFile_ConstructorError"
+      ],
+      "totalLines": 138,
+      "hasStructuralAnalysis": true
+    },
     "internal/bridge/agentmeshkafka/testdata/empirical-i4-results.json": {
       "filePath": "internal/bridge/agentmeshkafka/testdata/empirical-i4-results.json",
       "contentHash": "b3a61e0b12a351bfb66224eadb6368d8b62c64ac745777b1426903f61525963c",
@@ -3106,6 +3269,56 @@
       "totalLines": 6,
       "hasStructuralAnalysis": true
     },
+    "internal/bridge/llm/stub.go": {
+      "filePath": "internal/bridge/llm/stub.go",
+      "contentHash": "9e9b64a690a568186fffdc05ae9c3caf626849f1e19c8f0fd6d3f325828be690",
+      "functions": [
+        {
+          "name": "Fingerprint",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 1
+        },
+        {
+          "name": "Interpret",
+          "params": [
+            "_",
+            "intent"
+          ],
+          "returnType": "(float64, error)",
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "Stub",
+          "methods": [
+            "Fingerprint",
+            "Interpret"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 1
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        }
+      ],
+      "exports": [
+        "Stub",
+        "Fingerprint",
+        "Interpret"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
     "internal/bridge/llm/stub_test.go": {
       "filePath": "internal/bridge/llm/stub_test.go",
       "contentHash": "3af336ac8d6616dcb69048df605decc768910f11420068f2e16c048a8b135408",
@@ -3155,54 +3368,177 @@
       "totalLines": 40,
       "hasStructuralAnalysis": true
     },
-    "internal/bridge/llm/stub.go": {
-      "filePath": "internal/bridge/llm/stub.go",
-      "contentHash": "9e9b64a690a568186fffdc05ae9c3caf626849f1e19c8f0fd6d3f325828be690",
+    "internal/calibration/calibrate.go": {
+      "filePath": "internal/calibration/calibrate.go",
+      "contentHash": "b37f283cdd2c1e7eba94aba8f9b973ecac64d10112c078ba8a1e355eb446621b",
       "functions": [
         {
-          "name": "Fingerprint",
+          "name": "migrate",
           "params": [],
-          "returnType": "string",
-          "exported": true,
-          "lineCount": 1
+          "exported": false,
+          "lineCount": 5
         },
         {
-          "name": "Interpret",
-          "params": [
-            "_",
-            "intent"
-          ],
-          "returnType": "(float64, error)",
+          "name": "Validate",
+          "params": [],
+          "returnType": "error",
           "exported": true,
-          "lineCount": 12
+          "lineCount": 20
+        },
+        {
+          "name": "LoadCorpus",
+          "params": [
+            "path"
+          ],
+          "returnType": "([]CorpusEntry, error)",
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "Calibrate",
+          "params": [
+            "corpus",
+            "_",
+            "in"
+          ],
+          "returnType": "Profile",
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "countAgreement",
+          "params": [
+            "corpus",
+            "t"
+          ],
+          "returnType": "int",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "simulate",
+          "params": [
+            "e",
+            "t"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 15
+        },
+        {
+          "name": "MarshalCanonical",
+          "params": [
+            "p"
+          ],
+          "returnType": "([]byte, error)",
+          "exported": true,
+          "lineCount": 25
+        },
+        {
+          "name": "UnmarshalCanonical",
+          "params": [
+            "data"
+          ],
+          "returnType": "(Profile, error)",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "sortedAny",
+          "params": [
+            "v"
+          ],
+          "returnType": "any",
+          "exported": false,
+          "lineCount": 22
+        },
+        {
+          "name": "MarshalJSON",
+          "params": [],
+          "returnType": "([]byte, error)",
+          "exported": true,
+          "lineCount": 22
         }
       ],
       "classes": [
         {
-          "name": "Stub",
+          "name": "CorpusEntry",
           "methods": [
-            "Fingerprint",
-            "Interpret"
+            "migrate",
+            "Validate"
           ],
-          "properties": [],
+          "properties": [
+            "ID",
+            "SensScore",
+            "AuthorityScore",
+            "InvariantScore",
+            "HumanInLoop",
+            "HasAttestation",
+            "LabeledRegime",
+            "ExpectedRegime"
+          ],
           "exported": true,
-          "lineCount": 1
+          "lineCount": 14
+        },
+        {
+          "name": "kv",
+          "methods": [],
+          "properties": [
+            "Key",
+            "Value"
+          ],
+          "exported": false,
+          "lineCount": 4
         }
       ],
       "imports": [
         {
-          "source": "context",
+          "source": "bytes",
           "specifiers": [
-            "context"
+            "bytes"
+          ]
+        },
+        {
+          "source": "encoding/json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "sort",
+          "specifiers": [
+            "sort"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/errors",
+          "specifiers": [
+            "taugoerrors"
           ]
         }
       ],
       "exports": [
-        "Stub",
-        "Fingerprint",
-        "Interpret"
+        "CorpusEntry",
+        "Validate",
+        "LoadCorpus",
+        "Calibrate",
+        "MarshalCanonical",
+        "UnmarshalCanonical",
+        "MarshalJSON"
       ],
-      "totalLines": 29,
+      "totalLines": 299,
       "hasStructuralAnalysis": true
     },
     "internal/calibration/calibrate_test.go": {
@@ -3433,140 +3769,83 @@
       "totalLines": 276,
       "hasStructuralAnalysis": true
     },
-    "internal/calibration/calibrate.go": {
-      "filePath": "internal/calibration/calibrate.go",
-      "contentHash": "b37f283cdd2c1e7eba94aba8f9b973ecac64d10112c078ba8a1e355eb446621b",
+    "internal/calibration/doc.go": {
+      "filePath": "internal/calibration/doc.go",
+      "contentHash": "d63e53570baaf28682682a2407676337bfc511ec91ecf204ac413eae256befe5",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 5,
+      "hasStructuralAnalysis": true
+    },
+    "internal/calibration/drift.go": {
+      "filePath": "internal/calibration/drift.go",
+      "contentHash": "7df71c85ebc4508f486fd36daf046a0ba6e29581bd62305bf30904e8c901eed4",
       "functions": [
         {
-          "name": "migrate",
+          "name": "CheckDrift",
+          "params": [
+            "current",
+            "now",
+            "env"
+          ],
+          "returnType": "DriftReport",
+          "exported": true,
+          "lineCount": 48
+        },
+        {
+          "name": "FingerprintCPU",
           "params": [],
-          "exported": false,
-          "lineCount": 5
-        },
-        {
-          "name": "Validate",
-          "params": [],
-          "returnType": "error",
-          "exported": true,
-          "lineCount": 20
-        },
-        {
-          "name": "LoadCorpus",
-          "params": [
-            "path"
-          ],
-          "returnType": "([]CorpusEntry, error)",
-          "exported": true,
-          "lineCount": 21
-        },
-        {
-          "name": "Calibrate",
-          "params": [
-            "corpus",
-            "_",
-            "in"
-          ],
-          "returnType": "Profile",
-          "exported": true,
-          "lineCount": 43
-        },
-        {
-          "name": "countAgreement",
-          "params": [
-            "corpus",
-            "t"
-          ],
-          "returnType": "int",
-          "exported": false,
-          "lineCount": 9
-        },
-        {
-          "name": "simulate",
-          "params": [
-            "e",
-            "t"
-          ],
           "returnType": "string",
-          "exported": false,
-          "lineCount": 15
-        },
-        {
-          "name": "MarshalCanonical",
-          "params": [
-            "p"
-          ],
-          "returnType": "([]byte, error)",
           "exported": true,
-          "lineCount": 25
+          "lineCount": 3
         },
         {
-          "name": "UnmarshalCanonical",
+          "name": "FingerprintCorpus",
           "params": [
-            "data"
+            "jsonlPath"
           ],
-          "returnType": "(Profile, error)",
+          "returnType": "(string, error)",
           "exported": true,
-          "lineCount": 7
-        },
-        {
-          "name": "sortedAny",
-          "params": [
-            "v"
-          ],
-          "returnType": "any",
-          "exported": false,
-          "lineCount": 22
-        },
-        {
-          "name": "MarshalJSON",
-          "params": [],
-          "returnType": "([]byte, error)",
-          "exported": true,
-          "lineCount": 22
+          "lineCount": 13
         }
       ],
       "classes": [
         {
-          "name": "CorpusEntry",
-          "methods": [
-            "migrate",
-            "Validate"
-          ],
-          "properties": [
-            "ID",
-            "SensScore",
-            "AuthorityScore",
-            "InvariantScore",
-            "HumanInLoop",
-            "HasAttestation",
-            "LabeledRegime",
-            "ExpectedRegime"
-          ],
-          "exported": true,
-          "lineCount": 14
-        },
-        {
-          "name": "kv",
+          "name": "DriftReport",
           "methods": [],
           "properties": [
-            "Key",
-            "Value"
+            "Detected",
+            "Criteria",
+            "Details"
           ],
-          "exported": false,
-          "lineCount": 4
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "Env",
+          "methods": [],
+          "properties": [
+            "CurrentCPUFingerprint",
+            "CurrentLLMFingerprint",
+            "CurrentCorpusFingerprint"
+          ],
+          "exported": true,
+          "lineCount": 13
         }
       ],
       "imports": [
         {
-          "source": "bytes",
+          "source": "crypto/sha256",
           "specifiers": [
-            "bytes"
+            "sha256"
           ]
         },
         {
-          "source": "encoding/json",
+          "source": "encoding/hex",
           "specifiers": [
-            "json"
+            "hex"
           ]
         },
         {
@@ -3576,44 +3855,38 @@
           ]
         },
         {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
           "source": "os",
           "specifiers": [
             "os"
           ]
         },
         {
-          "source": "sort",
+          "source": "runtime",
           "specifiers": [
-            "sort"
+            "runtime"
           ]
         },
         {
-          "source": "github.com/agbruneau/taugo/internal/errors",
+          "source": "time",
           "specifiers": [
-            "taugoerrors"
+            "time"
           ]
         }
       ],
       "exports": [
-        "CorpusEntry",
-        "Validate",
-        "LoadCorpus",
-        "Calibrate",
-        "MarshalCanonical",
-        "UnmarshalCanonical",
-        "MarshalJSON"
+        "DriftReport",
+        "Env",
+        "CheckDrift",
+        "FingerprintCPU",
+        "FingerprintCorpus"
       ],
-      "totalLines": 299,
-      "hasStructuralAnalysis": true
-    },
-    "internal/calibration/doc.go": {
-      "filePath": "internal/calibration/doc.go",
-      "contentHash": "d63e53570baaf28682682a2407676337bfc511ec91ecf204ac413eae256befe5",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 5,
+      "totalLines": 145,
       "hasStructuralAnalysis": true
     },
     "internal/calibration/drift_test.go": {
@@ -3778,114 +4051,72 @@
       "totalLines": 203,
       "hasStructuralAnalysis": true
     },
-    "internal/calibration/drift.go": {
-      "filePath": "internal/calibration/drift.go",
-      "contentHash": "7df71c85ebc4508f486fd36daf046a0ba6e29581bd62305bf30904e8c901eed4",
+    "internal/calibration/profile.go": {
+      "filePath": "internal/calibration/profile.go",
+      "contentHash": "61f40f2851589c4c51c69fc30af824e5e0a2e5ba4c8fdcd2abf771a59d4ba950",
       "functions": [
         {
-          "name": "CheckDrift",
-          "params": [
-            "current",
-            "now",
-            "env"
-          ],
-          "returnType": "DriftReport",
-          "exported": true,
-          "lineCount": 48
-        },
-        {
-          "name": "FingerprintCPU",
+          "name": "DefaultProfile",
           "params": [],
-          "returnType": "string",
+          "returnType": "Profile",
           "exported": true,
-          "lineCount": 3
-        },
-        {
-          "name": "FingerprintCorpus",
-          "params": [
-            "jsonlPath"
-          ],
-          "returnType": "(string, error)",
-          "exported": true,
-          "lineCount": 13
+          "lineCount": 47
         }
       ],
       "classes": [
         {
-          "name": "DriftReport",
+          "name": "Weights",
           "methods": [],
           "properties": [
-            "Detected",
-            "Criteria",
-            "Details"
+            "DSens",
+            "DAuthority",
+            "DInvariant",
+            "SensProbes",
+            "AuthorityProbes",
+            "InvariantProbes"
           ],
           "exported": true,
-          "lineCount": 5
+          "lineCount": 8
         },
         {
-          "name": "Env",
+          "name": "Profile",
           "methods": [],
           "properties": [
-            "CurrentCPUFingerprint",
-            "CurrentLLMFingerprint",
-            "CurrentCorpusFingerprint"
+            "ID",
+            "Version",
+            "CreatedAt",
+            "DateRevision",
+            "VersionMonographie",
+            "CPUFingerprint",
+            "ModelLLMFingerprint",
+            "CorpusFingerprint",
+            "Thresholds",
+            "Weights"
           ],
           "exported": true,
-          "lineCount": 13
+          "lineCount": 12
         }
       ],
       "imports": [
-        {
-          "source": "crypto/sha256",
-          "specifiers": [
-            "sha256"
-          ]
-        },
-        {
-          "source": "encoding/hex",
-          "specifiers": [
-            "hex"
-          ]
-        },
-        {
-          "source": "fmt",
-          "specifiers": [
-            "fmt"
-          ]
-        },
-        {
-          "source": "io",
-          "specifiers": [
-            "io"
-          ]
-        },
-        {
-          "source": "os",
-          "specifiers": [
-            "os"
-          ]
-        },
-        {
-          "source": "runtime",
-          "specifiers": [
-            "runtime"
-          ]
-        },
         {
           "source": "time",
           "specifiers": [
             "time"
           ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/thresholds",
+          "specifiers": [
+            "thresholds"
+          ]
         }
       ],
       "exports": [
-        "DriftReport",
-        "Env",
-        "CheckDrift",
-        "FingerprintCPU",
-        "FingerprintCorpus"
+        "Weights",
+        "Profile",
+        "DefaultProfile"
       ],
-      "totalLines": 145,
+      "totalLines": 90,
       "hasStructuralAnalysis": true
     },
     "internal/calibration/profile_test.go": {
@@ -3964,72 +4195,157 @@
       "totalLines": 78,
       "hasStructuralAnalysis": true
     },
-    "internal/calibration/profile.go": {
-      "filePath": "internal/calibration/profile.go",
-      "contentHash": "61f40f2851589c4c51c69fc30af824e5e0a2e5ba4c8fdcd2abf771a59d4ba950",
+    "internal/calibration/store.go": {
+      "filePath": "internal/calibration/store.go",
+      "contentHash": "9ea2eacec7d58e6ffff11a8b1e6e04900c80f6d26d4cfb6b491a0b0938858e39",
       "functions": [
         {
-          "name": "DefaultProfile",
-          "params": [],
-          "returnType": "Profile",
+          "name": "NewStore",
+          "params": [
+            "dir"
+          ],
+          "returnType": "*Store",
           "exported": true,
-          "lineCount": 47
+          "lineCount": 1
+        },
+        {
+          "name": "Path",
+          "params": [
+            "id",
+            "version"
+          ],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "Save",
+          "params": [
+            "p"
+          ],
+          "returnType": "(string, error)",
+          "exported": true,
+          "lineCount": 23
+        },
+        {
+          "name": "refreshCurrent",
+          "params": [
+            "name",
+            "b"
+          ],
+          "returnType": "error",
+          "exported": false,
+          "lineCount": 25
+        },
+        {
+          "name": "Load",
+          "params": [
+            "id",
+            "version"
+          ],
+          "returnType": "(Profile, error)",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "LoadCurrent",
+          "params": [],
+          "returnType": "(Profile, error)",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "readProfile",
+          "params": [
+            "path"
+          ],
+          "returnType": "(Profile, error)",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "ExportSHA256",
+          "params": [
+            "path"
+          ],
+          "returnType": "(string, error)",
+          "exported": true,
+          "lineCount": 13
         }
       ],
       "classes": [
         {
-          "name": "Weights",
-          "methods": [],
+          "name": "Store",
+          "methods": [
+            "Path",
+            "Save",
+            "refreshCurrent",
+            "Load",
+            "LoadCurrent",
+            "readProfile",
+            "ExportSHA256"
+          ],
           "properties": [
-            "DSens",
-            "DAuthority",
-            "DInvariant",
-            "SensProbes",
-            "AuthorityProbes",
-            "InvariantProbes"
+            "Dir"
           ],
           "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "Profile",
-          "methods": [],
-          "properties": [
-            "ID",
-            "Version",
-            "CreatedAt",
-            "DateRevision",
-            "VersionMonographie",
-            "CPUFingerprint",
-            "ModelLLMFingerprint",
-            "CorpusFingerprint",
-            "Thresholds",
-            "Weights"
-          ],
-          "exported": true,
-          "lineCount": 12
+          "lineCount": 4
         }
       ],
       "imports": [
         {
-          "source": "time",
+          "source": "crypto/sha256",
           "specifiers": [
-            "time"
+            "sha256"
           ]
         },
         {
-          "source": "github.com/agbruneau/taugo/internal/thresholds",
+          "source": "encoding/hex",
           "specifiers": [
-            "thresholds"
+            "hex"
+          ]
+        },
+        {
+          "source": "fmt",
+          "specifiers": [
+            "fmt"
+          ]
+        },
+        {
+          "source": "io",
+          "specifiers": [
+            "io"
+          ]
+        },
+        {
+          "source": "log/slog",
+          "specifiers": [
+            "slog"
+          ]
+        },
+        {
+          "source": "os",
+          "specifiers": [
+            "os"
+          ]
+        },
+        {
+          "source": "path/filepath",
+          "specifiers": [
+            "filepath"
           ]
         }
       ],
       "exports": [
-        "Weights",
-        "Profile",
-        "DefaultProfile"
+        "Store",
+        "NewStore",
+        "Path",
+        "Save",
+        "Load",
+        "LoadCurrent",
+        "ExportSHA256"
       ],
-      "totalLines": 90,
+      "totalLines": 141,
       "hasStructuralAnalysis": true
     },
     "internal/calibration/store_test.go": {
@@ -4286,159 +4602,6 @@
       "totalLines": 54,
       "hasStructuralAnalysis": true
     },
-    "internal/calibration/store.go": {
-      "filePath": "internal/calibration/store.go",
-      "contentHash": "9ea2eacec7d58e6ffff11a8b1e6e04900c80f6d26d4cfb6b491a0b0938858e39",
-      "functions": [
-        {
-          "name": "NewStore",
-          "params": [
-            "dir"
-          ],
-          "returnType": "*Store",
-          "exported": true,
-          "lineCount": 1
-        },
-        {
-          "name": "Path",
-          "params": [
-            "id",
-            "version"
-          ],
-          "returnType": "string",
-          "exported": true,
-          "lineCount": 3
-        },
-        {
-          "name": "Save",
-          "params": [
-            "p"
-          ],
-          "returnType": "(string, error)",
-          "exported": true,
-          "lineCount": 23
-        },
-        {
-          "name": "refreshCurrent",
-          "params": [
-            "name",
-            "b"
-          ],
-          "returnType": "error",
-          "exported": false,
-          "lineCount": 25
-        },
-        {
-          "name": "Load",
-          "params": [
-            "id",
-            "version"
-          ],
-          "returnType": "(Profile, error)",
-          "exported": true,
-          "lineCount": 4
-        },
-        {
-          "name": "LoadCurrent",
-          "params": [],
-          "returnType": "(Profile, error)",
-          "exported": true,
-          "lineCount": 4
-        },
-        {
-          "name": "readProfile",
-          "params": [
-            "path"
-          ],
-          "returnType": "(Profile, error)",
-          "exported": false,
-          "lineCount": 11
-        },
-        {
-          "name": "ExportSHA256",
-          "params": [
-            "path"
-          ],
-          "returnType": "(string, error)",
-          "exported": true,
-          "lineCount": 13
-        }
-      ],
-      "classes": [
-        {
-          "name": "Store",
-          "methods": [
-            "Path",
-            "Save",
-            "refreshCurrent",
-            "Load",
-            "LoadCurrent",
-            "readProfile",
-            "ExportSHA256"
-          ],
-          "properties": [
-            "Dir"
-          ],
-          "exported": true,
-          "lineCount": 4
-        }
-      ],
-      "imports": [
-        {
-          "source": "crypto/sha256",
-          "specifiers": [
-            "sha256"
-          ]
-        },
-        {
-          "source": "encoding/hex",
-          "specifiers": [
-            "hex"
-          ]
-        },
-        {
-          "source": "fmt",
-          "specifiers": [
-            "fmt"
-          ]
-        },
-        {
-          "source": "io",
-          "specifiers": [
-            "io"
-          ]
-        },
-        {
-          "source": "log/slog",
-          "specifiers": [
-            "slog"
-          ]
-        },
-        {
-          "source": "os",
-          "specifiers": [
-            "os"
-          ]
-        },
-        {
-          "source": "path/filepath",
-          "specifiers": [
-            "filepath"
-          ]
-        }
-      ],
-      "exports": [
-        "Store",
-        "NewStore",
-        "Path",
-        "Save",
-        "Load",
-        "LoadCurrent",
-        "ExportSHA256"
-      ],
-      "totalLines": 141,
-      "hasStructuralAnalysis": true
-    },
     "internal/calibration/testdata/drift-corpus-a.jsonl": {
       "filePath": "internal/calibration/testdata/drift-corpus-a.jsonl",
       "contentHash": "5ef01c0a62c756967a936fc0542a49e0f5ab462db3b4b2a7a63c5e6567058764",
@@ -4468,89 +4631,6 @@
       "exports": [],
       "totalLines": 31,
       "hasStructuralAnalysis": false
-    },
-    "internal/calibration/thresholds_atomic_test.go": {
-      "filePath": "internal/calibration/thresholds_atomic_test.go",
-      "contentHash": "1fb6f430a9ad8eb1507870d2062d94baa94dc40b951b8f9e2a66fd21ce9ab0a6",
-      "functions": [
-        {
-          "name": "defaultThresholds",
-          "params": [],
-          "returnType": "calibration.Thresholds",
-          "exported": false,
-          "lineCount": 10
-        },
-        {
-          "name": "TestAtomicThresholds_Roundtrip",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 12
-        },
-        {
-          "name": "TestAtomicThresholds_OrderingInvariant",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "TestAtomicThresholds_PanicOnOrderingViolation",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 12
-        },
-        {
-          "name": "TestAtomicThresholds_SetTuning",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 18
-        },
-        {
-          "name": "TestAtomicThresholds_ConcurrentReadsSafe",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 15
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "sync",
-          "specifiers": [
-            "sync"
-          ]
-        },
-        {
-          "source": "testing",
-          "specifiers": [
-            "testing"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/calibration",
-          "specifiers": [
-            "calibration"
-          ]
-        }
-      ],
-      "exports": [
-        "TestAtomicThresholds_Roundtrip",
-        "TestAtomicThresholds_OrderingInvariant",
-        "TestAtomicThresholds_PanicOnOrderingViolation",
-        "TestAtomicThresholds_SetTuning",
-        "TestAtomicThresholds_ConcurrentReadsSafe"
-      ],
-      "totalLines": 90,
-      "hasStructuralAnalysis": true
     },
     "internal/calibration/thresholds_atomic.go": {
       "filePath": "internal/calibration/thresholds_atomic.go",
@@ -4689,6 +4769,124 @@
       "totalLines": 99,
       "hasStructuralAnalysis": true
     },
+    "internal/calibration/thresholds_atomic_test.go": {
+      "filePath": "internal/calibration/thresholds_atomic_test.go",
+      "contentHash": "1fb6f430a9ad8eb1507870d2062d94baa94dc40b951b8f9e2a66fd21ce9ab0a6",
+      "functions": [
+        {
+          "name": "defaultThresholds",
+          "params": [],
+          "returnType": "calibration.Thresholds",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "TestAtomicThresholds_Roundtrip",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "TestAtomicThresholds_OrderingInvariant",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "TestAtomicThresholds_PanicOnOrderingViolation",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "TestAtomicThresholds_SetTuning",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 18
+        },
+        {
+          "name": "TestAtomicThresholds_ConcurrentReadsSafe",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "sync",
+          "specifiers": [
+            "sync"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/calibration",
+          "specifiers": [
+            "calibration"
+          ]
+        }
+      ],
+      "exports": [
+        "TestAtomicThresholds_Roundtrip",
+        "TestAtomicThresholds_OrderingInvariant",
+        "TestAtomicThresholds_PanicOnOrderingViolation",
+        "TestAtomicThresholds_SetTuning",
+        "TestAtomicThresholds_ConcurrentReadsSafe"
+      ],
+      "totalLines": 90,
+      "hasStructuralAnalysis": true
+    },
+    "internal/calibration/weights.go": {
+      "filePath": "internal/calibration/weights.go",
+      "contentHash": "094dc3393e90c2787d5c90ca4a3588d65b7f5ecf10194c1d88a3c0b38973b69b",
+      "functions": [
+        {
+          "name": "defaultWeightHook",
+          "params": [
+            "_",
+            "_",
+            "base"
+          ],
+          "returnType": "Weights",
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "CalibrateWeights",
+          "params": [
+            "corpus",
+            "seed",
+            "base"
+          ],
+          "returnType": "Weights",
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [],
+      "imports": [],
+      "exports": [
+        "CalibrateWeights"
+      ],
+      "totalLines": 42,
+      "hasStructuralAnalysis": true
+    },
     "internal/calibration/weights_test.go": {
       "filePath": "internal/calibration/weights_test.go",
       "contentHash": "7b29b7a010d23a4b319332c7dd8033a57b92adf4704a6c405c2ea062c8cc2b43",
@@ -4748,126 +4946,6 @@
         "TestWeightCalibrationStrategy_IsV1"
       ],
       "totalLines": 72,
-      "hasStructuralAnalysis": true
-    },
-    "internal/calibration/weights.go": {
-      "filePath": "internal/calibration/weights.go",
-      "contentHash": "094dc3393e90c2787d5c90ca4a3588d65b7f5ecf10194c1d88a3c0b38973b69b",
-      "functions": [
-        {
-          "name": "defaultWeightHook",
-          "params": [
-            "_",
-            "_",
-            "base"
-          ],
-          "returnType": "Weights",
-          "exported": false,
-          "lineCount": 1
-        },
-        {
-          "name": "CalibrateWeights",
-          "params": [
-            "corpus",
-            "seed",
-            "base"
-          ],
-          "returnType": "Weights",
-          "exported": true,
-          "lineCount": 7
-        }
-      ],
-      "classes": [],
-      "imports": [],
-      "exports": [
-        "CalibrateWeights"
-      ],
-      "totalLines": 42,
-      "hasStructuralAnalysis": true
-    },
-    "internal/errors/errors_test.go": {
-      "filePath": "internal/errors/errors_test.go",
-      "contentHash": "c70ad34fce49b2eb5fb2a5dbac18d7d68a30ae7a291eabccbd1264c4e1906460",
-      "functions": [
-        {
-          "name": "TestDispatchError_ErrorMessage",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 24
-        },
-        {
-          "name": "TestDispatchError_UnwrapPropagation",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "TestRefusError_ErrorMessage",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 13
-        },
-        {
-          "name": "TestCalibrationError_ErrorMessage",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 24
-        },
-        {
-          "name": "TestCalibrationError_UnwrapPropagation",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "TestSentinels_IdentifieesViaErrorsIs",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 23
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "errors",
-          "specifiers": [
-            "stderrors"
-          ]
-        },
-        {
-          "source": "testing",
-          "specifiers": [
-            "testing"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/errors",
-          "specifiers": [
-            "taugerrors"
-          ]
-        }
-      ],
-      "exports": [
-        "TestDispatchError_ErrorMessage",
-        "TestDispatchError_UnwrapPropagation",
-        "TestRefusError_ErrorMessage",
-        "TestCalibrationError_ErrorMessage",
-        "TestCalibrationError_UnwrapPropagation",
-        "TestSentinels_IdentifieesViaErrorsIs"
-      ],
-      "totalLines": 115,
       "hasStructuralAnalysis": true
     },
     "internal/errors/errors.go": {
@@ -4980,6 +5058,91 @@
       "totalLines": 84,
       "hasStructuralAnalysis": true
     },
+    "internal/errors/errors_test.go": {
+      "filePath": "internal/errors/errors_test.go",
+      "contentHash": "c70ad34fce49b2eb5fb2a5dbac18d7d68a30ae7a291eabccbd1264c4e1906460",
+      "functions": [
+        {
+          "name": "TestDispatchError_ErrorMessage",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "TestDispatchError_UnwrapPropagation",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "TestRefusError_ErrorMessage",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 13
+        },
+        {
+          "name": "TestCalibrationError_ErrorMessage",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 24
+        },
+        {
+          "name": "TestCalibrationError_UnwrapPropagation",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "TestSentinels_IdentifieesViaErrorsIs",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "errors",
+          "specifiers": [
+            "stderrors"
+          ]
+        },
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/errors",
+          "specifiers": [
+            "taugerrors"
+          ]
+        }
+      ],
+      "exports": [
+        "TestDispatchError_ErrorMessage",
+        "TestDispatchError_UnwrapPropagation",
+        "TestRefusError_ErrorMessage",
+        "TestCalibrationError_ErrorMessage",
+        "TestCalibrationError_UnwrapPropagation",
+        "TestSentinels_IdentifieesViaErrorsIs"
+      ],
+      "totalLines": 115,
+      "hasStructuralAnalysis": true
+    },
     "internal/orchestration/decision_invariants_test.go": {
       "filePath": "internal/orchestration/decision_invariants_test.go",
       "contentHash": "694e7c44b6f8e1b76467c9291052f04abe446a41b4ad451a8458b3f25dc6f92e",
@@ -5042,6 +5205,168 @@
         "TestTraceImmutable"
       ],
       "totalLines": 88,
+      "hasStructuralAnalysis": true
+    },
+    "internal/orchestration/dispatcher.go": {
+      "filePath": "internal/orchestration/dispatcher.go",
+      "contentHash": "725bd71b5747c1148bc0fed3424e7a905431243a513460e8fbabb32787dcb601",
+      "functions": [
+        {
+          "name": "NewDispatcher",
+          "params": [
+            "client",
+            "t"
+          ],
+          "returnType": "*Dispatcher",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "NewDispatcherWithProfile",
+          "params": [
+            "client",
+            "t",
+            "p"
+          ],
+          "returnType": "*Dispatcher",
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "WithClock",
+          "params": [
+            "c"
+          ],
+          "returnType": "*Dispatcher",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "dimensionWeights",
+          "params": [],
+          "returnType": "struct{ DSens, DAuthority, DInvariant float64 }",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "durationNs",
+          "params": [
+            "start"
+          ],
+          "returnType": "int64",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "refusDecision",
+          "params": [
+            "x",
+            "diag",
+            "f",
+            "tt",
+            "ns"
+          ],
+          "returnType": "tau.Decision",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "refusDecisionWithScores",
+          "params": [
+            "x",
+            "diag",
+            "f",
+            "tt",
+            "ns",
+            "auth",
+            "sens",
+            "inv"
+          ],
+          "returnType": "tau.Decision",
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "Decide",
+          "params": [
+            "ctx",
+            "x"
+          ],
+          "returnType": "(tau.Decision, error)",
+          "exported": true,
+          "lineCount": 99
+        }
+      ],
+      "classes": [
+        {
+          "name": "Dispatcher",
+          "methods": [
+            "WithClock",
+            "dimensionWeights",
+            "Decide"
+          ],
+          "properties": [
+            "llm",
+            "thresholds",
+            "profile",
+            "now"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
+          "specifiers": [
+            "llm"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/calibration",
+          "specifiers": [
+            "calibration"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau/dimensions",
+          "specifiers": [
+            "dimensions"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau/invariants",
+          "specifiers": [
+            "invariants"
+          ]
+        }
+      ],
+      "exports": [
+        "Dispatcher",
+        "NewDispatcher",
+        "NewDispatcherWithProfile",
+        "WithClock",
+        "Decide"
+      ],
+      "totalLines": 226,
       "hasStructuralAnalysis": true
     },
     "internal/orchestration/dispatcher_expiry_test.go": {
@@ -5477,168 +5802,6 @@
       "totalLines": 136,
       "hasStructuralAnalysis": true
     },
-    "internal/orchestration/dispatcher.go": {
-      "filePath": "internal/orchestration/dispatcher.go",
-      "contentHash": "725bd71b5747c1148bc0fed3424e7a905431243a513460e8fbabb32787dcb601",
-      "functions": [
-        {
-          "name": "NewDispatcher",
-          "params": [
-            "client",
-            "t"
-          ],
-          "returnType": "*Dispatcher",
-          "exported": true,
-          "lineCount": 6
-        },
-        {
-          "name": "NewDispatcherWithProfile",
-          "params": [
-            "client",
-            "t",
-            "p"
-          ],
-          "returnType": "*Dispatcher",
-          "exported": true,
-          "lineCount": 5
-        },
-        {
-          "name": "WithClock",
-          "params": [
-            "c"
-          ],
-          "returnType": "*Dispatcher",
-          "exported": true,
-          "lineCount": 4
-        },
-        {
-          "name": "dimensionWeights",
-          "params": [],
-          "returnType": "struct{ DSens, DAuthority, DInvariant float64 }",
-          "exported": false,
-          "lineCount": 10
-        },
-        {
-          "name": "durationNs",
-          "params": [
-            "start"
-          ],
-          "returnType": "int64",
-          "exported": false,
-          "lineCount": 6
-        },
-        {
-          "name": "refusDecision",
-          "params": [
-            "x",
-            "diag",
-            "f",
-            "tt",
-            "ns"
-          ],
-          "returnType": "tau.Decision",
-          "exported": false,
-          "lineCount": 12
-        },
-        {
-          "name": "refusDecisionWithScores",
-          "params": [
-            "x",
-            "diag",
-            "f",
-            "tt",
-            "ns",
-            "auth",
-            "sens",
-            "inv"
-          ],
-          "returnType": "tau.Decision",
-          "exported": false,
-          "lineCount": 16
-        },
-        {
-          "name": "Decide",
-          "params": [
-            "ctx",
-            "x"
-          ],
-          "returnType": "(tau.Decision, error)",
-          "exported": true,
-          "lineCount": 99
-        }
-      ],
-      "classes": [
-        {
-          "name": "Dispatcher",
-          "methods": [
-            "WithClock",
-            "dimensionWeights",
-            "Decide"
-          ],
-          "properties": [
-            "llm",
-            "thresholds",
-            "profile",
-            "now"
-          ],
-          "exported": true,
-          "lineCount": 6
-        }
-      ],
-      "imports": [
-        {
-          "source": "context",
-          "specifiers": [
-            "context"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
-          "specifiers": [
-            "llm"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/calibration",
-          "specifiers": [
-            "calibration"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau/dimensions",
-          "specifiers": [
-            "dimensions"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau/invariants",
-          "specifiers": [
-            "invariants"
-          ]
-        }
-      ],
-      "exports": [
-        "Dispatcher",
-        "NewDispatcher",
-        "NewDispatcherWithProfile",
-        "WithClock",
-        "Decide"
-      ],
-      "totalLines": 226,
-      "hasStructuralAnalysis": true
-    },
     "internal/orchestration/doc.go": {
       "filePath": "internal/orchestration/doc.go",
       "contentHash": "a64a1392f91c7c421e2a1bc9e29019663afdfa8ecb82dd7abc2ac0233516ce68",
@@ -5792,6 +5955,107 @@
       "totalLines": 12,
       "hasStructuralAnalysis": true
     },
+    "internal/tau/dimensions/dauthority.go": {
+      "filePath": "internal/tau/dimensions/dauthority.go",
+      "contentHash": "e8d9dbcd71b49d60c285a7d1994c1e7efaf9dd031e786cad84582b3269ff2c2c",
+      "functions": [
+        {
+          "name": "DefaultAuthorityWeights",
+          "params": [],
+          "returnType": "AuthorityWeights",
+          "exported": true,
+          "lineCount": 8
+        },
+        {
+          "name": "ScoreDAuthority",
+          "params": [
+            "_",
+            "x",
+            "w"
+          ],
+          "returnType": "(Score, error)",
+          "exported": true,
+          "lineCount": 28
+        },
+        {
+          "name": "probeChainDepth",
+          "params": [
+            "x"
+          ],
+          "returnType": "float64",
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "probeCrossOrg",
+          "params": [
+            "x"
+          ],
+          "returnType": "float64",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "probeHumanAnchor",
+          "params": [
+            "x"
+          ],
+          "returnType": "float64",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "probeDynamicResolution",
+          "params": [
+            "x"
+          ],
+          "returnType": "float64",
+          "exported": false,
+          "lineCount": 6
+        }
+      ],
+      "classes": [
+        {
+          "name": "AuthorityWeights",
+          "methods": [],
+          "properties": [
+            "ChainDepth",
+            "CrossOrg",
+            "HumanAnchor",
+            "DynamicResolution"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "context",
+          "specifiers": [
+            "context"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [
+        "AuthorityWeights",
+        "DefaultAuthorityWeights",
+        "ScoreDAuthority"
+      ],
+      "totalLines": 110,
+      "hasStructuralAnalysis": true
+    },
     "internal/tau/dimensions/dauthority_test.go": {
       "filePath": "internal/tau/dimensions/dauthority_test.go",
       "contentHash": "2f9344de84fcbc2b68fbdc546cc4bc8396ca53fd19f7b682fc9032b17b421aaf",
@@ -5925,19 +6189,19 @@
       "totalLines": 169,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/dimensions/dauthority.go": {
-      "filePath": "internal/tau/dimensions/dauthority.go",
-      "contentHash": "e8d9dbcd71b49d60c285a7d1994c1e7efaf9dd031e786cad84582b3269ff2c2c",
+    "internal/tau/dimensions/dinvariant.go": {
+      "filePath": "internal/tau/dimensions/dinvariant.go",
+      "contentHash": "255473877e7bcf280dcf56b94b76b94a2b50d5f3522bfaf6ccf5f000a9971a45",
       "functions": [
         {
-          "name": "DefaultAuthorityWeights",
+          "name": "DefaultInvariantWeights",
           "params": [],
-          "returnType": "AuthorityWeights",
+          "returnType": "InvariantWeights",
           "exported": true,
           "lineCount": 8
         },
         {
-          "name": "ScoreDAuthority",
+          "name": "ScoreDInvariant",
           "params": [
             "_",
             "x",
@@ -5948,51 +6212,51 @@
           "lineCount": 28
         },
         {
-          "name": "probeChainDepth",
+          "name": "probeEventRegistry",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 10
+          "lineCount": 8
         },
         {
-          "name": "probeCrossOrg",
+          "name": "probeIdempotencyDerived",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 9
+          "lineCount": 8
         },
         {
-          "name": "probeHumanAnchor",
+          "name": "probeCapabilityMediation",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 6
+          "lineCount": 11
         },
         {
-          "name": "probeDynamicResolution",
+          "name": "probeEnumeratedPlan",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 6
+          "lineCount": 11
         }
       ],
       "classes": [
         {
-          "name": "AuthorityWeights",
+          "name": "InvariantWeights",
           "methods": [],
           "properties": [
-            "ChainDepth",
-            "CrossOrg",
-            "HumanAnchor",
-            "DynamicResolution"
+            "EventRegistry",
+            "IdempotencyDerived",
+            "CapabilityMediation",
+            "EnumeratedPlan"
           ],
           "exported": true,
           "lineCount": 6
@@ -6019,11 +6283,11 @@
         }
       ],
       "exports": [
-        "AuthorityWeights",
-        "DefaultAuthorityWeights",
-        "ScoreDAuthority"
+        "InvariantWeights",
+        "DefaultInvariantWeights",
+        "ScoreDInvariant"
       ],
-      "totalLines": 110,
+      "totalLines": 118,
       "hasStructuralAnalysis": true
     },
     "internal/tau/dimensions/dinvariant_test.go": {
@@ -6153,74 +6417,87 @@
       "totalLines": 175,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/dimensions/dinvariant.go": {
-      "filePath": "internal/tau/dimensions/dinvariant.go",
-      "contentHash": "255473877e7bcf280dcf56b94b76b94a2b50d5f3522bfaf6ccf5f000a9971a45",
+    "internal/tau/dimensions/doc.go": {
+      "filePath": "internal/tau/dimensions/doc.go",
+      "contentHash": "dfc15924326ebaa4b3df2fcea9b749c9193c1e6f9209aabca446773d07a8c523",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tau/dimensions/dsens.go": {
+      "filePath": "internal/tau/dimensions/dsens.go",
+      "contentHash": "aa9f57b77cbb0f6f9b2cf03dabe6418d71eaeb96d8d774f69bea28bc5901a778",
       "functions": [
         {
-          "name": "DefaultInvariantWeights",
+          "name": "DefaultSensWeights",
           "params": [],
-          "returnType": "InvariantWeights",
+          "returnType": "SensWeights",
           "exported": true,
           "lineCount": 8
         },
         {
-          "name": "ScoreDInvariant",
+          "name": "ScoreDSens",
           "params": [
-            "_",
+            "ctx",
             "x",
-            "w"
+            "w",
+            "llmClient"
           ],
           "returnType": "(Score, error)",
           "exported": true,
-          "lineCount": 28
+          "lineCount": 31
         },
         {
-          "name": "probeEventRegistry",
+          "name": "probeContract",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 8
+          "lineCount": 6
         },
         {
-          "name": "probeIdempotencyDerived",
+          "name": "probeRuntimeResolve",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 8
+          "lineCount": 6
         },
         {
-          "name": "probeCapabilityMediation",
+          "name": "probeCapabilityDiscovery",
           "params": [
             "x"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 11
+          "lineCount": 6
         },
         {
-          "name": "probeEnumeratedPlan",
+          "name": "probeReasonerIntent",
           "params": [
-            "x"
+            "ctx",
+            "x",
+            "c"
           ],
-          "returnType": "float64",
+          "returnType": "(float64, error)",
           "exported": false,
-          "lineCount": 11
+          "lineCount": 6
         }
       ],
       "classes": [
         {
-          "name": "InvariantWeights",
+          "name": "SensWeights",
           "methods": [],
           "properties": [
-            "EventRegistry",
-            "IdempotencyDerived",
-            "CapabilityMediation",
-            "EnumeratedPlan"
+            "Contract",
+            "RuntimeResolve",
+            "CapabilityDiscov",
+            "ReasonerIntent"
           ],
           "exported": true,
           "lineCount": 6
@@ -6240,6 +6517,12 @@
           ]
         },
         {
+          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
+          "specifiers": [
+            "llm"
+          ]
+        },
+        {
           "source": "github.com/agbruneau/taugo/internal/tau",
           "specifiers": [
             "tau"
@@ -6247,21 +6530,11 @@
         }
       ],
       "exports": [
-        "InvariantWeights",
-        "DefaultInvariantWeights",
-        "ScoreDInvariant"
+        "SensWeights",
+        "DefaultSensWeights",
+        "ScoreDSens"
       ],
-      "totalLines": 118,
-      "hasStructuralAnalysis": true
-    },
-    "internal/tau/dimensions/doc.go": {
-      "filePath": "internal/tau/dimensions/doc.go",
-      "contentHash": "dfc15924326ebaa4b3df2fcea9b749c9193c1e6f9209aabca446773d07a8c523",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 12,
+      "totalLines": 108,
       "hasStructuralAnalysis": true
     },
     "internal/tau/dimensions/dsens_test.go": {
@@ -6427,101 +6700,22 @@
       "totalLines": 166,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/dimensions/dsens.go": {
-      "filePath": "internal/tau/dimensions/dsens.go",
-      "contentHash": "aa9f57b77cbb0f6f9b2cf03dabe6418d71eaeb96d8d774f69bea28bc5901a778",
+    "internal/tau/dimensions/score.go": {
+      "filePath": "internal/tau/dimensions/score.go",
+      "contentHash": "ffcc969ec07192894ca93ca07a32e9d21a9351426b2ba8bfeec5850d96039bd2",
       "functions": [
         {
-          "name": "DefaultSensWeights",
-          "params": [],
-          "returnType": "SensWeights",
-          "exported": true,
-          "lineCount": 8
-        },
-        {
-          "name": "ScoreDSens",
+          "name": "clamp01",
           "params": [
-            "ctx",
-            "x",
-            "w",
-            "llmClient"
-          ],
-          "returnType": "(Score, error)",
-          "exported": true,
-          "lineCount": 31
-        },
-        {
-          "name": "probeContract",
-          "params": [
-            "x"
+            "v"
           ],
           "returnType": "float64",
           "exported": false,
-          "lineCount": 6
-        },
-        {
-          "name": "probeRuntimeResolve",
-          "params": [
-            "x"
-          ],
-          "returnType": "float64",
-          "exported": false,
-          "lineCount": 6
-        },
-        {
-          "name": "probeCapabilityDiscovery",
-          "params": [
-            "x"
-          ],
-          "returnType": "float64",
-          "exported": false,
-          "lineCount": 6
-        },
-        {
-          "name": "probeReasonerIntent",
-          "params": [
-            "ctx",
-            "x",
-            "c"
-          ],
-          "returnType": "(float64, error)",
-          "exported": false,
-          "lineCount": 6
+          "lineCount": 9
         }
       ],
-      "classes": [
-        {
-          "name": "SensWeights",
-          "methods": [],
-          "properties": [
-            "Contract",
-            "RuntimeResolve",
-            "CapabilityDiscov",
-            "ReasonerIntent"
-          ],
-          "exported": true,
-          "lineCount": 6
-        }
-      ],
+      "classes": [],
       "imports": [
-        {
-          "source": "context",
-          "specifiers": [
-            "context"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/bridge/llm",
-          "specifiers": [
-            "llm"
-          ]
-        },
         {
           "source": "github.com/agbruneau/taugo/internal/tau",
           "specifiers": [
@@ -6529,12 +6723,8 @@
           ]
         }
       ],
-      "exports": [
-        "SensWeights",
-        "DefaultSensWeights",
-        "ScoreDSens"
-      ],
-      "totalLines": 108,
+      "exports": [],
+      "totalLines": 25,
       "hasStructuralAnalysis": true
     },
     "internal/tau/dimensions/score_test.go": {
@@ -6607,33 +6797,6 @@
       "totalLines": 50,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/dimensions/score.go": {
-      "filePath": "internal/tau/dimensions/score.go",
-      "contentHash": "ffcc969ec07192894ca93ca07a32e9d21a9351426b2ba8bfeec5850d96039bd2",
-      "functions": [
-        {
-          "name": "clamp01",
-          "params": [
-            "v"
-          ],
-          "returnType": "float64",
-          "exported": false,
-          "lineCount": 9
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        }
-      ],
-      "exports": [],
-      "totalLines": 25,
-      "hasStructuralAnalysis": true
-    },
     "internal/tau/doc.go": {
       "filePath": "internal/tau/doc.go",
       "contentHash": "e7dee40c92503aa2910c61a1c274acbeccbcdccc0723b069de77a685d75706a4",
@@ -6642,6 +6805,42 @@
       "imports": [],
       "exports": [],
       "totalLines": 11,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tau/frontier.go": {
+      "filePath": "internal/tau/frontier.go",
+      "contentHash": "bc91b41d6ccef04b4eacdf5a79feffec5d1b173e4dc14519711c0a472747fc7a",
+      "functions": [
+        {
+          "name": "Inside",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [
+        {
+          "name": "FrontierCheck",
+          "methods": [
+            "Inside"
+          ],
+          "properties": [
+            "UniversOuvert",
+            "CompositionVariable",
+            "PairProbabiliste",
+            "CoutNonBorne"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "FrontierCheck",
+        "Inside"
+      ],
+      "totalLines": 20,
       "hasStructuralAnalysis": true
     },
     "internal/tau/frontier_test.go": {
@@ -6690,42 +6889,6 @@
       "totalLines": 115,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/frontier.go": {
-      "filePath": "internal/tau/frontier.go",
-      "contentHash": "bc91b41d6ccef04b4eacdf5a79feffec5d1b173e4dc14519711c0a472747fc7a",
-      "functions": [
-        {
-          "name": "Inside",
-          "params": [],
-          "returnType": "bool",
-          "exported": true,
-          "lineCount": 4
-        }
-      ],
-      "classes": [
-        {
-          "name": "FrontierCheck",
-          "methods": [
-            "Inside"
-          ],
-          "properties": [
-            "UniversOuvert",
-            "CompositionVariable",
-            "PairProbabiliste",
-            "CoutNonBorne"
-          ],
-          "exported": true,
-          "lineCount": 6
-        }
-      ],
-      "imports": [],
-      "exports": [
-        "FrontierCheck",
-        "Inside"
-      ],
-      "totalLines": 20,
-      "hasStructuralAnalysis": true
-    },
     "internal/tau/invariants/doc.go": {
       "filePath": "internal/tau/invariants/doc.go",
       "contentHash": "852906d77ade9b2b74a3b30a88911cbe3686a8302707af697521e9c2f7ecf023",
@@ -6734,6 +6897,78 @@
       "imports": [],
       "exports": [],
       "totalLines": 15,
+      "hasStructuralAnalysis": true
+    },
+    "internal/tau/invariants/evaluator.go": {
+      "filePath": "internal/tau/invariants/evaluator.go",
+      "contentHash": "7468b3a3de080d3f6b5a6848e671b63533dbefd82e113e66dd10296fc1bb6153",
+      "functions": [
+        {
+          "name": "String",
+          "params": [],
+          "returnType": "string",
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "AnyViolated",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "Summary",
+          "params": [],
+          "returnType": "[]string",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "EvaluateInvariants",
+          "params": [
+            "x",
+            "dec"
+          ],
+          "returnType": "Statuses",
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [
+        {
+          "name": "Statuses",
+          "methods": [
+            "AnyViolated",
+            "Summary"
+          ],
+          "properties": [
+            "I1",
+            "I2",
+            "I3",
+            "I4",
+            "I5"
+          ],
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "imports": [
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [
+        "String",
+        "Statuses",
+        "AnyViolated",
+        "Summary",
+        "EvaluateInvariants"
+      ],
+      "totalLines": 87,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/evaluator_test.go": {
@@ -6810,78 +7045,6 @@
         "TestEvaluateInvariants_NoPanicOnZeroExchange"
       ],
       "totalLines": 75,
-      "hasStructuralAnalysis": true
-    },
-    "internal/tau/invariants/evaluator.go": {
-      "filePath": "internal/tau/invariants/evaluator.go",
-      "contentHash": "7468b3a3de080d3f6b5a6848e671b63533dbefd82e113e66dd10296fc1bb6153",
-      "functions": [
-        {
-          "name": "String",
-          "params": [],
-          "returnType": "string",
-          "exported": true,
-          "lineCount": 12
-        },
-        {
-          "name": "AnyViolated",
-          "params": [],
-          "returnType": "bool",
-          "exported": true,
-          "lineCount": 4
-        },
-        {
-          "name": "Summary",
-          "params": [],
-          "returnType": "[]string",
-          "exported": true,
-          "lineCount": 19
-        },
-        {
-          "name": "EvaluateInvariants",
-          "params": [
-            "x",
-            "dec"
-          ],
-          "returnType": "Statuses",
-          "exported": true,
-          "lineCount": 9
-        }
-      ],
-      "classes": [
-        {
-          "name": "Statuses",
-          "methods": [
-            "AnyViolated",
-            "Summary"
-          ],
-          "properties": [
-            "I1",
-            "I2",
-            "I3",
-            "I4",
-            "I5"
-          ],
-          "exported": true,
-          "lineCount": 7
-        }
-      ],
-      "imports": [
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        }
-      ],
-      "exports": [
-        "String",
-        "Statuses",
-        "AnyViolated",
-        "Summary",
-        "EvaluateInvariants"
-      ],
-      "totalLines": 87,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/fuzz_targets_test.go": {
@@ -6986,6 +7149,47 @@
       "totalLines": 231,
       "hasStructuralAnalysis": true
     },
+    "internal/tau/invariants/i1_conservation.go": {
+      "filePath": "internal/tau/invariants/i1_conservation.go",
+      "contentHash": "447f9506735060a0444d2d839a2f754f2da101f8cf77e6338a7cdec493a293d0",
+      "functions": [
+        {
+          "name": "Conserve",
+          "params": [
+            "x",
+            "dec"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "EvaluateI1",
+          "params": [
+            "x",
+            "dec"
+          ],
+          "returnType": "Status",
+          "exported": true,
+          "lineCount": 9
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        }
+      ],
+      "exports": [
+        "Conserve",
+        "EvaluateI1"
+      ],
+      "totalLines": 29,
+      "hasStructuralAnalysis": true
+    },
     "internal/tau/invariants/i1_conservation_test.go": {
       "filePath": "internal/tau/invariants/i1_conservation_test.go",
       "contentHash": "1555ea92c152c269b88eb4561d9f340e4015fc7f5f6dd794adb06480c042600c",
@@ -7084,29 +7288,38 @@
       "totalLines": 95,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/invariants/i1_conservation.go": {
-      "filePath": "internal/tau/invariants/i1_conservation.go",
-      "contentHash": "447f9506735060a0444d2d839a2f754f2da101f8cf77e6338a7cdec493a293d0",
+    "internal/tau/invariants/i2_irreductibility.go": {
+      "filePath": "internal/tau/invariants/i2_irreductibility.go",
+      "contentHash": "21eea7fd561f20372c5ac7dabf1bb6898ceae92b3446223edb9ef04c6b3d5e5a",
       "functions": [
         {
-          "name": "Conserve",
+          "name": "Residu",
           "params": [
-            "x",
-            "dec"
+            "x"
           ],
-          "returnType": "bool",
+          "returnType": "[]ResidualMagnitude",
           "exported": true,
-          "lineCount": 3
+          "lineCount": 14
         },
         {
-          "name": "EvaluateI1",
+          "name": "Recablage",
+          "params": [
+            "x",
+            "removed"
+          ],
+          "returnType": "tau.FrontierCheck",
+          "exported": true,
+          "lineCount": 15
+        },
+        {
+          "name": "EvaluateI2",
           "params": [
             "x",
             "dec"
           ],
           "returnType": "Status",
           "exported": true,
-          "lineCount": 9
+          "lineCount": 17
         }
       ],
       "classes": [],
@@ -7119,10 +7332,11 @@
         }
       ],
       "exports": [
-        "Conserve",
-        "EvaluateI1"
+        "Residu",
+        "Recablage",
+        "EvaluateI2"
       ],
-      "totalLines": 29,
+      "totalLines": 89,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/i2_irreductibility_test.go": {
@@ -7214,42 +7428,57 @@
       "totalLines": 102,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/invariants/i2_irreductibility.go": {
-      "filePath": "internal/tau/invariants/i2_irreductibility.go",
-      "contentHash": "21eea7fd561f20372c5ac7dabf1bb6898ceae92b3446223edb9ef04c6b3d5e5a",
+    "internal/tau/invariants/i3_authority_asymmetry.go": {
+      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
+      "contentHash": "e4a0afccd4e7ecc47520c64b8f67781506a84d6fc4f5d3059b95289deb356088",
       "functions": [
         {
-          "name": "Residu",
-          "params": [
-            "x"
-          ],
-          "returnType": "[]ResidualMagnitude",
+          "name": "I3PerimptionLimite",
+          "params": [],
+          "returnType": "time.Time",
           "exported": true,
-          "lineCount": 14
+          "lineCount": 3
         },
         {
-          "name": "Recablage",
+          "name": "IsProfileExpired",
+          "params": [
+            "dec",
+            "now"
+          ],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "EvaluateI3WithClock",
           "params": [
             "x",
-            "removed"
+            "dec",
+            "now"
           ],
-          "returnType": "tau.FrontierCheck",
+          "returnType": "Status",
           "exported": true,
-          "lineCount": 15
+          "lineCount": 43
         },
         {
-          "name": "EvaluateI2",
+          "name": "EvaluateI3",
           "params": [
             "x",
             "dec"
           ],
           "returnType": "Status",
           "exported": true,
-          "lineCount": 17
+          "lineCount": 3
         }
       ],
       "classes": [],
       "imports": [
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
         {
           "source": "github.com/agbruneau/taugo/internal/tau",
           "specifiers": [
@@ -7258,11 +7487,12 @@
         }
       ],
       "exports": [
-        "Residu",
-        "Recablage",
-        "EvaluateI2"
+        "I3PerimptionLimite",
+        "IsProfileExpired",
+        "EvaluateI3WithClock",
+        "EvaluateI3"
       ],
-      "totalLines": 89,
+      "totalLines": 107,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/i3_authority_asymmetry_test.go": {
@@ -7392,57 +7622,35 @@
       "totalLines": 185,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/invariants/i3_authority_asymmetry.go": {
-      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
-      "contentHash": "e4a0afccd4e7ecc47520c64b8f67781506a84d6fc4f5d3059b95289deb356088",
+    "internal/tau/invariants/i4_coherence.go": {
+      "filePath": "internal/tau/invariants/i4_coherence.go",
+      "contentHash": "5401f836e773df6cb30c3233d72f9c625ca9dfd2150f43902ce730b9dceeda56",
       "functions": [
         {
-          "name": "I3PerimptionLimite",
-          "params": [],
-          "returnType": "time.Time",
+          "name": "IsIncoherent",
+          "params": [
+            "sensValue",
+            "invValue",
+            "sensCoherence",
+            "invCoherence"
+          ],
+          "returnType": "bool",
           "exported": true,
           "lineCount": 3
         },
         {
-          "name": "IsProfileExpired",
+          "name": "EvaluateI4",
           "params": [
-            "dec",
-            "now"
-          ],
-          "returnType": "bool",
-          "exported": true,
-          "lineCount": 6
-        },
-        {
-          "name": "EvaluateI3WithClock",
-          "params": [
-            "x",
-            "dec",
-            "now"
-          ],
-          "returnType": "Status",
-          "exported": true,
-          "lineCount": 43
-        },
-        {
-          "name": "EvaluateI3",
-          "params": [
-            "x",
+            "_",
             "dec"
           ],
           "returnType": "Status",
           "exported": true,
-          "lineCount": 3
+          "lineCount": 18
         }
       ],
       "classes": [],
       "imports": [
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
         {
           "source": "github.com/agbruneau/taugo/internal/tau",
           "specifiers": [
@@ -7451,12 +7659,10 @@
         }
       ],
       "exports": [
-        "I3PerimptionLimite",
-        "IsProfileExpired",
-        "EvaluateI3WithClock",
-        "EvaluateI3"
+        "IsIncoherent",
+        "EvaluateI4"
       ],
-      "totalLines": 107,
+      "totalLines": 50,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/i4_coherence_test.go": {
@@ -7535,35 +7741,47 @@
       "totalLines": 122,
       "hasStructuralAnalysis": true
     },
-    "internal/tau/invariants/i4_coherence.go": {
-      "filePath": "internal/tau/invariants/i4_coherence.go",
-      "contentHash": "5401f836e773df6cb30c3233d72f9c625ca9dfd2150f43902ce730b9dceeda56",
+    "internal/tau/invariants/i5_composition.go": {
+      "filePath": "internal/tau/invariants/i5_composition.go",
+      "contentHash": "425fb9c4fc6c456d038287c0142e0a5df75c5b349b522bf1632d72e14b064b75",
       "functions": [
         {
-          "name": "IsIncoherent",
+          "name": "Aggregate",
           "params": [
-            "sensValue",
-            "invValue",
-            "sensCoherence",
-            "invCoherence"
+            "p"
+          ],
+          "returnType": "[]string",
+          "exported": true,
+          "lineCount": 14
+        },
+        {
+          "name": "BoundsHold",
+          "params": [
+            "p"
           ],
           "returnType": "bool",
           "exported": true,
-          "lineCount": 3
+          "lineCount": 22
         },
         {
-          "name": "EvaluateI4",
+          "name": "EvaluateI5",
           "params": [
             "_",
-            "dec"
+            "_"
           ],
           "returnType": "Status",
           "exported": true,
-          "lineCount": 18
+          "lineCount": 5
         }
       ],
       "classes": [],
       "imports": [
+        {
+          "source": "sort",
+          "specifiers": [
+            "sort"
+          ]
+        },
         {
           "source": "github.com/agbruneau/taugo/internal/tau",
           "specifiers": [
@@ -7572,10 +7790,11 @@
         }
       ],
       "exports": [
-        "IsIncoherent",
-        "EvaluateI4"
+        "Aggregate",
+        "BoundsHold",
+        "EvaluateI5"
       ],
-      "totalLines": 50,
+      "totalLines": 99,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/i5_composition_test.go": {
@@ -7698,62 +7917,6 @@
         "BenchmarkI5_BoundsHold"
       ],
       "totalLines": 142,
-      "hasStructuralAnalysis": true
-    },
-    "internal/tau/invariants/i5_composition.go": {
-      "filePath": "internal/tau/invariants/i5_composition.go",
-      "contentHash": "425fb9c4fc6c456d038287c0142e0a5df75c5b349b522bf1632d72e14b064b75",
-      "functions": [
-        {
-          "name": "Aggregate",
-          "params": [
-            "p"
-          ],
-          "returnType": "[]string",
-          "exported": true,
-          "lineCount": 14
-        },
-        {
-          "name": "BoundsHold",
-          "params": [
-            "p"
-          ],
-          "returnType": "bool",
-          "exported": true,
-          "lineCount": 22
-        },
-        {
-          "name": "EvaluateI5",
-          "params": [
-            "_",
-            "_"
-          ],
-          "returnType": "Status",
-          "exported": true,
-          "lineCount": 5
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "sort",
-          "specifiers": [
-            "sort"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        }
-      ],
-      "exports": [
-        "Aggregate",
-        "BoundsHold",
-        "EvaluateI5"
-      ],
-      "totalLines": 99,
       "hasStructuralAnalysis": true
     },
     "internal/tau/invariants/testdata/fuzz/FuzzI1_Conservation/seed-01": {
@@ -7915,112 +8078,6 @@
       "exports": [],
       "totalLines": 3,
       "hasStructuralAnalysis": false
-    },
-    "internal/tau/operator_test.go": {
-      "filePath": "internal/tau/operator_test.go",
-      "contentHash": "9f50c8e0fdf4dd92b9ec7b3e5b9027f5a23abdbc75668359b44aa4795a844290",
-      "functions": [
-        {
-          "name": "TestRegime_String",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 21
-        },
-        {
-          "name": "TestRegime_MarshalJSON_StringRepresentation",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 10
-        },
-        {
-          "name": "TestRegime_UnmarshalJSON_AccepteStringEtInt",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 47
-        },
-        {
-          "name": "TestDiscoveryMode_String",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 21
-        },
-        {
-          "name": "TestDiscoveryMode_MarshalJSON_StringRepresentation",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 10
-        },
-        {
-          "name": "TestDiscoveryMode_UnmarshalJSON_AccepteStringEtInt",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 47
-        },
-        {
-          "name": "TestTrace_MarshalJSON_ScoresVentilesOmitemptySiVides",
-          "params": [
-            "t"
-          ],
-          "exported": true,
-          "lineCount": 46
-        }
-      ],
-      "classes": [],
-      "imports": [
-        {
-          "source": "encoding/json",
-          "specifiers": [
-            "json"
-          ]
-        },
-        {
-          "source": "strings",
-          "specifiers": [
-            "strings"
-          ]
-        },
-        {
-          "source": "testing",
-          "specifiers": [
-            "testing"
-          ]
-        },
-        {
-          "source": "time",
-          "specifiers": [
-            "time"
-          ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/tau",
-          "specifiers": [
-            "tau"
-          ]
-        }
-      ],
-      "exports": [
-        "TestRegime_String",
-        "TestRegime_MarshalJSON_StringRepresentation",
-        "TestRegime_UnmarshalJSON_AccepteStringEtInt",
-        "TestDiscoveryMode_String",
-        "TestDiscoveryMode_MarshalJSON_StringRepresentation",
-        "TestDiscoveryMode_UnmarshalJSON_AccepteStringEtInt",
-        "TestTrace_MarshalJSON_ScoresVentilesOmitemptySiVides"
-      ],
-      "totalLines": 228,
-      "hasStructuralAnalysis": true
     },
     "internal/tau/operator.go": {
       "filePath": "internal/tau/operator.go",
@@ -8243,29 +8300,81 @@
       "totalLines": 248,
       "hasStructuralAnalysis": true
     },
-    "internal/testutil/builders_test.go": {
-      "filePath": "internal/testutil/builders_test.go",
-      "contentHash": "20ef82f1eb0fe276ca06e73f36ba16da695a7d7a66a0b7ae0236820b6fabef96",
+    "internal/tau/operator_test.go": {
+      "filePath": "internal/tau/operator_test.go",
+      "contentHash": "9f50c8e0fdf4dd92b9ec7b3e5b9027f5a23abdbc75668359b44aa4795a844290",
       "functions": [
         {
-          "name": "TestBuildExchange_Defaults",
+          "name": "TestRegime_String",
           "params": [
             "t"
           ],
           "exported": true,
-          "lineCount": 30
+          "lineCount": 21
         },
         {
-          "name": "TestBuildExchange_AppliqueOptions",
+          "name": "TestRegime_MarshalJSON_StringRepresentation",
           "params": [
             "t"
           ],
           "exported": true,
-          "lineCount": 43
+          "lineCount": 10
+        },
+        {
+          "name": "TestRegime_UnmarshalJSON_AccepteStringEtInt",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "TestDiscoveryMode_String",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 21
+        },
+        {
+          "name": "TestDiscoveryMode_MarshalJSON_StringRepresentation",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "TestDiscoveryMode_UnmarshalJSON_AccepteStringEtInt",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "TestTrace_MarshalJSON_ScoresVentilesOmitemptySiVides",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 46
         }
       ],
       "classes": [],
       "imports": [
+        {
+          "source": "encoding/json",
+          "specifiers": [
+            "json"
+          ]
+        },
+        {
+          "source": "strings",
+          "specifiers": [
+            "strings"
+          ]
+        },
         {
           "source": "testing",
           "specifiers": [
@@ -8283,19 +8392,18 @@
           "specifiers": [
             "tau"
           ]
-        },
-        {
-          "source": "github.com/agbruneau/taugo/internal/testutil",
-          "specifiers": [
-            "testutil"
-          ]
         }
       ],
       "exports": [
-        "TestBuildExchange_Defaults",
-        "TestBuildExchange_AppliqueOptions"
+        "TestRegime_String",
+        "TestRegime_MarshalJSON_StringRepresentation",
+        "TestRegime_UnmarshalJSON_AccepteStringEtInt",
+        "TestDiscoveryMode_String",
+        "TestDiscoveryMode_MarshalJSON_StringRepresentation",
+        "TestDiscoveryMode_UnmarshalJSON_AccepteStringEtInt",
+        "TestTrace_MarshalJSON_ScoresVentilesOmitemptySiVides"
       ],
-      "totalLines": 85,
+      "totalLines": 228,
       "hasStructuralAnalysis": true
     },
     "internal/testutil/builders.go": {
@@ -8412,6 +8520,99 @@
       "totalLines": 99,
       "hasStructuralAnalysis": true
     },
+    "internal/testutil/builders_test.go": {
+      "filePath": "internal/testutil/builders_test.go",
+      "contentHash": "20ef82f1eb0fe276ca06e73f36ba16da695a7d7a66a0b7ae0236820b6fabef96",
+      "functions": [
+        {
+          "name": "TestBuildExchange_Defaults",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 30
+        },
+        {
+          "name": "TestBuildExchange_AppliqueOptions",
+          "params": [
+            "t"
+          ],
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "testing",
+          "specifiers": [
+            "testing"
+          ]
+        },
+        {
+          "source": "time",
+          "specifiers": [
+            "time"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/tau",
+          "specifiers": [
+            "tau"
+          ]
+        },
+        {
+          "source": "github.com/agbruneau/taugo/internal/testutil",
+          "specifiers": [
+            "testutil"
+          ]
+        }
+      ],
+      "exports": [
+        "TestBuildExchange_Defaults",
+        "TestBuildExchange_AppliqueOptions"
+      ],
+      "totalLines": 85,
+      "hasStructuralAnalysis": true
+    },
+    "internal/thresholds/thresholds.go": {
+      "filePath": "internal/thresholds/thresholds.go",
+      "contentHash": "f83784963617faea92ea4c9bcb80f4c4c0370ce40dbc469a4d33273275952e94",
+      "functions": [
+        {
+          "name": "Ordered",
+          "params": [],
+          "returnType": "bool",
+          "exported": true,
+          "lineCount": 1
+        }
+      ],
+      "classes": [
+        {
+          "name": "Thresholds",
+          "methods": [
+            "Ordered"
+          ],
+          "properties": [
+            "Deterministe",
+            "Probabiliste",
+            "AuthBlock",
+            "SensCoherence",
+            "InvCoherence",
+            "HysteresisGap"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "Thresholds",
+        "Ordered"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
     "internal/thresholds/thresholds_test.go": {
       "filePath": "internal/thresholds/thresholds_test.go",
       "contentHash": "3526e422dc3afb6dfe4557dff1a060f451bb38fbe85d561b545fd7fcbe68af33",
@@ -8462,74 +8663,6 @@
         "TestThresholds_OrderedInvariant"
       ],
       "totalLines": 54,
-      "hasStructuralAnalysis": true
-    },
-    "internal/thresholds/thresholds.go": {
-      "filePath": "internal/thresholds/thresholds.go",
-      "contentHash": "f83784963617faea92ea4c9bcb80f4c4c0370ce40dbc469a4d33273275952e94",
-      "functions": [
-        {
-          "name": "Ordered",
-          "params": [],
-          "returnType": "bool",
-          "exported": true,
-          "lineCount": 1
-        }
-      ],
-      "classes": [
-        {
-          "name": "Thresholds",
-          "methods": [
-            "Ordered"
-          ],
-          "properties": [
-            "Deterministe",
-            "Probabiliste",
-            "AuthBlock",
-            "SensCoherence",
-            "InvCoherence",
-            "HysteresisGap"
-          ],
-          "exported": true,
-          "lineCount": 8
-        }
-      ],
-      "imports": [],
-      "exports": [
-        "Thresholds",
-        "Ordered"
-      ],
-      "totalLines": 30,
-      "hasStructuralAnalysis": true
-    },
-    "Makefile": {
-      "filePath": "Makefile",
-      "contentHash": "f1e6dc9a8f4012fd47769fb3779007a8605611d826a26fbeb41d48617f273d60",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 70,
-      "hasStructuralAnalysis": true
-    },
-    "PRD.md": {
-      "filePath": "PRD.md",
-      "contentHash": "e4d4284095aba2af79824c537fd583576c8fd27cccb3096cc4ec67e8db896fbf",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 932,
-      "hasStructuralAnalysis": true
-    },
-    "README.md": {
-      "filePath": "README.md",
-      "contentHash": "b504008dfd00046953e860321479b1b2b20fa382b41cc335c3a9fa141ecb12da",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 408,
       "hasStructuralAnalysis": true
     },
     "scripts/typography-fr.py": {
