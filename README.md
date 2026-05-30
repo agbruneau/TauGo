@@ -369,6 +369,7 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 - [`docs/adr/0008-trace-ventilee-scores-dimensions.md`](docs/adr/0008-trace-ventilee-scores-dimensions.md) — `Trace.DSens/DAuthority/DInvariant` *(v0.1.1)*
 - [`docs/adr/0009-types-erreurs-typees.md`](docs/adr/0009-types-erreurs-typees.md) — `DispatchError`/`RefusError`/`CalibrationError` *(v0.1.1)*
 - [`docs/adr/0010-retrait-ci-cd-pure-local.md`](docs/adr/0010-retrait-ci-cd-pure-local.md) — retrait outillage CI/CD, projet pure-local *(v0.1.2)*
+- [`docs/adr/0012-golden-corpus-calibration-schema.md`](docs/adr/0012-golden-corpus-calibration-schema.md) — golden corpus au schéma `CorpusEntry` + re-pin du hash *(v0.1.2)*
 
 ### Empirique
 
