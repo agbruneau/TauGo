@@ -44,3 +44,7 @@ default.pgo
 
 # agent runtime
 .claude-flow/
+
+# understand-anything scratch (regenerated each run; only knowledge-graph/meta/fingerprints are kept)
+.understand-anything/intermediate/
+.understand-anything/tmp/

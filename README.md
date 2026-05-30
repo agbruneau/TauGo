@@ -2,11 +2,11 @@
 
 ### ▶ [Dashboard interactif en ligne — agbruneau.github.io/TauGo](https://agbruneau.github.io/TauGo/)
 
-Graphe de connaissance navigable du dépôt : **303 nœuds, 816 arêtes, 12 couches, tour pédagogique 12 étapes** *(généré par `understand-anything`, à jour 2026-05-29)*.
+Graphe de connaissance navigable du dépôt : **325 nœuds, 1 339 arêtes, 12 couches, tour pédagogique 12 étapes** *(généré par `understand-anything`, à jour 2026-05-29)*.
 
 > **Références canoniques** :
 > - **Monographie** *(théorie)* — [`agbruneau/InteroperabiliteAgentique`](https://github.com/agbruneau/InteroperabiliteAgentique) (v2.4.3, chap. III.8)
-> - **Dashboard interactif** *(graphe de connaissance)* — [`https://agbruneau.github.io/TauGo/`](https://agbruneau.github.io/TauGo/) — 303 nœuds, 816 arêtes, 12 couches, tour pédagogique 12 étapes (généré par `understand-anything`, régénéré 2026-05-29).
+> - **Dashboard interactif** *(graphe de connaissance)* — [`https://agbruneau.github.io/TauGo/`](https://agbruneau.github.io/TauGo/) — 325 nœuds, 1 339 arêtes, 12 couches, tour pédagogique 12 étapes (généré par `understand-anything`, régénéré 2026-05-29).
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/agbruneau/taugo.svg)](https://pkg.go.dev/github.com/agbruneau/taugo)
 [![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
