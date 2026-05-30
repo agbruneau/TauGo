@@ -26,6 +26,7 @@ func run(args []string, stdout io.Writer) int {
 	output := fs.String("output", "-", "output path (.jsonl); use - for stdout")
 	distr := fs.String("distribution", "balanced", "profile: balanced | i4-heavy | refus-heavy")
 	annotate := fs.Bool("annotate-with-dispatcher", false, "enrich each line with expected_regime via the production Dispatcher")
+	scored := fs.Bool("scored", false, "emit calibration CorpusEntry JSONL (pre-scored, labeled) instead of AgentMeshExchange")
 
 	if err := fs.Parse(args); err != nil {
 		fmt.Fprintf(os.Stderr, "generate-corpus: %v\n", err)
@@ -55,6 +56,14 @@ func run(args []string, stdout io.Writer) int {
 	}
 
 	g := NewGenerator(*seed)
+	if *scored {
+		d := app.NewDispatcher()
+		if err := g.GenerateScored(context.Background(), w, *count, profile, d); err != nil {
+			fmt.Fprintf(os.Stderr, "generate-corpus: %v\n", err)
+			return 1
+		}
+		return 0
+	}
 	if *annotate {
 		d := app.NewDispatcher()
 		if err := g.GenerateAnnotated(context.Background(), w, *count, profile, d); err != nil {

@@ -22,11 +22,15 @@ import (
 )
 
 // goldenCorpusCanonicalHash is the expected sha256 of the profile produced by
-// `tau calibrate` with the golden corpus (200 lines), seed 42,
+// `tau calibrate` with the golden corpus (170 pre-scored CorpusEntry lines:
+// 90 probabiliste, 50 deterministe, 30 refus_authority), seed 42,
 // date_revision 2026-11-23, version_monographie v2.4.3, created_at frozen to
-// 1970-01-01T00:00:00Z. Changing this value signals a regression in the
-// calibration algorithm or the canonical marshaller (PRD §17 criterion #10).
-const goldenCorpusCanonicalHash = "d753245b87933f97c6324f54df1572fab7cc68c52bc49baa1b891ab97abff6c7"
+// 1970-01-01T00:00:00Z. The calibrated profile is non-degenerate
+// (deterministe=0.45, probabiliste=0.65, auth_block=0.70, sens_coherence=0.30,
+// inv_coherence=0.30, hysteresis_gap=0.20). Changing this value signals a
+// regression in the calibration algorithm or the canonical marshaller
+// (PRD §17 criterion #10).
+const goldenCorpusCanonicalHash = "8e5dc2fcb84a6caf26deabb03e3e9732a6789c959a8e07866cf9488a09f3caa4"
 
 // goldenCorpusPath resolves the path to tests/calibration/golden-corpus.jsonl
 // relative to the module root, regardless of where the test binary runs.

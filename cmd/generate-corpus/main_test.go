@@ -198,15 +198,19 @@ func TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash(t *testing.T) {
 
 // TestGoldenCorpus_FrozenHash_Seed42_200_Balanced pins the sha256 of the
 // checked-in golden calibration corpus (tests/calibration/golden-corpus.jsonl).
-// Two successive generations must be identical; both must match the pinned constant.
+// Since AUDIT C1-01 the golden is emitted by GenerateScored in the CorpusEntry
+// schema (pre-scored, labeled) from 200 generated exchanges; the 30 frontier /
+// péremption refusals are skipped → 170 lines (90 probabiliste, 50 deterministe,
+// 30 refus_authority). Two successive generations must be identical; both must
+// match the pinned constant and the checked-in file.
 func TestGoldenCorpus_FrozenHash_Seed42_200_Balanced(t *testing.T) {
 	t.Parallel()
 	d := app.NewDispatcher()
 
 	hashGen := func() string {
 		var buf bytes.Buffer
-		if err := NewGenerator(42).GenerateAnnotated(context.Background(), &buf, 200, ProfileBalanced, d); err != nil {
-			t.Fatalf("GenerateAnnotated: %v", err)
+		if err := NewGenerator(42).GenerateScored(context.Background(), &buf, 200, ProfileBalanced, d); err != nil {
+			t.Fatalf("GenerateScored: %v", err)
 		}
 		h := sha256.Sum256(buf.Bytes())
 		return hex.EncodeToString(h[:])
@@ -215,11 +219,11 @@ func TestGoldenCorpus_FrozenHash_Seed42_200_Balanced(t *testing.T) {
 	run1 := hashGen()
 	run2 := hashGen()
 	if run1 != run2 {
-		t.Fatalf("annotated generation is not reproducible: run1=%s run2=%s", run1, run2)
+		t.Fatalf("scored generation is not reproducible: run1=%s run2=%s", run1, run2)
 	}
 
 	// Pinned after first green run.
-	const want = "beb6c8d87911ef58d189c6f1c3d4adf9b71777e6dce328ed781e394614ac3a1b"
+	const want = "c5bb66832114d6c106249cf4825ae7cc939698398476f4ebf84c58a44de0c7e8"
 	if run1 != want {
 		t.Fatalf("golden corpus hash drift: got=%s want=%s", run1, want)
 	}

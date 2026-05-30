@@ -151,6 +151,65 @@ func TestRunCalibrate_CorpusInvalidJSON_Exit1(t *testing.T) {
 	}
 }
 
+// TestRunCalibrate_CorpusInvalidRegime_NonZero verifies that a corpus carrying an
+// out-of-vocabulary labeled_regime is rejected by validation (AUDIT C1-01): the
+// CLI returns a non-zero exit code (2 for content errors) instead of silently
+// producing a degenerate profile.
+func TestRunCalibrate_CorpusInvalidRegime_NonZero(t *testing.T) {
+	t.Parallel()
+	dir := t.TempDir()
+	corpus := filepath.Join(dir, "invalid-regime.jsonl")
+	line := `{"id":"x01","sens_score":0.5,"authority_score":0.3,"invariant_score":0.4,"labeled_regime":"INVALID_REGIME"}` + "\n"
+	if err := os.WriteFile(corpus, []byte(line), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	output := filepath.Join(t.TempDir(), "profile.json")
+	code := runCalibrate([]string{
+		"--corpus", corpus,
+		"--output", output,
+		"--date-revision", "2026-11-23",
+	})
+	if code == 0 {
+		t.Fatalf("runCalibrate returned 0, want non-zero for invalid labeled_regime")
+	}
+	if code != 2 {
+		t.Errorf("runCalibrate returned %d, want 2 (content validation error)", code)
+	}
+	if _, err := os.Stat(output); err == nil {
+		t.Error("profile must not be written when the corpus is invalid")
+	}
+}
+
+// TestRunCalibrate_CorpusLegacyExpectedRegime_Migre verifies that a legacy
+// CorpusEntry line carrying only expected_regime (no labeled_regime) with valid
+// scores is migrated and accepted (exit 0, profile written).
+func TestRunCalibrate_CorpusLegacyExpectedRegime_Migre(t *testing.T) {
+	t.Parallel()
+	dir := t.TempDir()
+	corpus := filepath.Join(dir, "legacy.jsonl")
+	line := `{"id":"l01","sens_score":0.80,"authority_score":0.20,"invariant_score":0.75,"has_attestation":true,"expected_regime":"deterministe"}` + "\n"
+	if err := os.WriteFile(corpus, []byte(line), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	output := filepath.Join(t.TempDir(), "profile.json")
+	code := runCalibrate([]string{
+		"--corpus", corpus,
+		"--output", output,
+		"--date-revision", "2026-11-23",
+		"--created-at", "1970-01-01T00:00:00Z",
+	})
+	if code != 0 {
+		t.Fatalf("runCalibrate returned %d, want 0 (legacy expected_regime should migrate)", code)
+	}
+	data, err := os.ReadFile(output)
+	if err != nil {
+		t.Fatalf("profile not written: %v", err)
+	}
+	if len(data) == 0 {
+		t.Fatal("migrated corpus produced empty profile")
+	}
+}
+
 // ---------------------------------------------------------------------------
 // parseDateRev tests
 // ---------------------------------------------------------------------------

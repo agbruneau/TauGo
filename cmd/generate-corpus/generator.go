@@ -10,8 +10,15 @@ import (
 
 	"github.com/agbruneau/taugo/internal/app"
 	"github.com/agbruneau/taugo/internal/bridge/agentmeshkafka"
+	"github.com/agbruneau/taugo/internal/bridge/llm"
+	"github.com/agbruneau/taugo/internal/calibration"
 	"github.com/agbruneau/taugo/internal/tau"
+	"github.com/agbruneau/taugo/internal/tau/dimensions"
 )
+
+// defaultLLMStub returns the deterministic LLM used by app.NewDispatcher, so the
+// D-SENS probe in GenerateScored matches the dispatcher's score exactly.
+func defaultLLMStub() llm.Client { return llm.Stub{} }
 
 // AnnotatedEntry wraps an AgentMeshExchange with its expected_regime,
 // computed by piping the exchange through app.ToTauExchange + Dispatcher.Decide.
@@ -115,6 +122,132 @@ func (g *Generator) GenerateAnnotated(ctx context.Context, w io.Writer, n int, p
 		}
 	}
 	return nil
+}
+
+// GenerateScored writes n exchanges to w as JSONL in the calibration
+// CorpusEntry schema (not AgentMeshExchange). For each generated exchange it:
+//   - computes the three ventilated dimension scores exactly as the dispatcher
+//     does at steps 2 and 4 (default weights, deterministic LLM stub for D-SENS);
+//   - derives labeled_regime via a.Decide, mapping Refus diagnostics to
+//     refus_authority / refus_i4 and skipping frontier / péremption refusals
+//     (those are upstream of scoring, not calibration samples);
+//   - for non-Refus decisions, assigns deterministe / probabiliste using the
+//     calibrator's own simulate() convention against the default thresholds, so
+//     the emitted corpus is genuine grid-search ground truth.
+//
+// The base RNG stream is identical to Generate, so the underlying exchanges are
+// byte-for-byte reproducible for the same seed.
+func (g *Generator) GenerateScored(ctx context.Context, w io.Writer, n int, profile DistributionProfile, a Annotator) error {
+	wts, err := weightsFor(profile)
+	if err != nil {
+		return err
+	}
+	if n < 1 {
+		return fmt.Errorf("count must be >= 1")
+	}
+
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(false)
+
+	plan := buildPlan(n, wts, g)
+	g.rng.Shuffle(len(plan), func(i, j int) { plan[i], plan[j] = plan[j], plan[i] })
+
+	base := time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC)
+	def := calibration.DefaultProfile().Thresholds
+	for idx, fn := range plan {
+		x := fn(idx)
+		x.DiscoveredAt = base.Add(time.Duration(idx) * time.Minute)
+		x.SourceTopic = "agentic.synth"
+		x.SourceOffset = int64(idx)
+
+		entry, keep, derr := scoredEntry(ctx, x, a, def)
+		if derr != nil {
+			return fmt.Errorf("score line %d: %w", idx, derr)
+		}
+		if !keep {
+			continue
+		}
+		if err := enc.Encode(&entry); err != nil {
+			return fmt.Errorf("encode line %d: %w", idx, err)
+		}
+	}
+	return nil
+}
+
+// scoredEntry converts one AgentMeshExchange into a labeled CorpusEntry.
+// It returns keep=false for frontier / péremption refusals, which are not
+// calibration samples (they short-circuit before scoring in the dispatcher).
+func scoredEntry(
+	ctx context.Context,
+	x agentmeshkafka.AgentMeshExchange,
+	a Annotator,
+	def calibration.Thresholds,
+) (calibration.CorpusEntry, bool, error) {
+	tx := app.ToTauExchange(x)
+	dec, err := a.Decide(ctx, tx)
+	if err != nil {
+		return calibration.CorpusEntry{}, false, err
+	}
+
+	auth, err := dimensions.ScoreDAuthority(ctx, tx, dimensions.DefaultAuthorityWeights())
+	if err != nil {
+		return calibration.CorpusEntry{}, false, err
+	}
+	sens, err := dimensions.ScoreDSens(ctx, tx, dimensions.DefaultSensWeights(), defaultLLMStub())
+	if err != nil {
+		return calibration.CorpusEntry{}, false, err
+	}
+	inv, err := dimensions.ScoreDInvariant(ctx, tx, dimensions.DefaultInvariantWeights())
+	if err != nil {
+		return calibration.CorpusEntry{}, false, err
+	}
+
+	label, keep := labelForDecision(dec, sens.Value, auth.Value, inv.Value,
+		x.AttestationInstitutionnelle != nil, def)
+	if !keep {
+		return calibration.CorpusEntry{}, false, nil
+	}
+	return calibration.CorpusEntry{
+		ID:             x.ID,
+		SensScore:      sens.Value,
+		AuthorityScore: auth.Value,
+		InvariantScore: inv.Value,
+		HumanInLoop:    x.Initiator.HumanInLoop,
+		HasAttestation: x.AttestationInstitutionnelle != nil,
+		LabeledRegime:  label,
+	}, true, nil
+}
+
+// labelForDecision maps a dispatcher Decision plus the ventilated scores to one
+// of the four CorpusEntry labels, returning keep=false for frontier / péremption
+// refusals. For non-Refus decisions, the deterministe / probabiliste split uses
+// the calibrator's simulate() convention (PRD §10; see calibrate.go simulate):
+// high SensScore ⇒ deterministe (high confidence), moderate ⇒ probabiliste.
+func labelForDecision(
+	dec tau.Decision, sens, auth, inv float64, hasAttestation bool, def calibration.Thresholds,
+) (string, bool) {
+	if dec.Regime == tau.Refus {
+		switch dec.Diagnostic {
+		case tau.DiagVerrouOntologique:
+			return "refus_authority", true
+		case tau.DiagIncoherenceI4:
+			return "refus_i4", true
+		default: // DiagFrontiereFranchie or DiagPeremptionProfile — not a sample
+			return "", false
+		}
+	}
+	// Non-Refus: re-derive the regime with the same rule the grid search scores
+	// against, so the emitted label is consistent ground truth.
+	if auth >= def.AuthBlock && !hasAttestation {
+		return "refus_authority", true
+	}
+	if sens < def.SensCoherence && inv >= def.InvCoherence {
+		return "refus_i4", true
+	}
+	if sens >= def.Probabiliste {
+		return "deterministe", true
+	}
+	return "probabiliste", true
 }
 
 // Generate writes n exchanges to w as JSONL.

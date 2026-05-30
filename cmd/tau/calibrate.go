@@ -4,12 +4,15 @@ package main
 
 import (
 	"encoding/json"
+	stderrors "errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"time"
 
 	"github.com/agbruneau/taugo/internal/calibration"
+	customerrors "github.com/agbruneau/taugo/internal/errors"
 )
 
 // runCalibrate is the entry point for `tau calibrate`.
@@ -67,7 +70,7 @@ FLAGS:
 	entries, err := loadCorpus(*corpusPath)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "tau calibrate: reading corpus:", err)
-		return 1
+		return corpusErrExitCode(err)
 	}
 
 	profile := calibration.DefaultProfile()
@@ -101,22 +104,34 @@ func parseDateRev(s string) (time.Time, error) {
 	return time.Parse("2006-01-02", s)
 }
 
-// loadCorpus reads a JSONL file and decodes each line into a CorpusEntry.
+// loadCorpus reads a JSONL file, migrates legacy ExpectedRegime entries and
+// validates every entry (scores in [0,1], LabeledRegime among the four accepted
+// values). It delegates to calibration.LoadCorpus so an invalid or legacy corpus
+// is rejected at load time rather than silently producing a degenerate profile
+// (AUDIT C1-01).
 func loadCorpus(path string) ([]calibration.CorpusEntry, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
+	return calibration.LoadCorpus(path)
+}
 
-	dec := json.NewDecoder(f)
-	out := make([]calibration.CorpusEntry, 0, 32)
-	for dec.More() {
-		var e calibration.CorpusEntry
-		if err := dec.Decode(&e); err != nil {
-			return nil, fmt.Errorf("decoding corpus entry: %w", err)
-		}
-		out = append(out, e)
+// corpusErrExitCode classifies a corpus-load failure into a CLI exit code:
+//   - exit 1 for I/O (missing file) and JSON syntax errors — operational faults;
+//   - exit 2 for content validation errors (invalid regime, score out of range)
+//     surfaced as a *CalibrationError without an underlying I/O or JSON cause —
+//     i.e. bad input the caller must fix.
+func corpusErrExitCode(err error) int {
+	var pathErr *os.PathError
+	if stderrors.As(err, &pathErr) {
+		return 1
 	}
-	return out, nil
+	var synErr *json.SyntaxError
+	var typeErr *json.UnmarshalTypeError
+	if stderrors.As(err, &synErr) || stderrors.As(err, &typeErr) ||
+		stderrors.Is(err, io.ErrUnexpectedEOF) {
+		return 1
+	}
+	var calErr *customerrors.CalibrationError
+	if stderrors.As(err, &calErr) {
+		return 2
+	}
+	return 1
 }

@@ -6,6 +6,17 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 **Décision structurelle** orchestrée selon [ADR-0010](docs/adr/0010-retrait-ci-cd-pure-local.md). Le projet devient *pure-local* : validation entièrement déléguée au poste développeur (`make test && make lint && make fuzz`), plus aucun gate automatisé bloquant.
 
+### Corrigé — post-audit de régression 2026-05-29
+
+Lot de correctifs issus de l'audit multi-agents 2026-05-29 ([`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/)).
+
+- **C1-01 (golden corpus de calibration dégénéré) — RÉSOLU** *([ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md))*. `tests/calibration/golden-corpus.jsonl` était en schéma `Exchange` (et non `CorpusEntry`) → `tau calibrate` produisait un profil dégénéré (no-op depuis M5 ; runtime `Decide` jamais affecté car `DefaultProfile`). Corpus régénéré au schéma `CorpusEntry` via `cmd/generate-corpus --scored` (170 lignes ; scores ventilés réels ; `probabiliste` 90 / `deterministe` 50 / `refus_authority` 30 ; `refus_i4` 0 — limitation I4 connue). Profil non dégénéré (seuils Det 0,45 / Prob 0,65 / Auth 0,70 / Sens 0,30 / Inv 0,30). Hash re-épinglé `8e5dc2fc…40c1`. Validation CLI rétablie : `loadCorpus` applique migration + `Validate`, corpus invalide → exit 2 (`TestRunCalibrate_CorpusInvalidRegime_NonZero`, `TestRunCalibrate_CorpusLegacyExpectedRegime_Migre`).
+- **Q5-01** : `RefusError.Is` compare le `Diagnostic` aux sentinels → `errors.Is(refus, ErrFrontiereFranchie)` matche (ADR-0009).
+- **I2-04** : I1/I2 utilisent la constante `tau.DiagFrontiereFranchie` (anti-drift). **I2-03** : test I4 renommé `..._NoVentilatedScores_Held`. **C1-04** : message `Validate` corrigé en `LabeledRegime`. **P4-04** : commentaire `BoundsHold` corrigé (mono-passe).
+- **P4-02** : `BenchmarkDecide` (Det/Prob/Refus) + `BenchmarkScoreD*` ajoutés (directive perf 5 vérifiable).
+- **R3-01** : godoc `StreamAsTauExchanges` documente la sémantique best-effort/lossy de `errc`. **R3-02** : docstring `SetTuning` ne survend plus l'atomicité transactionnelle.
+- **A6-03/04** : `arch_test.go` purge les références `config`/`metrics` (supprimés) + règles `from` défensives pour `internal/errors` et `internal/testutil`.
+- **Documentaire** : survente couverture (92,1 % → 89,2 % `-coverpkg`) et débits fuzz (méthode fonction-propriété vs moteur `go test -fuzz`) corrigées ; arborescence resynchronisée (`generate-corpus`, retrait `config`/`metrics`, `tests/calibration`) ; anti-patrons `theory/07` 4 théoriques + 3 gardes d’ingénierie = 7 ; graphe de connaissance régénéré (`understand --full`, 303 nœuds) + dashboard `gh-pages` rafraîchi.
 ### Supprimé
 
 - **GitHub Actions** — `.github/workflows/ci.yml` (143 l., matrice 3 OS × Go 1.25, `go test -race` via CGO, lint, build, cross-compile, fuzz smoke) et `.github/workflows/coverage.yml` (86 l., gate per-package `tau/*` ≥ 90 %, global ≥ 80 %). Dossier `.github/` retiré entièrement.

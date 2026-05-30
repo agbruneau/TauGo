@@ -859,7 +859,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 | 7 | Aucun emoji, aucune fabrication, aucune citation non sourçée | Audit textuel M6 |
 | 8 | Trois OS supportés (Linux/macOS/Windows) | `go build` cross-compile vert (Makefile `build-all`) ; matrix CI historique retirée v0.1.2 |
 | 9 | Quatre anti-patrons gardés par tests *(§7.2)* | `TestNoPredictiveAPI`, `TestFrontierCheck_Inside_*` *(anciennement `TestRefusHorsFrontiere`)*, `TestI3_DateRevisionRespectee`, `TestUnmodeledObservationsReported` |
-| 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` *(réserve audit 2026-05-29 : la byte-identité porte sur un profil **dégénéré** — golden en mauvais schéma, cf. §20.2)* |
+| 10 | Profil de calibration reproductible byte-identique | `TestCalibrationDeterministic` *(corrigé 2026-05-29, [ADR-0012] : golden migré au schéma `CorpusEntry`, profil **non dégénéré** — seuils Det 0,45 / Prob 0,65 ; cf. §20.4)* |
 
 ---
 
@@ -935,9 +935,9 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 
 ---
 
-## 20.2 Dette technique identifiée — golden corpus de calibration *(audit 2026-05-29, C1-01)*
+## 20.4 Dette technique résolue — golden corpus de calibration *(audit 2026-05-29, C1-01 ; résolu via [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md))*
 
-**Amélioration planifiée pour une prochaine itération** (non corrigée dans le lot d'audit ; ne pas viser avant décision/ADR).
+**RÉSOLU le 2026-05-29 — [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md).** Le constat ci-dessous a motivé la correction ; la résolution livrée est résumée en fin de section.
 
 **Constat [Confirmé].** `tests/calibration/golden-corpus.jsonl` (200 lignes) est sérialisé dans le **schéma `Exchange`** (`intent_description` + `expected_regime` en PascalCase « Deterministe/Probabiliste/Refus »), et **non** dans le schéma `CorpusEntry` attendu par `calibration.Calibrate`. `CorpusEntry` (`internal/calibration/calibrate.go`) requiert des **scores de dimensions pré-calculés** (`sens_score`, `authority_score`, `invariant_score`) et un `labeled_regime` parmi **quatre** valeurs minuscules : `deterministe`, `probabiliste`, `refus_authority`, `refus_i4`. Le golden n'a aucun score (0/200) ni `labeled_regime` (0/200).
 
@@ -953,6 +953,15 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 5. **Normaliser la casse** des régimes dans `validRegimes`/`migrate` (fixer la casse canonique ; tolérer ou rejeter explicitement le PascalCase).
 6. **Réappliquer la validation CLI** (C1-01 / WP-A différé) : `cmd/tau/calibrate.go:loadCorpus` délègue à `calibration.LoadCorpus` (migrate + Validate) ; corpus invalide → exit ≠ 0. Tests gardiens `TestRunCalibrate_CorpusInvalidRegime_NonZero` + `TestRunCalibrate_CorpusLegacyExpectedRegime_Migre`.
 7. **Actualiser** `CHANGELOG.md` : la « byte-identité de calibration confirmée » (M5, §17 #10) portait sur un profil dégénéré.
+
+**Résolution livrée [Confirmé, 2026-05-29] — [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md).**
+
+- `tests/calibration/golden-corpus.jsonl` régénéré au schéma `CorpusEntry` via le mode `cmd/generate-corpus --scored` : **170 lignes** (30 des 200 échanges exclus — refus hors frontière / péremption, non pertinents pour le réglage des seuils), scores ventilés réels (170/170 non nuls), distribution `labeled_regime` `probabiliste` 90 / `deterministe` 50 / `refus_authority` 30. **`refus_i4` = 0** — attendu et honnête : le corpus synthétique ne pilote pas D-INVARIANT au-dessus de θ_inv (limitation I4 connue, cf. `docs/empirical/I4-report.md`).
+- Profil de calibration désormais **non dégénéré** : seuils `Deterministe` 0,45 / `Probabiliste` 0,65 / `AuthBlock` 0,70 / `SensCoherence` 0,30 / `InvCoherence` 0,30 / `HysteresisGap` 0,20 (le grid search optimise réellement ; le plancher dégénéré était 0,10 / 0,15).
+- Hash golden re-épinglé : `goldenCorpusCanonicalHash = 8e5dc2fcb84a6caf26deabb03e3e9732a6789c959a8e07866cf9488a09f3caa4` ; byte-identité reconfirmée (deux runs `tau calibrate` → hash identique).
+- **Validation CLI rétablie** : `cmd/tau/calibrate.go:loadCorpus` délègue à `calibration.LoadCorpus` (migration `ExpectedRegime → LabeledRegime` + `Validate`) ; un corpus invalide retourne exit 2 (gardes `TestRunCalibrate_CorpusInvalidRegime_NonZero`, `TestRunCalibrate_CorpusLegacyExpectedRegime_Migre`).
+- Point d’attention mainteneurs (cf. ADR-0012 §Conséquences) : l’étiquetage `deterministe`/`probabiliste` suit la convention de `calibration.simulate()` (par `SensScore`), inversée par rapport aux *noms* de régime du dispatcher (par `tau_score` composite) — ne pas « corriger » vers les noms du dispatcher sous peine de ré-introduire le profil dégénéré.
+- Suite verte : `go test ./...`, `go test -tags=e2e` (nouveau hash), `go test -tags=integration`, `golangci-lint` (LF) tous OK.
 
 Détail d'audit : [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/01_conformite_tau.md) (C1-01).
 
