@@ -935,7 +935,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 
 ---
 
-## 20.4 Dette technique résolue — golden corpus de calibration *(audit 2026-05-29, C1-01 ; résolu via [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md))*
+### 20.4 Dette technique résolue — golden corpus de calibration *(audit 2026-05-29, C1-01 ; résolu via [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md))*
 
 **RÉSOLU le 2026-05-29 — [ADR-0012](docs/adr/0012-golden-corpus-calibration-schema.md).** Le constat ci-dessous a motivé la correction ; la résolution livrée est résumée en fin de section.
 
