@@ -9,7 +9,8 @@ import (
 // I3PerimptionLimite returns the cut-off date beyond which any calibration
 // profile is considered expired and triggers Refus (anti-pattern #3, PRD §7.2).
 // The value is fixed at compile time; modifying it requires an ADR.
-// Status: Probable. Dated 2026-05-24; next review 2027-01-01.
+// Status: Probable, dated 2026-05-16. The returned 2027-01-01 is the hard
+// profile-expiry ceiling, distinct from the I3 review date 2026-12-01.
 func I3PerimptionLimite() time.Time {
 	return time.Date(2027, 1, 1, 0, 0, 0, 0, time.UTC)
 }
