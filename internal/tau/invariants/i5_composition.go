@@ -85,8 +85,8 @@ func BoundsHold(p Pile) bool {
 //
 // FuzzI5 throughput note: the fuzzer decodes a raw byte slice into a variable-
 // length Pile of AngleMort slices, which is heavier than simple scalar decoding.
-// This reduces observed throughput (roughly 700K executions/s vs 8M for scalar
-// fuzz targets). The 30 s CI window (-fuzztime=30s) provides adequate coverage
+// This reduces observed engine throughput (~1.1 M exec/s here for the I5 engine,
+// vs ~8.2-9.5 M for the isolated scalar I1-I4 property-functions; distinct metrics). The local 30 s fuzz window (-fuzztime=30s) provides adequate coverage
 // of the union and bounds properties; a V2 corpus-seeding pass is tracked as a
 // performance refinement, not a correctness blocker.
 //
