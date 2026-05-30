@@ -14788,6 +14788,167 @@
       "direction": "forward",
       "weight": 0.5,
       "description": "Path-based pairing (deterministic)"
+    },
+    {
+      "source": "document:docs/adr/0001-clean-architecture-4-layers.md",
+      "target": "document:PRD.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/adr/0006-types-valeur-transverses.md",
+      "target": "document:PRD.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/adr/0008-trace-ventilee-scores-dimensions.md",
+      "target": "document:PRD.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:internal/anti_patterns_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/anti_patterns_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/orchestration/dispatcher.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/orchestration/dispatcher.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/orchestration/dispatcher_scores_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/orchestration/dispatcher_scores_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/evaluator_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/evaluator_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/fuzz_targets_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/fuzz_targets_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i1_conservation_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i1_conservation_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i4_coherence_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i4_coherence_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition_test.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition_test.go",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
     }
   ],
   "layers": [
