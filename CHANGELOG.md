@@ -16,7 +16,7 @@ Lot de correctifs issus de l'audit multi-agents 2026-05-29 ([`docs/archive/audit
 - **P4-02** : `BenchmarkDecide` (Det/Prob/Refus) + `BenchmarkScoreD*` ajoutés (directive perf 5 vérifiable).
 - **R3-01** : godoc `StreamAsTauExchanges` documente la sémantique best-effort/lossy de `errc`. **R3-02** : docstring `SetTuning` ne survend plus l'atomicité transactionnelle.
 - **A6-03/04** : `arch_test.go` purge les références `config`/`metrics` (supprimés) + règles `from` défensives pour `internal/errors` et `internal/testutil`.
-- **Documentaire** : survente couverture (92,1 % → 89,2 % `-coverpkg`) et débits fuzz (méthode fonction-propriété vs moteur `go test -fuzz`) corrigées ; arborescence resynchronisée (`generate-corpus`, retrait `config`/`metrics`, `tests/calibration`) ; anti-patrons `theory/07` 4 théoriques + 3 gardes d’ingénierie = 7 ; graphe de connaissance régénéré (`understand --full`, 303 nœuds) + dashboard `gh-pages` rafraîchi.
+- **Documentaire** : survente couverture (92,1 % → 89,2 % `-coverpkg`) et débits fuzz (méthode fonction-propriété vs moteur `go test -fuzz`) corrigées ; arborescence resynchronisée (`generate-corpus`, retrait `config`/`metrics`, `tests/calibration`) ; anti-patrons `theory/07` 4 théoriques + 3 gardes d’ingénierie = 7 ; graphe de connaissance régénéré (`understand --full`, 325 nœuds, 1 339 arêtes) + dashboard `gh-pages` rafraîchi.
 ### Supprimé
 
 - **GitHub Actions** — `.github/workflows/ci.yml` (143 l., matrice 3 OS × Go 1.25, `go test -race` via CGO, lint, build, cross-compile, fuzz smoke) et `.github/workflows/coverage.yml` (86 l., gate per-package `tau/*` ≥ 90 %, global ≥ 80 %). Dossier `.github/` retiré entièrement.
