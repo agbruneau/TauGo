@@ -1,0 +1,1808 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 9,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "internal/arch_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 218,
+      "nonEmptyLines": 204,
+      "functions": [
+        {
+          "name": "TestArchitectureLayering",
+          "startLine": 80,
+          "endLine": 101,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestBridgeNoTauImport",
+          "startLine": 107,
+          "endLine": 150,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestArchNoConcreteLLMInDomain",
+          "startLine": 156,
+          "endLine": 218,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "rule",
+          "startLine": 14,
+          "endLine": 17,
+          "methods": [],
+          "properties": [
+            "from",
+            "deny"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestArchitectureLayering",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "TestBridgeNoTauImport",
+          "line": 107,
+          "isDefault": false
+        },
+        {
+          "name": "TestArchNoConcreteLLMInDomain",
+          "line": 156,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "t.Parallel",
+          "lineNumber": 81
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "t.Run",
+          "lineNumber": 83
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "strings.ReplaceAll",
+          "lineNumber": 83
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "t.Parallel",
+          "lineNumber": 84
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "build.Default.Import",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "t.Skipf",
+          "lineNumber": 88
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "append",
+          "lineNumber": 90
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "append",
+          "lineNumber": 91
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "strings.HasPrefix",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TestArchitectureLayering",
+          "callee": "t.Errorf",
+          "lineNumber": 95
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Parallel",
+          "lineNumber": 108
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "build.Default.Import",
+          "lineNumber": 115
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Skipf",
+          "lineNumber": 117
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "filepath.Join",
+          "lineNumber": 119
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "filepath.Dir",
+          "lineNumber": 119
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "os.Stat",
+          "lineNumber": 121
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "os.IsNotExist",
+          "lineNumber": 121
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Skipf",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "token.NewFileSet",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "filepath.WalkDir",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "d.IsDir",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "strings.HasSuffix",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "strings.HasSuffix",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "parser.ParseFile",
+          "lineNumber": 133
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Errorf",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "strings.Trim",
+          "lineNumber": 140
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "strings.HasPrefix",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Errorf",
+          "lineNumber": 142
+        },
+        {
+          "caller": "TestBridgeNoTauImport",
+          "callee": "t.Fatalf",
+          "lineNumber": 148
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "t.Parallel",
+          "lineNumber": 157
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "build.Default.Import",
+          "lineNumber": 175
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "t.Skipf",
+          "lineNumber": 177
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "filepath.Dir",
+          "lineNumber": 179
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "filepath.Join",
+          "lineNumber": 182
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "filepath.Join",
+          "lineNumber": 183
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "token.NewFileSet",
+          "lineNumber": 186
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "os.Stat",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "os.IsNotExist",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "filepath.WalkDir",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "d.IsDir",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "strings.HasSuffix",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "strings.HasSuffix",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "parser.ParseFile",
+          "lineNumber": 198
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "t.Errorf",
+          "lineNumber": 200
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "filepath.Rel",
+          "lineNumber": 203
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "strings.ToLower",
+          "lineNumber": 205
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "strings.Trim",
+          "lineNumber": 205
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "strings.Contains",
+          "lineNumber": 207
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "t.Errorf",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TestArchNoConcreteLLMInDomain",
+          "callee": "t.Fatalf",
+          "lineNumber": 215
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "internal/orchestration/decide_bench_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 79,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "benchThresholds",
+          "startLine": 15,
+          "endLine": 23,
+          "params": []
+        },
+        {
+          "name": "BenchmarkDecide",
+          "startLine": 30,
+          "endLine": 59,
+          "params": [
+            "b"
+          ]
+        },
+        {
+          "name": "benchDecide",
+          "startLine": 63,
+          "endLine": 79,
+          "params": [
+            "ctx",
+            "b",
+            "d",
+            "x",
+            "want"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BenchmarkDecide",
+          "line": 30,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "context.Background",
+          "lineNumber": 31
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "b.Run",
+          "lineNumber": 33
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "orchestration.NewDispatcher",
+          "lineNumber": 35
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchThresholds",
+          "lineNumber": 35
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "newDeterministeExchange",
+          "lineNumber": 36
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchDecide",
+          "lineNumber": 37
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "b.Run",
+          "lineNumber": 40
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "orchestration.NewDispatcher",
+          "lineNumber": 42
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchThresholds",
+          "lineNumber": 42
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "testutil.BuildExchange",
+          "lineNumber": 43
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "testutil.WithID",
+          "lineNumber": 43
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchDecide",
+          "lineNumber": 44
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "b.Run",
+          "lineNumber": 47
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "orchestration.NewDispatcher",
+          "lineNumber": 50
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchThresholds",
+          "lineNumber": 50
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "time.Now",
+          "lineNumber": 53
+        },
+        {
+          "caller": "BenchmarkDecide",
+          "callee": "benchDecide",
+          "lineNumber": 57
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "b.Helper",
+          "lineNumber": 64
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "d.Decide",
+          "lineNumber": 66
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "b.Fatalf",
+          "lineNumber": 68
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "b.Fatalf",
+          "lineNumber": 71
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "b.ReportAllocs",
+          "lineNumber": 74
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "b.ResetTimer",
+          "lineNumber": 75
+        },
+        {
+          "caller": "benchDecide",
+          "callee": "d.Decide",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 18,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tau/dimensions/dimensions_bench_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 46,
+      "functions": [
+        {
+          "name": "BenchmarkScoreDSens",
+          "startLine": 15,
+          "endLine": 26,
+          "params": [
+            "b"
+          ]
+        },
+        {
+          "name": "BenchmarkScoreDAuthority",
+          "startLine": 30,
+          "endLine": 40,
+          "params": [
+            "b"
+          ]
+        },
+        {
+          "name": "BenchmarkScoreDInvariant",
+          "startLine": 44,
+          "endLine": 54,
+          "params": [
+            "b"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BenchmarkScoreDSens",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "BenchmarkScoreDAuthority",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "BenchmarkScoreDInvariant",
+          "line": 44,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "context.Background",
+          "lineNumber": 16
+        },
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "testutil.BuildExchange",
+          "lineNumber": 17
+        },
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "dimensions.DefaultSensWeights",
+          "lineNumber": 18
+        },
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "b.ReportAllocs",
+          "lineNumber": 21
+        },
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "b.ResetTimer",
+          "lineNumber": 22
+        },
+        {
+          "caller": "BenchmarkScoreDSens",
+          "callee": "dimensions.ScoreDSens",
+          "lineNumber": 24
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "context.Background",
+          "lineNumber": 31
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "testutil.BuildExchange",
+          "lineNumber": 32
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "dimensions.DefaultAuthorityWeights",
+          "lineNumber": 33
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "b.ReportAllocs",
+          "lineNumber": 35
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "b.ResetTimer",
+          "lineNumber": 36
+        },
+        {
+          "caller": "BenchmarkScoreDAuthority",
+          "callee": "dimensions.ScoreDAuthority",
+          "lineNumber": 38
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "context.Background",
+          "lineNumber": 45
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "testutil.BuildExchange",
+          "lineNumber": 46
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "dimensions.DefaultInvariantWeights",
+          "lineNumber": 47
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "b.ReportAllocs",
+          "lineNumber": 49
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "b.ResetTimer",
+          "lineNumber": 50
+        },
+        {
+          "caller": "BenchmarkScoreDInvariant",
+          "callee": "dimensions.ScoreDInvariant",
+          "lineNumber": 52
+        }
+      ],
+      "metrics": {
+        "importCount": 15,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tau/invariants/i1_conservation.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 25,
+      "functions": [
+        {
+          "name": "Conserve",
+          "startLine": 12,
+          "endLine": 14,
+          "params": [
+            "x",
+            "dec"
+          ]
+        },
+        {
+          "name": "EvaluateI1",
+          "startLine": 20,
+          "endLine": 28,
+          "params": [
+            "x",
+            "dec"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Conserve",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "EvaluateI1",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EvaluateI1",
+          "callee": "Conserve",
+          "lineNumber": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tau/invariants/i2_irreductibility.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 88,
+      "nonEmptyLines": 82,
+      "functions": [
+        {
+          "name": "Residu",
+          "startLine": 27,
+          "endLine": 40,
+          "params": [
+            "x"
+          ]
+        },
+        {
+          "name": "Recablage",
+          "startLine": 48,
+          "endLine": 62,
+          "params": [
+            "x",
+            "removed"
+          ]
+        },
+        {
+          "name": "EvaluateI2",
+          "startLine": 72,
+          "endLine": 88,
+          "params": [
+            "x",
+            "dec"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Residu",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "Recablage",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "EvaluateI2",
+          "line": 72,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Residu",
+          "callee": "make",
+          "lineNumber": 28
+        },
+        {
+          "caller": "Residu",
+          "callee": "append",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Residu",
+          "callee": "append",
+          "lineNumber": 34
+        },
+        {
+          "caller": "Residu",
+          "callee": "append",
+          "lineNumber": 37
+        },
+        {
+          "caller": "Recablage",
+          "callee": "x.FrontierCheck",
+          "lineNumber": 49
+        },
+        {
+          "caller": "Recablage",
+          "callee": "ResidualMagnitude",
+          "lineNumber": 51
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "Residu",
+          "lineNumber": 76
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "len",
+          "lineNumber": 77
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "make",
+          "lineNumber": 80
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "len",
+          "lineNumber": 80
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "string",
+          "lineNumber": 82
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "Recablage(x, names).Inside",
+          "lineNumber": 84
+        },
+        {
+          "caller": "EvaluateI2",
+          "callee": "Recablage",
+          "lineNumber": 84
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tau/invariants/i4_coherence_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 111,
+      "functions": [
+        {
+          "name": "TestIsIncoherent_TableDriven",
+          "startLine": 12,
+          "endLine": 45,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestEvaluateI4_NominalHeld",
+          "startLine": 48,
+          "endLine": 57,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestEvaluateI4_RefusalForI4_Held",
+          "startLine": 61,
+          "endLine": 70,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestEvaluateI4_NoVentilatedScores_Held",
+          "startLine": 78,
+          "endLine": 98,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "startLine": 102,
+          "endLine": 118,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestIsIncoherent_TableDriven",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "TestEvaluateI4_NominalHeld",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "TestEvaluateI4_RefusalForI4_Held",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "TestEvaluateI4_NoVentilatedScores_Held",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "line": 102,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestIsIncoherent_TableDriven",
+          "callee": "t.Parallel",
+          "lineNumber": 13
+        },
+        {
+          "caller": "TestIsIncoherent_TableDriven",
+          "callee": "t.Run",
+          "lineNumber": 34
+        },
+        {
+          "caller": "TestIsIncoherent_TableDriven",
+          "callee": "t.Parallel",
+          "lineNumber": 35
+        },
+        {
+          "caller": "TestIsIncoherent_TableDriven",
+          "callee": "invariants.IsIncoherent",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TestIsIncoherent_TableDriven",
+          "callee": "t.Fatalf",
+          "lineNumber": 38
+        },
+        {
+          "caller": "TestEvaluateI4_NominalHeld",
+          "callee": "t.Parallel",
+          "lineNumber": 49
+        },
+        {
+          "caller": "TestEvaluateI4_NominalHeld",
+          "callee": "invariants.EvaluateI4",
+          "lineNumber": 54
+        },
+        {
+          "caller": "TestEvaluateI4_NominalHeld",
+          "callee": "t.Fatalf",
+          "lineNumber": 55
+        },
+        {
+          "caller": "TestEvaluateI4_RefusalForI4_Held",
+          "callee": "t.Parallel",
+          "lineNumber": 62
+        },
+        {
+          "caller": "TestEvaluateI4_RefusalForI4_Held",
+          "callee": "invariants.EvaluateI4",
+          "lineNumber": 67
+        },
+        {
+          "caller": "TestEvaluateI4_RefusalForI4_Held",
+          "callee": "t.Fatalf",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TestEvaluateI4_NoVentilatedScores_Held",
+          "callee": "t.Parallel",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TestEvaluateI4_NoVentilatedScores_Held",
+          "callee": "invariants.EvaluateI4",
+          "lineNumber": 90
+        },
+        {
+          "caller": "TestEvaluateI4_NoVentilatedScores_Held",
+          "callee": "t.Fatalf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "callee": "t.Parallel",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "callee": "t.Run",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "callee": "t.Parallel",
+          "lineNumber": 111
+        },
+        {
+          "caller": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "callee": "invariants.EvaluateI4",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TestEvaluateI4_OtherRefusal_NotApplicable",
+          "callee": "t.Fatalf",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 19,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/tau/invariants/i5_composition_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 141,
+      "nonEmptyLines": 129,
+      "functions": [
+        {
+          "name": "TestAggregate_EmptyStack",
+          "startLine": 12,
+          "endLine": 18,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestAggregate_SingleLayer",
+          "startLine": 22,
+          "endLine": 35,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "startLine": 39,
+          "endLine": 52,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "startLine": 56,
+          "endLine": 67,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestM_LowerBoundMaxLayer",
+          "startLine": 71,
+          "endLine": 82,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestM_UpperBoundSum",
+          "startLine": 86,
+          "endLine": 97,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestEvaluateI5_HeldInV1Pipeline",
+          "startLine": 103,
+          "endLine": 109,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "makeLargePile",
+          "startLine": 113,
+          "endLine": 123,
+          "params": [
+            "layerCount",
+            "entriesPerLayer"
+          ]
+        },
+        {
+          "name": "BenchmarkI5_Aggregate",
+          "startLine": 126,
+          "endLine": 132,
+          "params": [
+            "b"
+          ]
+        },
+        {
+          "name": "BenchmarkI5_BoundsHold",
+          "startLine": 135,
+          "endLine": 141,
+          "params": [
+            "b"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestAggregate_EmptyStack",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "TestAggregate_SingleLayer",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "TestM_LowerBoundMaxLayer",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "TestM_UpperBoundSum",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "TestEvaluateI5_HeldInV1Pipeline",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "BenchmarkI5_Aggregate",
+          "line": 126,
+          "isDefault": false
+        },
+        {
+          "name": "BenchmarkI5_BoundsHold",
+          "line": 135,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestAggregate_EmptyStack",
+          "callee": "t.Parallel",
+          "lineNumber": 13
+        },
+        {
+          "caller": "TestAggregate_EmptyStack",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 14
+        },
+        {
+          "caller": "TestAggregate_EmptyStack",
+          "callee": "len",
+          "lineNumber": 15
+        },
+        {
+          "caller": "TestAggregate_EmptyStack",
+          "callee": "t.Fatalf",
+          "lineNumber": 16
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "t.Parallel",
+          "lineNumber": 23
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "len",
+          "lineNumber": 27
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "len",
+          "lineNumber": 27
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "t.Fatalf",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "len",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "len",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestAggregate_SingleLayer",
+          "callee": "t.Fatalf",
+          "lineNumber": 32
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "t.Parallel",
+          "lineNumber": 40
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 42
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "len",
+          "lineNumber": 44
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "len",
+          "lineNumber": 44
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "t.Fatalf",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "len",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "len",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TestAggregate_MultipleLayers_StableSortedUnion",
+          "callee": "t.Fatalf",
+          "lineNumber": 49
+        },
+        {
+          "caller": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "callee": "t.Parallel",
+          "lineNumber": 57
+        },
+        {
+          "caller": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 63
+        },
+        {
+          "caller": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "callee": "len",
+          "lineNumber": 64
+        },
+        {
+          "caller": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "callee": "t.Fatalf",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TestAggregate_DuplicateBlindSpots_Deduplicated",
+          "callee": "len",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "t.Parallel",
+          "lineNumber": 72
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 74
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "len",
+          "lineNumber": 76
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "t.Fatalf",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "len",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "invariants.BoundsHold",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TestM_LowerBoundMaxLayer",
+          "callee": "t.Fatalf",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "t.Parallel",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 89
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "len",
+          "lineNumber": 91
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "t.Fatalf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "len",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "invariants.BoundsHold",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TestM_UpperBoundSum",
+          "callee": "t.Fatal",
+          "lineNumber": 95
+        },
+        {
+          "caller": "TestEvaluateI5_HeldInV1Pipeline",
+          "callee": "t.Parallel",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestEvaluateI5_HeldInV1Pipeline",
+          "callee": "invariants.EvaluateI5",
+          "lineNumber": 105
+        },
+        {
+          "caller": "TestEvaluateI5_HeldInV1Pipeline",
+          "callee": "t.Fatalf",
+          "lineNumber": 107
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "make",
+          "lineNumber": 114
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "make",
+          "lineNumber": 116
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "string",
+          "lineNumber": 118
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "rune",
+          "lineNumber": 118
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "string",
+          "lineNumber": 118
+        },
+        {
+          "caller": "makeLargePile",
+          "callee": "rune",
+          "lineNumber": 118
+        },
+        {
+          "caller": "BenchmarkI5_Aggregate",
+          "callee": "makeLargePile",
+          "lineNumber": 127
+        },
+        {
+          "caller": "BenchmarkI5_Aggregate",
+          "callee": "b.ResetTimer",
+          "lineNumber": 128
+        },
+        {
+          "caller": "BenchmarkI5_Aggregate",
+          "callee": "invariants.Aggregate",
+          "lineNumber": 130
+        },
+        {
+          "caller": "BenchmarkI5_BoundsHold",
+          "callee": "makeLargePile",
+          "lineNumber": 136
+        },
+        {
+          "caller": "BenchmarkI5_BoundsHold",
+          "callee": "b.ResetTimer",
+          "lineNumber": 137
+        },
+        {
+          "caller": "BenchmarkI5_BoundsHold",
+          "callee": "invariants.BoundsHold",
+          "lineNumber": 139
+        }
+      ],
+      "metrics": {
+        "importCount": 19,
+        "exportCount": 9,
+        "functionCount": 10,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "test/e2e/calibration_determinism_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 198,
+      "nonEmptyLines": 178,
+      "functions": [
+        {
+          "name": "goldenCorpusPath",
+          "startLine": 37,
+          "endLine": 47,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "buildTauE2E",
+          "startLine": 52,
+          "endLine": 63,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "sha256HexFile",
+          "startLine": 66,
+          "endLine": 78,
+          "params": [
+            "t",
+            "path"
+          ]
+        },
+        {
+          "name": "runCalibrateCanonical",
+          "startLine": 82,
+          "endLine": 96,
+          "params": [
+            "t",
+            "bin",
+            "corpus",
+            "output"
+          ]
+        },
+        {
+          "name": "TestCalibrationDeterministic",
+          "startLine": 101,
+          "endLine": 117,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestCalibrate_GoldenCorpus_FixedHash",
+          "startLine": 122,
+          "endLine": 135,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestExpiredProfileRefuses",
+          "startLine": 145,
+          "endLine": 198,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestCalibrationDeterministic",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "TestCalibrate_GoldenCorpus_FixedHash",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "TestExpiredProfileRefuses",
+          "line": 145,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "t.Helper",
+          "lineNumber": 38
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "runtime.Caller",
+          "lineNumber": 39
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "filepath.Join",
+          "lineNumber": 41
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "filepath.Dir",
+          "lineNumber": 41
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "filepath.Join",
+          "lineNumber": 42
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "os.Stat",
+          "lineNumber": 43
+        },
+        {
+          "caller": "goldenCorpusPath",
+          "callee": "t.Fatalf",
+          "lineNumber": 44
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "t.Helper",
+          "lineNumber": 53
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "filepath.Join",
+          "lineNumber": 54
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "t.TempDir",
+          "lineNumber": 54
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "exec.Command",
+          "lineNumber": 58
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "cmd.CombinedOutput",
+          "lineNumber": 59
+        },
+        {
+          "caller": "buildTauE2E",
+          "callee": "t.Fatalf",
+          "lineNumber": 60
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "t.Helper",
+          "lineNumber": 67
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "os.Open",
+          "lineNumber": 68
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "t.Fatalf",
+          "lineNumber": 70
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "f.Close",
+          "lineNumber": 72
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "sha256.New",
+          "lineNumber": 73
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "io.Copy",
+          "lineNumber": 74
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "t.Fatalf",
+          "lineNumber": 75
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "hex.EncodeToString",
+          "lineNumber": 77
+        },
+        {
+          "caller": "sha256HexFile",
+          "callee": "h.Sum",
+          "lineNumber": 77
+        },
+        {
+          "caller": "runCalibrateCanonical",
+          "callee": "t.Helper",
+          "lineNumber": 83
+        },
+        {
+          "caller": "runCalibrateCanonical",
+          "callee": "exec.Command",
+          "lineNumber": 84
+        },
+        {
+          "caller": "runCalibrateCanonical",
+          "callee": "cmd.CombinedOutput",
+          "lineNumber": 93
+        },
+        {
+          "caller": "runCalibrateCanonical",
+          "callee": "t.Fatalf",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "t.Parallel",
+          "lineNumber": 102
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "buildTauE2E",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "goldenCorpusPath",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "t.TempDir",
+          "lineNumber": 105
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "filepath.Join",
+          "lineNumber": 106
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "filepath.Join",
+          "lineNumber": 107
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "runCalibrateCanonical",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "runCalibrateCanonical",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "sha256HexFile",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "sha256HexFile",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TestCalibrationDeterministic",
+          "callee": "t.Fatalf",
+          "lineNumber": 115
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "t.Parallel",
+          "lineNumber": 123
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "buildTauE2E",
+          "lineNumber": 124
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "goldenCorpusPath",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "filepath.Join",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "t.TempDir",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "runCalibrateCanonical",
+          "lineNumber": 128
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "sha256HexFile",
+          "lineNumber": 130
+        },
+        {
+          "caller": "TestCalibrate_GoldenCorpus_FixedHash",
+          "callee": "t.Fatalf",
+          "lineNumber": 132
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "t.Parallel",
+          "lineNumber": 146
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "calibration.DefaultProfile",
+          "lineNumber": 149
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "time.Date",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "time.Date",
+          "lineNumber": 153
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "orchestration.NewDispatcherWithProfile(\n\t\tllm.Stub{},\n\t\torchestration.DefaultThresholds(),\n\t\t&p,\n\t).WithClock",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "orchestration.NewDispatcherWithProfile",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "orchestration.DefaultThresholds",
+          "lineNumber": 157
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "d.Decide",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "context.Background",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "t.Fatalf",
+          "lineNumber": 190
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "t.Fatalf",
+          "lineNumber": 193
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "strings.Contains",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestExpiredProfileRefuses",
+          "callee": "t.Fatalf",
+          "lineNumber": 196
+        }
+      ],
+      "metrics": {
+        "importCount": 36,
+        "exportCount": 3,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/calibration/golden-corpus.jsonl",
+      "language": "jsonl",
+      "fileCategory": "code",
+      "totalLines": 170,
+      "nonEmptyLines": 170,
+      "metrics": {}
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+[
+ {
+  "id": "layer:cli-entry",
+  "name": "Entry Points, CLI & Examples",
+  "description": "Command-line entry points (tau decide/calibrate, generate-corpus) and the runnable quickstart example — the outermost Presentation layer."
+ },
+ {
+  "id": "layer:application",
+  "name": "Application",
+  "description": "internal/app — lifecycle, top-level dispatch wiring, concrete LLM injection; NewDispatcher loads DefaultProfile() to activate the péremption guard."
+ },
+ {
+  "id": "layer:orchestration",
+  "name": "Orchestration",
+  "description": "internal/orchestration — the 8-step Decide dispatcher, Decision and Trace types, threshold aliases."
+ },
+ {
+  "id": "layer:calibration",
+  "name": "Calibration & Drift",
+  "description": "internal/calibration — Profile, byte-identical serialization, AtomicThresholds, drift detection, DefaultProfile, store."
+ },
+ {
+  "id": "layer:domain-core",
+  "name": "Domain Core — opérateur τ",
+  "description": "internal/tau core (operator.go, frontier.go, diagnostics.go): the single public Kernel.Decide API, Exchange/Decision/Trace types, FrontierCheck guard; plus the internal/ architecture & anti-pattern étanchéité guards."
+ },
+ {
+  "id": "layer:dimensions",
+  "name": "Dimensions (D-SENS / D-AUTORITÉ / D-INVARIANT)",
+  "description": "internal/tau/dimensions — the three orthogonal scoring dimensions and the shared Score type."
+ },
+ {
+  "id": "layer:invariants",
+  "name": "Invariants I1-I5",
+  "description": "internal/tau/invariants — the five refutable invariant evaluators (chap. III.8.5) and their native Go fuzz targets and seed corpora."
+ },
+ {
+  "id": "layer:bridges",
+  "name": "Bridges (LLM, AgentMeshKafka)",
+  "description": "internal/bridge — the LLM Client interface + deterministic Stub (isolates non-determinism) and the AgentMeshKafka FileAdapter + neutral DTO empirical bridge."
+ },
+ {
+  "id": "layer:shared-kernel",
+  "name": "Shared Kernel (thresholds, errors, testutil)",
+  "description": "internal/thresholds (transverse value type, ADR-0006), internal/errors (typed errors + sentinels, ADR-0009), internal/testutil (BuildExchange helpers)."
+ },
+ {
+  "id": "layer:tests-e2e",
+  "name": "End-to-End Tests & Golden Fixtures",
+  "description": "test/e2e end-to-end scenarios and the byte-identical golden calibration corpus under tests/calibration."
+ },
+ {
+  "id": "layer:documentation",
+  "name": "Documentation",
+  "description": "PRD, CLAUDE, README, CHANGELOG and docs/ (theory, algorithms, ADRs, empirical reports, archived plans & audits)."
+ },
+ {
+  "id": "layer:build-config",
+  "name": "Build & Configuration",
+  "description": "Makefile, .golangci.yml, go.mod and maintenance scripts (typography-fr.py)."
+ }
+]

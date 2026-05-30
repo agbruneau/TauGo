@@ -1,0 +1,106 @@
+{
+  "nodes": [
+    {
+      "id": "document:CHANGELOG.md",
+      "type": "document",
+      "name": "CHANGELOG.md",
+      "filePath": "CHANGELOG.md",
+      "summary": "Keep-a-Changelog history of the τ kernel from v0.0.1-alpha through the unreleased v0.1.2-pre, documenting the M0–M6 milestones, the v0.1.1 post-audit refactor, and the v0.1.2 full removal of CI/CD tooling for a pure-local project.",
+      "tags": ["documentation", "changelog", "release-notes", "project-history"],
+      "complexity": "complex",
+      "languageNotes": "FR-CA Keep-a-Changelog format with 47 sections; versions in reverse-chronological order with Added/Changed/Removed/Fixed groupings."
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "Operational rulebook for the TauGo project: doctrine (what the τ kernel is and is not), the 7 forbidden anti-patterns guarded by tests, the strict 4-layer Clean Architecture, the I1–I5 invariants and three dimensions, the five Refus cases, essential commands, and coding/editorial conventions.",
+      "tags": ["documentation", "configuration", "conventions", "architecture", "agent-instructions"],
+      "complexity": "complex",
+      "languageNotes": "FR-CA project memory file driving agent-team orchestration; cross-references PRD.md and chap. III.8 of the InteroperabiliteAgentique monograph throughout."
+    },
+    {
+      "id": "document:PRD.md",
+      "type": "document",
+      "name": "PRD.md",
+      "filePath": "PRD.md",
+      "summary": "Canonical V0.3 product requirements document for the τ kernel, organized in five blocks: strategic framing, operationalized theory (τ operator, three dimensions, five invariants), target architecture and data model, the 8-step dispatch algorithm and adaptive calibration, execution discipline, and the V1 roadmap with success criteria.",
+      "tags": ["documentation", "specification", "prd", "architecture", "data-model"],
+      "complexity": "complex",
+      "languageNotes": "FR-CA canonical spec with 75 sections; the single source of truth for theory, data model, and dispatch pseudo-algorithm that CLAUDE.md and README defer to."
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Project entry-point documentation presenting the τ kernel doctrine and anti-goals, quick-start commands, the 4-layer architecture, usage examples (tau decide, tau calibrate, Go embedding of Kernel.Decide, fuzz/E2E), the v0.1.0→v0.1.2-pre status, invariant statuses, and a documentation index.",
+      "tags": ["documentation", "entry-point", "overview", "getting-started"],
+      "complexity": "complex",
+      "languageNotes": "FR-CA top-level README linking to an online interactive dashboard and indexing the spec, theory, ADRs, and archives."
+    },
+    {
+      "id": "document:docs/adr/0009-types-erreurs-typees.md",
+      "type": "document",
+      "name": "0009-types-erreurs-typees.md",
+      "filePath": "docs/adr/0009-types-erreurs-typees.md",
+      "summary": "Architecture decision record establishing typed error values (DispatchError, RefusError, CalibrationError) and errors.Is/As-compatible sentinels in the populated internal/errors package, with consequences and rejected alternatives.",
+      "tags": ["documentation", "adr", "architecture-decision", "error-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/adr/0012-golden-corpus-calibration-schema.md",
+      "type": "document",
+      "name": "0012-golden-corpus-calibration-schema.md",
+      "filePath": "docs/adr/0012-golden-corpus-calibration-schema.md",
+      "summary": "Architecture decision record resolving the C1-01 debt by regenerating the golden calibration corpus to the CorpusEntry schema via cmd/generate-corpus --scored, re-pinning its canonical hash, and re-enabling CLI corpus validation in cmd/tau/calibrate.go.",
+      "tags": ["documentation", "adr", "architecture-decision", "calibration", "golden-corpus"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "document:README.md",
+      "target": "file:internal/tau/operator.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:PRD.md",
+      "target": "file:internal/tau/operator.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "file:internal/tau/operator.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/adr/0009-types-erreurs-typees.md",
+      "target": "file:internal/errors/errors.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/adr/0012-golden-corpus-calibration-schema.md",
+      "target": "file:cmd/tau/calibrate.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/adr/0012-golden-corpus-calibration-schema.md",
+      "target": "file:tests/calibration/golden-corpus.jsonl",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

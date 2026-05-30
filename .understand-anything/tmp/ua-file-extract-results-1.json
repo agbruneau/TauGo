@@ -1,0 +1,4577 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "cmd/generate-corpus/generator.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 458,
+      "nonEmptyLines": 418,
+      "functions": [
+        {
+          "name": "defaultLLMStub",
+          "startLine": 21,
+          "endLine": 21,
+          "params": []
+        },
+        {
+          "name": "weightsFor",
+          "startLine": 57,
+          "endLine": 70,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "NewGenerator",
+          "startLine": 81,
+          "endLine": 84,
+          "params": [
+            "seed"
+          ]
+        },
+        {
+          "name": "GenerateAnnotated",
+          "startLine": 90,
+          "endLine": 125,
+          "params": [
+            "ctx",
+            "w",
+            "n",
+            "profile",
+            "a"
+          ]
+        },
+        {
+          "name": "GenerateScored",
+          "startLine": 140,
+          "endLine": 175,
+          "params": [
+            "ctx",
+            "w",
+            "n",
+            "profile",
+            "a"
+          ]
+        },
+        {
+          "name": "scoredEntry",
+          "startLine": 180,
+          "endLine": 219,
+          "params": [
+            "ctx",
+            "x",
+            "a",
+            "def"
+          ]
+        },
+        {
+          "name": "labelForDecision",
+          "startLine": 226,
+          "endLine": 251,
+          "params": [
+            "dec",
+            "sens",
+            "auth",
+            "inv",
+            "hasAttestation",
+            "def"
+          ]
+        },
+        {
+          "name": "Generate",
+          "startLine": 254,
+          "endLine": 282,
+          "params": [
+            "w",
+            "n",
+            "profile"
+          ]
+        },
+        {
+          "name": "buildPlan",
+          "startLine": 286,
+          "endLine": 303,
+          "params": [
+            "n",
+            "wts",
+            "g"
+          ]
+        },
+        {
+          "name": "intentFor",
+          "startLine": 318,
+          "endLine": 318,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildRefusFrontiere",
+          "startLine": 322,
+          "endLine": 339,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildRefusI3",
+          "startLine": 341,
+          "endLine": 357,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildRefusI4",
+          "startLine": 359,
+          "endLine": 383,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildDeterministe",
+          "startLine": 385,
+          "endLine": 408,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildProbabiliste",
+          "startLine": 410,
+          "endLine": 433,
+          "params": [
+            "i"
+          ]
+        },
+        {
+          "name": "buildHysteresis",
+          "startLine": 435,
+          "endLine": 458,
+          "params": [
+            "i"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AnnotatedEntry",
+          "startLine": 25,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "ExpectedRegime"
+          ]
+        },
+        {
+          "name": "Annotator",
+          "startLine": 33,
+          "endLine": 35,
+          "methods": [
+            "Decide"
+          ],
+          "properties": []
+        },
+        {
+          "name": "branchWeights",
+          "startLine": 48,
+          "endLine": 55,
+          "methods": [],
+          "properties": [
+            "refusFrontiere",
+            "refusI3",
+            "refusI4",
+            "deterministe",
+            "probabiliste",
+            "hysteresis"
+          ]
+        },
+        {
+          "name": "Generator",
+          "startLine": 74,
+          "endLine": 76,
+          "methods": [
+            "GenerateAnnotated",
+            "GenerateScored",
+            "Generate",
+            "buildRefusFrontiere",
+            "buildRefusI3",
+            "buildRefusI4",
+            "buildDeterministe",
+            "buildProbabiliste",
+            "buildHysteresis"
+          ],
+          "properties": [
+            "rng"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AnnotatedEntry",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Annotator",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "Generator",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "NewGenerator",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "GenerateAnnotated",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "GenerateScored",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "Generate",
+          "line": 254,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "weightsFor",
+          "callee": "fmt.Errorf",
+          "lineNumber": 68
+        },
+        {
+          "caller": "NewGenerator",
+          "callee": "rand.NewPCG",
+          "lineNumber": 82
+        },
+        {
+          "caller": "NewGenerator",
+          "callee": "uint64",
+          "lineNumber": 82
+        },
+        {
+          "caller": "NewGenerator",
+          "callee": "uint64",
+          "lineNumber": 82
+        },
+        {
+          "caller": "NewGenerator",
+          "callee": "rand.New",
+          "lineNumber": 83
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "weightsFor",
+          "lineNumber": 91
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "fmt.Errorf",
+          "lineNumber": 96
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "json.NewEncoder",
+          "lineNumber": 99
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "enc.SetEscapeHTML",
+          "lineNumber": 100
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "buildPlan",
+          "lineNumber": 102
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "g.rng.Shuffle",
+          "lineNumber": 103
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "len",
+          "lineNumber": 103
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "time.Date",
+          "lineNumber": 105
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "fn",
+          "lineNumber": 107
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "base.Add",
+          "lineNumber": 108
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "time.Duration",
+          "lineNumber": 108
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "int64",
+          "lineNumber": 110
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "a.Decide",
+          "lineNumber": 112
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "app.ToTauExchange",
+          "lineNumber": 112
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "fmt.Errorf",
+          "lineNumber": 114
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "d.Regime.String",
+          "lineNumber": 118
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "enc.Encode",
+          "lineNumber": 120
+        },
+        {
+          "caller": "GenerateAnnotated",
+          "callee": "fmt.Errorf",
+          "lineNumber": 121
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "weightsFor",
+          "lineNumber": 141
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "fmt.Errorf",
+          "lineNumber": 146
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "json.NewEncoder",
+          "lineNumber": 149
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "enc.SetEscapeHTML",
+          "lineNumber": 150
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "buildPlan",
+          "lineNumber": 152
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "g.rng.Shuffle",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "len",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "time.Date",
+          "lineNumber": 155
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "calibration.DefaultProfile",
+          "lineNumber": 156
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "fn",
+          "lineNumber": 158
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "base.Add",
+          "lineNumber": 159
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "time.Duration",
+          "lineNumber": 159
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "int64",
+          "lineNumber": 161
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "scoredEntry",
+          "lineNumber": 163
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "fmt.Errorf",
+          "lineNumber": 165
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "enc.Encode",
+          "lineNumber": 170
+        },
+        {
+          "caller": "GenerateScored",
+          "callee": "fmt.Errorf",
+          "lineNumber": 171
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "app.ToTauExchange",
+          "lineNumber": 186
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "a.Decide",
+          "lineNumber": 187
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.ScoreDAuthority",
+          "lineNumber": 192
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.DefaultAuthorityWeights",
+          "lineNumber": 192
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.ScoreDSens",
+          "lineNumber": 196
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.DefaultSensWeights",
+          "lineNumber": 196
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "defaultLLMStub",
+          "lineNumber": 196
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.ScoreDInvariant",
+          "lineNumber": 200
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "dimensions.DefaultInvariantWeights",
+          "lineNumber": 200
+        },
+        {
+          "caller": "scoredEntry",
+          "callee": "labelForDecision",
+          "lineNumber": 205
+        },
+        {
+          "caller": "Generate",
+          "callee": "weightsFor",
+          "lineNumber": 255
+        },
+        {
+          "caller": "Generate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 260
+        },
+        {
+          "caller": "Generate",
+          "callee": "json.NewEncoder",
+          "lineNumber": 263
+        },
+        {
+          "caller": "Generate",
+          "callee": "enc.SetEscapeHTML",
+          "lineNumber": 264
+        },
+        {
+          "caller": "Generate",
+          "callee": "buildPlan",
+          "lineNumber": 266
+        },
+        {
+          "caller": "Generate",
+          "callee": "g.rng.Shuffle",
+          "lineNumber": 269
+        },
+        {
+          "caller": "Generate",
+          "callee": "len",
+          "lineNumber": 269
+        },
+        {
+          "caller": "Generate",
+          "callee": "time.Date",
+          "lineNumber": 271
+        },
+        {
+          "caller": "Generate",
+          "callee": "fn",
+          "lineNumber": 273
+        },
+        {
+          "caller": "Generate",
+          "callee": "base.Add",
+          "lineNumber": 274
+        },
+        {
+          "caller": "Generate",
+          "callee": "time.Duration",
+          "lineNumber": 274
+        },
+        {
+          "caller": "Generate",
+          "callee": "int64",
+          "lineNumber": 276
+        },
+        {
+          "caller": "Generate",
+          "callee": "enc.Encode",
+          "lineNumber": 277
+        },
+        {
+          "caller": "Generate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 278
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "make",
+          "lineNumber": 287
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "append",
+          "lineNumber": 290
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "addN",
+          "lineNumber": 293
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "addN",
+          "lineNumber": 294
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "addN",
+          "lineNumber": 295
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "addN",
+          "lineNumber": 296
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "addN",
+          "lineNumber": 297
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "len",
+          "lineNumber": 299
+        },
+        {
+          "caller": "buildPlan",
+          "callee": "append",
+          "lineNumber": 300
+        },
+        {
+          "caller": "intentFor",
+          "callee": "len",
+          "lineNumber": 318
+        },
+        {
+          "caller": "buildRefusFrontiere",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 325
+        },
+        {
+          "caller": "buildRefusFrontiere",
+          "callee": "intentFor",
+          "lineNumber": 326
+        },
+        {
+          "caller": "buildRefusFrontiere",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 328
+        },
+        {
+          "caller": "buildRefusI3",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 344
+        },
+        {
+          "caller": "buildRefusI3",
+          "callee": "intentFor",
+          "lineNumber": 345
+        },
+        {
+          "caller": "buildRefusI3",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 347
+        },
+        {
+          "caller": "buildRefusI3",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 349
+        },
+        {
+          "caller": "buildRefusI4",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 363
+        },
+        {
+          "caller": "buildRefusI4",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 366
+        },
+        {
+          "caller": "buildRefusI4",
+          "callee": "time.Date",
+          "lineNumber": 380
+        },
+        {
+          "caller": "buildDeterministe",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 388
+        },
+        {
+          "caller": "buildDeterministe",
+          "callee": "intentFor",
+          "lineNumber": 389
+        },
+        {
+          "caller": "buildDeterministe",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 391
+        },
+        {
+          "caller": "buildDeterministe",
+          "callee": "time.Date",
+          "lineNumber": 405
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "g.rng.Int64",
+          "lineNumber": 412
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 414
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 415
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "intentFor",
+          "lineNumber": 415
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 417
+        },
+        {
+          "caller": "buildProbabiliste",
+          "callee": "time.Date",
+          "lineNumber": 430
+        },
+        {
+          "caller": "buildHysteresis",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 438
+        },
+        {
+          "caller": "buildHysteresis",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 439
+        },
+        {
+          "caller": "buildHysteresis",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 441
+        },
+        {
+          "caller": "buildHysteresis",
+          "callee": "time.Date",
+          "lineNumber": 455
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 16,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "cmd/generate-corpus/main.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 80,
+      "nonEmptyLines": 70,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 13,
+          "endLine": 15,
+          "params": []
+        },
+        {
+          "name": "run",
+          "startLine": 20,
+          "endLine": 80,
+          "params": [
+            "args",
+            "stdout"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "os.Exit",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "run",
+          "lineNumber": 14
+        },
+        {
+          "caller": "run",
+          "callee": "flag.NewFlagSet",
+          "lineNumber": 21
+        },
+        {
+          "caller": "run",
+          "callee": "fs.SetOutput",
+          "lineNumber": 22
+        },
+        {
+          "caller": "run",
+          "callee": "fs.Int",
+          "lineNumber": 24
+        },
+        {
+          "caller": "run",
+          "callee": "fs.Int64",
+          "lineNumber": 25
+        },
+        {
+          "caller": "run",
+          "callee": "fs.String",
+          "lineNumber": 26
+        },
+        {
+          "caller": "run",
+          "callee": "fs.String",
+          "lineNumber": 27
+        },
+        {
+          "caller": "run",
+          "callee": "fs.Bool",
+          "lineNumber": 28
+        },
+        {
+          "caller": "run",
+          "callee": "fs.Bool",
+          "lineNumber": 29
+        },
+        {
+          "caller": "run",
+          "callee": "fs.Parse",
+          "lineNumber": 31
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 32
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 37
+        },
+        {
+          "caller": "run",
+          "callee": "DistributionProfile",
+          "lineNumber": 41
+        },
+        {
+          "caller": "run",
+          "callee": "weightsFor",
+          "lineNumber": 42
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 43
+        },
+        {
+          "caller": "run",
+          "callee": "os.Create",
+          "lineNumber": 49
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 51
+        },
+        {
+          "caller": "run",
+          "callee": "func() { _ = f.Close() }",
+          "lineNumber": 54
+        },
+        {
+          "caller": "run",
+          "callee": "f.Close",
+          "lineNumber": 54
+        },
+        {
+          "caller": "run",
+          "callee": "NewGenerator",
+          "lineNumber": 58
+        },
+        {
+          "caller": "run",
+          "callee": "app.NewDispatcher",
+          "lineNumber": 60
+        },
+        {
+          "caller": "run",
+          "callee": "g.GenerateScored",
+          "lineNumber": 61
+        },
+        {
+          "caller": "run",
+          "callee": "context.Background",
+          "lineNumber": 61
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 62
+        },
+        {
+          "caller": "run",
+          "callee": "app.NewDispatcher",
+          "lineNumber": 68
+        },
+        {
+          "caller": "run",
+          "callee": "g.GenerateAnnotated",
+          "lineNumber": 69
+        },
+        {
+          "caller": "run",
+          "callee": "context.Background",
+          "lineNumber": 69
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 70
+        },
+        {
+          "caller": "run",
+          "callee": "g.Generate",
+          "lineNumber": 75
+        },
+        {
+          "caller": "run",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "cmd/generate-corpus/main_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 374,
+      "nonEmptyLines": 345,
+      "functions": [
+        {
+          "name": "TestGenerateCorpus_ReproducibleBytewise",
+          "startLine": 19,
+          "endLine": 31,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_RespectsCount",
+          "startLine": 33,
+          "endLine": 45,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "startLine": 47,
+          "endLine": 101,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "startLine": 103,
+          "endLine": 115,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_AllProfilesValid",
+          "startLine": 117,
+          "endLine": 130,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "startLine": 132,
+          "endLine": 147,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "startLine": 151,
+          "endLine": 180,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "startLine": 185,
+          "endLine": 197,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "startLine": 206,
+          "endLine": 239,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_HappyPath_Stdout",
+          "startLine": 247,
+          "endLine": 264,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_HappyPath_FileOutput",
+          "startLine": 268,
+          "endLine": 284,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_WithAnnotateFlag",
+          "startLine": 288,
+          "endLine": 319,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_BadDistribution_Exit2",
+          "startLine": 323,
+          "endLine": 330,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_NegativeCount_Exit2",
+          "startLine": 333,
+          "endLine": 340,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_CountZero_Exit2",
+          "startLine": 343,
+          "endLine": 350,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_UnknownFlag_Exit2",
+          "startLine": 353,
+          "endLine": 360,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRun_OutputDirNotWritable_Exit1",
+          "startLine": 366,
+          "endLine": 374,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestGenerateCorpus_ReproducibleBytewise",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_RespectsCount",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_AllProfilesValid",
+          "line": 117,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "line": 151,
+          "isDefault": false
+        },
+        {
+          "name": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "line": 185,
+          "isDefault": false
+        },
+        {
+          "name": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "line": 206,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_HappyPath_Stdout",
+          "line": 247,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_HappyPath_FileOutput",
+          "line": 268,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_WithAnnotateFlag",
+          "line": 288,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_BadDistribution_Exit2",
+          "line": 323,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_NegativeCount_Exit2",
+          "line": 333,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_CountZero_Exit2",
+          "line": 343,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_UnknownFlag_Exit2",
+          "line": 353,
+          "isDefault": false
+        },
+        {
+          "name": "TestRun_OutputDirNotWritable_Exit1",
+          "line": 366,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "t.Parallel",
+          "lineNumber": 20
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 22
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "NewGenerator",
+          "lineNumber": 22
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "t.Fatal",
+          "lineNumber": 23
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "NewGenerator",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "t.Fatal",
+          "lineNumber": 26
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "a.String",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "b.String",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TestGenerateCorpus_ReproducibleBytewise",
+          "callee": "t.Fatal",
+          "lineNumber": 29
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "t.Parallel",
+          "lineNumber": 34
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "NewGenerator",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "t.Fatalf",
+          "lineNumber": 38
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "strings.Count",
+          "lineNumber": 40
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "buf.String",
+          "lineNumber": 40
+        },
+        {
+          "caller": "TestGenerateCorpus_RespectsCount",
+          "callee": "t.Errorf",
+          "lineNumber": 42
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Parallel",
+          "lineNumber": 48
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "NewGenerator",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Fatal",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "bufio.NewScanner",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "scanner.Scan",
+          "lineNumber": 66
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "json.Unmarshal",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "scanner.Bytes",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Fatalf",
+          "lineNumber": 69
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "strings.SplitN",
+          "lineNumber": 72
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "len",
+          "lineNumber": 73
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "scanner.Err",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Fatal",
+          "lineNumber": 78
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Helper",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "int",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "float64",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "float64",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "int",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "float64",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "float64",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "t.Errorf",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "checkBetween",
+          "lineNumber": 96
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "checkBetween",
+          "lineNumber": 97
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "checkBetween",
+          "lineNumber": 98
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "checkBetween",
+          "lineNumber": 99
+        },
+        {
+          "caller": "TestGenerateCorpus_DistributionBalanced_RoughlyEven",
+          "callee": "checkBetween",
+          "lineNumber": 100
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "t.Parallel",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 106
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "NewGenerator",
+          "lineNumber": 106
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "t.Fatal",
+          "lineNumber": 107
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "NewGenerator(99).Generate",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "NewGenerator",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "t.Fatal",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "a.String",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "b.String",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TestGenerateCorpus_DifferentSeeds_DifferentOutput",
+          "callee": "t.Fatal",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "t.Parallel",
+          "lineNumber": 118
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "NewGenerator",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "t.Errorf",
+          "lineNumber": 123
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "strings.Count",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "buf.String",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestGenerateCorpus_AllProfilesValid",
+          "callee": "t.Errorf",
+          "lineNumber": 127
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "t.Parallel",
+          "lineNumber": 133
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 137
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "NewGenerator",
+          "lineNumber": 137
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "t.Fatal",
+          "lineNumber": 138
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "sha256.Sum256",
+          "lineNumber": 140
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "buf.Bytes",
+          "lineNumber": 140
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "hex.EncodeToString",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TestGenerateCorpus_FrozenHash_Seed42_120_Balanced",
+          "callee": "t.Fatalf",
+          "lineNumber": 145
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Parallel",
+          "lineNumber": 152
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "app.NewDispatcher",
+          "lineNumber": 153
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "NewGenerator(42).GenerateAnnotated",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "NewGenerator",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "context.Background",
+          "lineNumber": 155
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Fatal",
+          "lineNumber": 156
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "bufio.NewScanner",
+          "lineNumber": 159
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "scanner.Scan",
+          "lineNumber": 161
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "json.Unmarshal",
+          "lineNumber": 164
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "scanner.Bytes",
+          "lineNumber": 164
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Fatalf",
+          "lineNumber": 165
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Errorf",
+          "lineNumber": 168
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Errorf",
+          "lineNumber": 171
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "scanner.Err",
+          "lineNumber": 174
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Fatal",
+          "lineNumber": 175
+        },
+        {
+          "caller": "TestGenerateCorpus_WithAnnotation_ProducesExpectedRegime",
+          "callee": "t.Fatalf",
+          "lineNumber": 178
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "t.Parallel",
+          "lineNumber": 186
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "NewGenerator(42).Generate",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "NewGenerator",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "t.Fatal",
+          "lineNumber": 189
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "sha256.Sum256",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "buf.Bytes",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "hex.EncodeToString",
+          "lineNumber": 192
+        },
+        {
+          "caller": "TestGenerateCorpus_AnnotationDoesNotBreakBaselineHash",
+          "callee": "t.Fatalf",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "t.Parallel",
+          "lineNumber": 207
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "app.NewDispatcher",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "NewGenerator(42).GenerateScored",
+          "lineNumber": 212
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "NewGenerator",
+          "lineNumber": 212
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "context.Background",
+          "lineNumber": 212
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "t.Fatalf",
+          "lineNumber": 213
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "sha256.Sum256",
+          "lineNumber": 215
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "buf.Bytes",
+          "lineNumber": 215
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "hex.EncodeToString",
+          "lineNumber": 216
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "hashGen",
+          "lineNumber": 219
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "hashGen",
+          "lineNumber": 220
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "t.Fatalf",
+          "lineNumber": 222
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "t.Fatalf",
+          "lineNumber": 228
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "os.ReadFile",
+          "lineNumber": 232
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "sha256.Sum256",
+          "lineNumber": 233
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "hex.EncodeToString",
+          "lineNumber": 234
+        },
+        {
+          "caller": "TestGoldenCorpus_FrozenHash_Seed42_200_Balanced",
+          "callee": "t.Errorf",
+          "lineNumber": 236
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "t.Parallel",
+          "lineNumber": 248
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "run",
+          "lineNumber": 250
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "t.Fatalf",
+          "lineNumber": 252
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "strings.Split",
+          "lineNumber": 254
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "strings.TrimRight",
+          "lineNumber": 254
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "buf.String",
+          "lineNumber": 254
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "len",
+          "lineNumber": 255
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "t.Fatalf",
+          "lineNumber": 256
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "len",
+          "lineNumber": 256
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "json.Unmarshal",
+          "lineNumber": 260
+        },
+        {
+          "caller": "TestRun_HappyPath_Stdout",
+          "callee": "t.Errorf",
+          "lineNumber": 261
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "t.Parallel",
+          "lineNumber": 269
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "filepath.Join",
+          "lineNumber": 270
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "t.TempDir",
+          "lineNumber": 270
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "run",
+          "lineNumber": 272
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "t.Fatalf",
+          "lineNumber": 274
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "os.ReadFile",
+          "lineNumber": 276
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "t.Fatalf",
+          "lineNumber": 278
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "strings.Split",
+          "lineNumber": 280
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "strings.TrimRight",
+          "lineNumber": 280
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "string",
+          "lineNumber": 280
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "len",
+          "lineNumber": 281
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "t.Fatalf",
+          "lineNumber": 282
+        },
+        {
+          "caller": "TestRun_HappyPath_FileOutput",
+          "callee": "len",
+          "lineNumber": 282
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Parallel",
+          "lineNumber": 289
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "filepath.Join",
+          "lineNumber": 290
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.TempDir",
+          "lineNumber": 290
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "run",
+          "lineNumber": 292
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Fatalf",
+          "lineNumber": 294
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "os.ReadFile",
+          "lineNumber": 296
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Fatalf",
+          "lineNumber": 298
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "bufio.NewScanner",
+          "lineNumber": 301
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "bytes.NewReader",
+          "lineNumber": 301
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "scanner.Scan",
+          "lineNumber": 303
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "json.Unmarshal",
+          "lineNumber": 306
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "scanner.Bytes",
+          "lineNumber": 306
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Fatalf",
+          "lineNumber": 307
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Errorf",
+          "lineNumber": 310
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Errorf",
+          "lineNumber": 313
+        },
+        {
+          "caller": "TestRun_WithAnnotateFlag",
+          "callee": "t.Fatalf",
+          "lineNumber": 317
+        },
+        {
+          "caller": "TestRun_BadDistribution_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 324
+        },
+        {
+          "caller": "TestRun_BadDistribution_Exit2",
+          "callee": "run",
+          "lineNumber": 326
+        },
+        {
+          "caller": "TestRun_BadDistribution_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 328
+        },
+        {
+          "caller": "TestRun_NegativeCount_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 334
+        },
+        {
+          "caller": "TestRun_NegativeCount_Exit2",
+          "callee": "run",
+          "lineNumber": 336
+        },
+        {
+          "caller": "TestRun_NegativeCount_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 338
+        },
+        {
+          "caller": "TestRun_CountZero_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 344
+        },
+        {
+          "caller": "TestRun_CountZero_Exit2",
+          "callee": "run",
+          "lineNumber": 346
+        },
+        {
+          "caller": "TestRun_CountZero_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 348
+        },
+        {
+          "caller": "TestRun_UnknownFlag_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 354
+        },
+        {
+          "caller": "TestRun_UnknownFlag_Exit2",
+          "callee": "run",
+          "lineNumber": 356
+        },
+        {
+          "caller": "TestRun_UnknownFlag_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 358
+        },
+        {
+          "caller": "TestRun_OutputDirNotWritable_Exit1",
+          "callee": "t.Parallel",
+          "lineNumber": 367
+        },
+        {
+          "caller": "TestRun_OutputDirNotWritable_Exit1",
+          "callee": "filepath.Join",
+          "lineNumber": 368
+        },
+        {
+          "caller": "TestRun_OutputDirNotWritable_Exit1",
+          "callee": "t.TempDir",
+          "lineNumber": 368
+        },
+        {
+          "caller": "TestRun_OutputDirNotWritable_Exit1",
+          "callee": "run",
+          "lineNumber": 370
+        },
+        {
+          "caller": "TestRun_OutputDirNotWritable_Exit1",
+          "callee": "t.Fatalf",
+          "lineNumber": 372
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 17,
+        "functionCount": 17,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "cmd/tau/calibrate.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 137,
+      "nonEmptyLines": 118,
+      "functions": [
+        {
+          "name": "runCalibrate",
+          "startLine": 21,
+          "endLine": 97,
+          "params": [
+            "args"
+          ]
+        },
+        {
+          "name": "parseDateRev",
+          "startLine": 100,
+          "endLine": 105,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "loadCorpus",
+          "startLine": 112,
+          "endLine": 114,
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "corpusErrExitCode",
+          "startLine": 121,
+          "endLine": 137,
+          "params": [
+            "err"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "runCalibrate",
+          "callee": "flag.NewFlagSet",
+          "lineNumber": 22
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.String",
+          "lineNumber": 23
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.String",
+          "lineNumber": 24
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.String",
+          "lineNumber": 25
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.String",
+          "lineNumber": 26
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.Int64",
+          "lineNumber": 27
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.String",
+          "lineNumber": 28
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintf",
+          "lineNumber": 31
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.PrintDefaults",
+          "lineNumber": 38
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.Parse",
+          "lineNumber": 41
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 42
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 47
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fs.Usage",
+          "lineNumber": 48
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "parseDateRev",
+          "lineNumber": 52
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 54
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "time.Parse",
+          "lineNumber": 58
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 60
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "calibration.FingerprintCorpus",
+          "lineNumber": 64
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 66
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "loadCorpus",
+          "lineNumber": 70
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 72
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "corpusErrExitCode",
+          "lineNumber": 73
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "calibration.DefaultProfile",
+          "lineNumber": 76
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "calibration.FingerprintCPU",
+          "lineNumber": 81
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "calibration.Calibrate",
+          "lineNumber": 84
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "calibration.MarshalCanonical",
+          "lineNumber": 86
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 88
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "os.WriteFile",
+          "lineNumber": 92
+        },
+        {
+          "caller": "runCalibrate",
+          "callee": "fmt.Fprintln",
+          "lineNumber": 93
+        },
+        {
+          "caller": "parseDateRev",
+          "callee": "time.Parse",
+          "lineNumber": 101
+        },
+        {
+          "caller": "parseDateRev",
+          "callee": "time.Parse",
+          "lineNumber": 104
+        },
+        {
+          "caller": "loadCorpus",
+          "callee": "calibration.LoadCorpus",
+          "lineNumber": 113
+        },
+        {
+          "caller": "corpusErrExitCode",
+          "callee": "stderrors.As",
+          "lineNumber": 123
+        },
+        {
+          "caller": "corpusErrExitCode",
+          "callee": "stderrors.As",
+          "lineNumber": 128
+        },
+        {
+          "caller": "corpusErrExitCode",
+          "callee": "stderrors.As",
+          "lineNumber": 128
+        },
+        {
+          "caller": "corpusErrExitCode",
+          "callee": "stderrors.Is",
+          "lineNumber": 129
+        },
+        {
+          "caller": "corpusErrExitCode",
+          "callee": "stderrors.As",
+          "lineNumber": 133
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "cmd/tau/calibrate_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 295,
+      "nonEmptyLines": 272,
+      "functions": [
+        {
+          "name": "writeTempCorpus",
+          "startLine": 16,
+          "endLine": 28,
+          "params": [
+            "t",
+            "n"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_HappyPath_Exit0",
+          "startLine": 34,
+          "endLine": 55,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "startLine": 57,
+          "endLine": 67,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "startLine": 69,
+          "endLine": 79,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "startLine": 81,
+          "endLine": 92,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_BadDateRev_Exit2",
+          "startLine": 94,
+          "endLine": 106,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "startLine": 108,
+          "endLine": 121,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "startLine": 123,
+          "endLine": 134,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "startLine": 136,
+          "endLine": 152,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "startLine": 158,
+          "endLine": 181,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "startLine": 186,
+          "endLine": 211,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestParseDateRev_RFC3339_OK",
+          "startLine": 217,
+          "endLine": 226,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestParseDateRev_DateOnly_OK",
+          "startLine": 228,
+          "endLine": 237,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestParseDateRev_Invalid_Error",
+          "startLine": 239,
+          "endLine": 244,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestLoadCorpus_HappyPath",
+          "startLine": 250,
+          "endLine": 260,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestLoadCorpus_FileNotFound",
+          "startLine": 262,
+          "endLine": 268,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestLoadCorpus_InvalidJSON",
+          "startLine": 270,
+          "endLine": 281,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "startLine": 283,
+          "endLine": 295,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestRunCalibrate_HappyPath_Exit0",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_BadDateRev_Exit2",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "line": 158,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "line": 186,
+          "isDefault": false
+        },
+        {
+          "name": "TestParseDateRev_RFC3339_OK",
+          "line": 217,
+          "isDefault": false
+        },
+        {
+          "name": "TestParseDateRev_DateOnly_OK",
+          "line": 228,
+          "isDefault": false
+        },
+        {
+          "name": "TestParseDateRev_Invalid_Error",
+          "line": 239,
+          "isDefault": false
+        },
+        {
+          "name": "TestLoadCorpus_HappyPath",
+          "line": 250,
+          "isDefault": false
+        },
+        {
+          "name": "TestLoadCorpus_FileNotFound",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "TestLoadCorpus_InvalidJSON",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "line": 283,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "writeTempCorpus",
+          "callee": "t.Helper",
+          "lineNumber": 17
+        },
+        {
+          "caller": "writeTempCorpus",
+          "callee": "t.TempDir",
+          "lineNumber": 18
+        },
+        {
+          "caller": "writeTempCorpus",
+          "callee": "filepath.Join",
+          "lineNumber": 19
+        },
+        {
+          "caller": "writeTempCorpus",
+          "callee": "os.WriteFile",
+          "lineNumber": 24
+        },
+        {
+          "caller": "writeTempCorpus",
+          "callee": "t.Fatalf",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "t.Parallel",
+          "lineNumber": 35
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "writeTempCorpus",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "filepath.Join",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "t.TempDir",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "runCalibrate",
+          "lineNumber": 38
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "t.Fatalf",
+          "lineNumber": 46
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "os.ReadFile",
+          "lineNumber": 48
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "t.Fatalf",
+          "lineNumber": 50
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "len",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TestRunCalibrate_HappyPath_Exit0",
+          "callee": "t.Fatal",
+          "lineNumber": 53
+        },
+        {
+          "caller": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 58
+        },
+        {
+          "caller": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "callee": "filepath.Join",
+          "lineNumber": 59
+        },
+        {
+          "caller": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "callee": "t.TempDir",
+          "lineNumber": 59
+        },
+        {
+          "caller": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "callee": "runCalibrate",
+          "lineNumber": 60
+        },
+        {
+          "caller": "TestRunCalibrate_MissingCorpusFlag_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 70
+        },
+        {
+          "caller": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "callee": "writeTempCorpus",
+          "lineNumber": 71
+        },
+        {
+          "caller": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "callee": "runCalibrate",
+          "lineNumber": 72
+        },
+        {
+          "caller": "TestRunCalibrate_MissingOutputFlag_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 82
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "writeTempCorpus",
+          "lineNumber": 83
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "filepath.Join",
+          "lineNumber": 84
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "t.TempDir",
+          "lineNumber": 84
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "runCalibrate",
+          "lineNumber": 85
+        },
+        {
+          "caller": "TestRunCalibrate_MissingDateRevFlag_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 90
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 95
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "writeTempCorpus",
+          "lineNumber": 96
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "filepath.Join",
+          "lineNumber": 97
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "t.TempDir",
+          "lineNumber": 97
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "runCalibrate",
+          "lineNumber": 98
+        },
+        {
+          "caller": "TestRunCalibrate_BadDateRev_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "t.Parallel",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "writeTempCorpus",
+          "lineNumber": 110
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "filepath.Join",
+          "lineNumber": 111
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "t.TempDir",
+          "lineNumber": 111
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "runCalibrate",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TestRunCalibrate_BadCreatedAt_Exit2",
+          "callee": "t.Fatalf",
+          "lineNumber": 119
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "callee": "t.Parallel",
+          "lineNumber": 124
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "callee": "filepath.Join",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "callee": "t.TempDir",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "callee": "runCalibrate",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusNotFound_Exit1",
+          "callee": "t.Fatalf",
+          "lineNumber": 132
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "t.Parallel",
+          "lineNumber": 137
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "t.TempDir",
+          "lineNumber": 138
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "filepath.Join",
+          "lineNumber": 139
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "os.WriteFile",
+          "lineNumber": 140
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "t.Fatal",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "filepath.Join",
+          "lineNumber": 143
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "t.TempDir",
+          "lineNumber": 143
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "runCalibrate",
+          "lineNumber": 144
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidJSON_Exit1",
+          "callee": "t.Fatalf",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.Parallel",
+          "lineNumber": 159
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.TempDir",
+          "lineNumber": 160
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "filepath.Join",
+          "lineNumber": 161
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "os.WriteFile",
+          "lineNumber": 163
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.Fatal",
+          "lineNumber": 164
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "filepath.Join",
+          "lineNumber": 166
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.TempDir",
+          "lineNumber": 166
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "runCalibrate",
+          "lineNumber": 167
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.Fatalf",
+          "lineNumber": 173
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.Errorf",
+          "lineNumber": 176
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "os.Stat",
+          "lineNumber": 178
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusInvalidRegime_NonZero",
+          "callee": "t.Error",
+          "lineNumber": 179
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.Parallel",
+          "lineNumber": 187
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.TempDir",
+          "lineNumber": 188
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "filepath.Join",
+          "lineNumber": 189
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "os.WriteFile",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.Fatal",
+          "lineNumber": 192
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "filepath.Join",
+          "lineNumber": 194
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.TempDir",
+          "lineNumber": 194
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "runCalibrate",
+          "lineNumber": 195
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.Fatalf",
+          "lineNumber": 202
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "os.ReadFile",
+          "lineNumber": 204
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.Fatalf",
+          "lineNumber": 206
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "len",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TestRunCalibrate_CorpusLegacyExpectedRegime_Migre",
+          "callee": "t.Fatal",
+          "lineNumber": 209
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "t.Parallel",
+          "lineNumber": 218
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "parseDateRev",
+          "lineNumber": 219
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "t.Fatalf",
+          "lineNumber": 221
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "tm.Year",
+          "lineNumber": 223
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "tm.Month",
+          "lineNumber": 223
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "tm.Day",
+          "lineNumber": 223
+        },
+        {
+          "caller": "TestParseDateRev_RFC3339_OK",
+          "callee": "t.Errorf",
+          "lineNumber": 224
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "t.Parallel",
+          "lineNumber": 229
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "parseDateRev",
+          "lineNumber": 230
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "t.Fatalf",
+          "lineNumber": 232
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "tm.Year",
+          "lineNumber": 234
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "tm.Month",
+          "lineNumber": 234
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "tm.Day",
+          "lineNumber": 234
+        },
+        {
+          "caller": "TestParseDateRev_DateOnly_OK",
+          "callee": "t.Errorf",
+          "lineNumber": 235
+        },
+        {
+          "caller": "TestParseDateRev_Invalid_Error",
+          "callee": "t.Parallel",
+          "lineNumber": 240
+        },
+        {
+          "caller": "TestParseDateRev_Invalid_Error",
+          "callee": "parseDateRev",
+          "lineNumber": 241
+        },
+        {
+          "caller": "TestParseDateRev_Invalid_Error",
+          "callee": "t.Fatal",
+          "lineNumber": 242
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "t.Parallel",
+          "lineNumber": 251
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "writeTempCorpus",
+          "lineNumber": 252
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "loadCorpus",
+          "lineNumber": 253
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "t.Fatalf",
+          "lineNumber": 255
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "len",
+          "lineNumber": 257
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "t.Errorf",
+          "lineNumber": 258
+        },
+        {
+          "caller": "TestLoadCorpus_HappyPath",
+          "callee": "len",
+          "lineNumber": 258
+        },
+        {
+          "caller": "TestLoadCorpus_FileNotFound",
+          "callee": "t.Parallel",
+          "lineNumber": 263
+        },
+        {
+          "caller": "TestLoadCorpus_FileNotFound",
+          "callee": "loadCorpus",
+          "lineNumber": 264
+        },
+        {
+          "caller": "TestLoadCorpus_FileNotFound",
+          "callee": "t.Fatal",
+          "lineNumber": 266
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "t.Parallel",
+          "lineNumber": 271
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "t.TempDir",
+          "lineNumber": 272
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "filepath.Join",
+          "lineNumber": 273
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "os.WriteFile",
+          "lineNumber": 274
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "t.Fatal",
+          "lineNumber": 275
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "loadCorpus",
+          "lineNumber": 277
+        },
+        {
+          "caller": "TestLoadCorpus_InvalidJSON",
+          "callee": "t.Fatal",
+          "lineNumber": 279
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "t.Parallel",
+          "lineNumber": 284
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "writeTempCorpus",
+          "lineNumber": 285
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "runCalibrate",
+          "lineNumber": 287
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "filepath.Join",
+          "lineNumber": 289
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "t.TempDir",
+          "lineNumber": 289
+        },
+        {
+          "caller": "TestRunCalibrate_OutputDirNotFound_Exit1",
+          "callee": "t.Fatalf",
+          "lineNumber": 293
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 17,
+        "functionCount": 18,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/calibration/calibrate.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 298,
+      "nonEmptyLines": 278,
+      "functions": [
+        {
+          "name": "migrate",
+          "startLine": 44,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "Validate",
+          "startLine": 52,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "LoadCorpus",
+          "startLine": 76,
+          "endLine": 96,
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "Calibrate",
+          "startLine": 111,
+          "endLine": 153,
+          "params": [
+            "corpus",
+            "_",
+            "in"
+          ]
+        },
+        {
+          "name": "countAgreement",
+          "startLine": 157,
+          "endLine": 165,
+          "params": [
+            "corpus",
+            "t"
+          ]
+        },
+        {
+          "name": "simulate",
+          "startLine": 184,
+          "endLine": 198,
+          "params": [
+            "e",
+            "t"
+          ]
+        },
+        {
+          "name": "MarshalCanonical",
+          "startLine": 206,
+          "endLine": 230,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "UnmarshalCanonical",
+          "startLine": 234,
+          "endLine": 240,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "sortedAny",
+          "startLine": 244,
+          "endLine": 265,
+          "params": [
+            "v"
+          ]
+        },
+        {
+          "name": "MarshalJSON",
+          "startLine": 277,
+          "endLine": 298,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "CorpusEntry",
+          "startLine": 17,
+          "endLine": 30,
+          "methods": [
+            "migrate",
+            "Validate"
+          ],
+          "properties": [
+            "ID",
+            "SensScore",
+            "AuthorityScore",
+            "InvariantScore",
+            "HumanInLoop",
+            "HasAttestation",
+            "LabeledRegime",
+            "ExpectedRegime"
+          ]
+        },
+        {
+          "name": "kv",
+          "startLine": 271,
+          "endLine": 274,
+          "methods": [],
+          "properties": [
+            "Key",
+            "Value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CorpusEntry",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Validate",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "LoadCorpus",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "Calibrate",
+          "line": 111,
+          "isDefault": false
+        },
+        {
+          "name": "MarshalCanonical",
+          "line": 206,
+          "isDefault": false
+        },
+        {
+          "name": "UnmarshalCanonical",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "MarshalJSON",
+          "line": 277,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 54
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 63
+        },
+        {
+          "caller": "Validate",
+          "callee": "fmt.Errorf",
+          "lineNumber": 67
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "os.Open",
+          "lineNumber": 77
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "fmt.Errorf",
+          "lineNumber": 79
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "f.Close",
+          "lineNumber": 81
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "json.NewDecoder",
+          "lineNumber": 82
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "make",
+          "lineNumber": 83
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "dec.More",
+          "lineNumber": 84
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "dec.Decode",
+          "lineNumber": 86
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "fmt.Errorf",
+          "lineNumber": 87
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "e.migrate",
+          "lineNumber": 89
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "e.Validate",
+          "lineNumber": 90
+        },
+        {
+          "caller": "LoadCorpus",
+          "callee": "append",
+          "lineNumber": 93
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 128
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 128
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 129
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 129
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 130
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 130
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 131
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 131
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 132
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 132
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "fromMillis",
+          "lineNumber": 133
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "int64",
+          "lineNumber": 133
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "countAgreement",
+          "lineNumber": 135
+        },
+        {
+          "caller": "Calibrate",
+          "callee": "CalibrateWeights",
+          "lineNumber": 151
+        },
+        {
+          "caller": "countAgreement",
+          "callee": "simulate",
+          "lineNumber": 160
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "json.Marshal",
+          "lineNumber": 208
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "fmt.Errorf",
+          "lineNumber": 210
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "json.NewDecoder",
+          "lineNumber": 215
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "bytes.NewReader",
+          "lineNumber": 215
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "dec.UseNumber",
+          "lineNumber": 216
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "dec.Decode",
+          "lineNumber": 217
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "fmt.Errorf",
+          "lineNumber": 218
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "json.NewEncoder",
+          "lineNumber": 222
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "enc.SetIndent",
+          "lineNumber": 223
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "enc.SetEscapeHTML",
+          "lineNumber": 224
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "enc.Encode",
+          "lineNumber": 225
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "sortedAny",
+          "lineNumber": 225
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "fmt.Errorf",
+          "lineNumber": 226
+        },
+        {
+          "caller": "MarshalCanonical",
+          "callee": "buf.Bytes",
+          "lineNumber": 229
+        },
+        {
+          "caller": "UnmarshalCanonical",
+          "callee": "json.Unmarshal",
+          "lineNumber": 236
+        },
+        {
+          "caller": "UnmarshalCanonical",
+          "callee": "fmt.Errorf",
+          "lineNumber": 237
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "make",
+          "lineNumber": 247
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "len",
+          "lineNumber": 247
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "append",
+          "lineNumber": 249
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "sort.Strings",
+          "lineNumber": 251
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "make",
+          "lineNumber": 252
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "len",
+          "lineNumber": 252
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "append",
+          "lineNumber": 254
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "sortedAny",
+          "lineNumber": 254
+        },
+        {
+          "caller": "sortedAny",
+          "callee": "sortedAny",
+          "lineNumber": 259
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.WriteByte",
+          "lineNumber": 279
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.WriteByte",
+          "lineNumber": 282
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "json.Marshal",
+          "lineNumber": 284
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.Write",
+          "lineNumber": 288
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.WriteByte",
+          "lineNumber": 289
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "json.Marshal",
+          "lineNumber": 290
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.Write",
+          "lineNumber": 294
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.WriteByte",
+          "lineNumber": 296
+        },
+        {
+          "caller": "MarshalJSON",
+          "callee": "buf.Bytes",
+          "lineNumber": 297
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 10,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "internal/calibration/thresholds_atomic.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 93,
+      "functions": [
+        {
+          "name": "NewAtomicThresholds",
+          "startLine": 24,
+          "endLine": 36,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "Deterministe",
+          "startLine": 39,
+          "endLine": 41,
+          "params": []
+        },
+        {
+          "name": "Probabiliste",
+          "startLine": 44,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "AuthBlock",
+          "startLine": 49,
+          "endLine": 51,
+          "params": []
+        },
+        {
+          "name": "SensCoherence",
+          "startLine": 54,
+          "endLine": 56,
+          "params": []
+        },
+        {
+          "name": "InvCoherence",
+          "startLine": 59,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "HysteresisGap",
+          "startLine": 64,
+          "endLine": 66,
+          "params": []
+        },
+        {
+          "name": "Snapshot",
+          "startLine": 69,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "SetTuning",
+          "startLine": 90,
+          "endLine": 100,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "millis",
+          "startLine": 103,
+          "endLine": 103,
+          "params": [
+            "v"
+          ]
+        },
+        {
+          "name": "fromMillis",
+          "startLine": 106,
+          "endLine": 106,
+          "params": [
+            "v"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AtomicThresholds",
+          "startLine": 13,
+          "endLine": 20,
+          "methods": [
+            "Deterministe",
+            "Probabiliste",
+            "AuthBlock",
+            "SensCoherence",
+            "InvCoherence",
+            "HysteresisGap",
+            "Snapshot",
+            "SetTuning"
+          ],
+          "properties": [
+            "deterministe",
+            "probabiliste",
+            "authBlock",
+            "sensCoherence",
+            "invCoherence",
+            "hysteresisGap"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AtomicThresholds",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "NewAtomicThresholds",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "Deterministe",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "Probabiliste",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "AuthBlock",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "SensCoherence",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "InvCoherence",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "HysteresisGap",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "Snapshot",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "SetTuning",
+          "line": 90,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "panic",
+          "lineNumber": 26
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.deterministe.Store",
+          "lineNumber": 29
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 29
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.probabiliste.Store",
+          "lineNumber": 30
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 30
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.authBlock.Store",
+          "lineNumber": 31
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 31
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.sensCoherence.Store",
+          "lineNumber": 32
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 32
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.invCoherence.Store",
+          "lineNumber": 33
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 33
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "at.hysteresisGap.Store",
+          "lineNumber": 34
+        },
+        {
+          "caller": "NewAtomicThresholds",
+          "callee": "millis",
+          "lineNumber": 34
+        },
+        {
+          "caller": "Deterministe",
+          "callee": "fromMillis",
+          "lineNumber": 40
+        },
+        {
+          "caller": "Deterministe",
+          "callee": "at.deterministe.Load",
+          "lineNumber": 40
+        },
+        {
+          "caller": "Probabiliste",
+          "callee": "fromMillis",
+          "lineNumber": 45
+        },
+        {
+          "caller": "Probabiliste",
+          "callee": "at.probabiliste.Load",
+          "lineNumber": 45
+        },
+        {
+          "caller": "AuthBlock",
+          "callee": "fromMillis",
+          "lineNumber": 50
+        },
+        {
+          "caller": "AuthBlock",
+          "callee": "at.authBlock.Load",
+          "lineNumber": 50
+        },
+        {
+          "caller": "SensCoherence",
+          "callee": "fromMillis",
+          "lineNumber": 55
+        },
+        {
+          "caller": "SensCoherence",
+          "callee": "at.sensCoherence.Load",
+          "lineNumber": 55
+        },
+        {
+          "caller": "InvCoherence",
+          "callee": "fromMillis",
+          "lineNumber": 60
+        },
+        {
+          "caller": "InvCoherence",
+          "callee": "at.invCoherence.Load",
+          "lineNumber": 60
+        },
+        {
+          "caller": "HysteresisGap",
+          "callee": "fromMillis",
+          "lineNumber": 65
+        },
+        {
+          "caller": "HysteresisGap",
+          "callee": "at.hysteresisGap.Load",
+          "lineNumber": 65
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.Deterministe",
+          "lineNumber": 71
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.Probabiliste",
+          "lineNumber": 72
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.AuthBlock",
+          "lineNumber": 73
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.SensCoherence",
+          "lineNumber": 74
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.InvCoherence",
+          "lineNumber": 75
+        },
+        {
+          "caller": "Snapshot",
+          "callee": "at.HysteresisGap",
+          "lineNumber": 76
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "panic",
+          "lineNumber": 92
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.deterministe.Store",
+          "lineNumber": 94
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 94
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.probabiliste.Store",
+          "lineNumber": 95
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 95
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.authBlock.Store",
+          "lineNumber": 96
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 96
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.sensCoherence.Store",
+          "lineNumber": 97
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 97
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.invCoherence.Store",
+          "lineNumber": 98
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 98
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "at.hysteresisGap.Store",
+          "lineNumber": 99
+        },
+        {
+          "caller": "SetTuning",
+          "callee": "millis",
+          "lineNumber": 99
+        },
+        {
+          "caller": "millis",
+          "callee": "int64",
+          "lineNumber": 103
+        },
+        {
+          "caller": "fromMillis",
+          "callee": "float64",
+          "lineNumber": 106
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 11,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "internal/errors/errors.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 95,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "Error",
+          "startLine": 32,
+          "endLine": 39,
+          "params": []
+        },
+        {
+          "name": "Unwrap",
+          "startLine": 42,
+          "endLine": 42,
+          "params": []
+        },
+        {
+          "name": "Error",
+          "startLine": 54,
+          "endLine": 57,
+          "params": []
+        },
+        {
+          "name": "Is",
+          "startLine": 65,
+          "endLine": 67,
+          "params": [
+            "target"
+          ]
+        },
+        {
+          "name": "Error",
+          "startLine": 76,
+          "endLine": 82,
+          "params": []
+        },
+        {
+          "name": "Unwrap",
+          "startLine": 85,
+          "endLine": 85,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "DispatchError",
+          "startLine": 25,
+          "endLine": 30,
+          "methods": [
+            "Error",
+            "Unwrap"
+          ],
+          "properties": [
+            "Stage",
+            "Cause",
+            "ExchangeID",
+            "Detail"
+          ]
+        },
+        {
+          "name": "RefusError",
+          "startLine": 48,
+          "endLine": 52,
+          "methods": [
+            "Error",
+            "Is"
+          ],
+          "properties": [
+            "Stage",
+            "Diagnostic",
+            "ExchangeID"
+          ]
+        },
+        {
+          "name": "CalibrationError",
+          "startLine": 71,
+          "endLine": 74,
+          "methods": [
+            "Error",
+            "Unwrap"
+          ],
+          "properties": [
+            "ProfileVersion",
+            "Cause"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DispatchError",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Error",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "Unwrap",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "RefusError",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "Error",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "Is",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationError",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "Error",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "Unwrap",
+          "line": 85,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Error",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 34
+        },
+        {
+          "caller": "Error",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 37
+        },
+        {
+          "caller": "Error",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 55
+        },
+        {
+          "caller": "Is",
+          "callee": "target.Error",
+          "lineNumber": 66
+        },
+        {
+          "caller": "Error",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 78
+        },
+        {
+          "caller": "Error",
+          "callee": "fmt.Sprintf",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 6,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "internal/errors/errors_test.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 143,
+      "nonEmptyLines": 126,
+      "functions": [
+        {
+          "name": "TestDispatchError_ErrorMessage",
+          "startLine": 10,
+          "endLine": 33,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestDispatchError_UnwrapPropagation",
+          "startLine": 35,
+          "endLine": 42,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRefusError_ErrorMessage",
+          "startLine": 44,
+          "endLine": 56,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "startLine": 58,
+          "endLine": 85,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestCalibrationError_ErrorMessage",
+          "startLine": 87,
+          "endLine": 110,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestCalibrationError_UnwrapPropagation",
+          "startLine": 112,
+          "endLine": 119,
+          "params": [
+            "t"
+          ]
+        },
+        {
+          "name": "TestSentinels_IdentifieesViaErrorsIs",
+          "startLine": 121,
+          "endLine": 143,
+          "params": [
+            "t"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestDispatchError_ErrorMessage",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "TestDispatchError_UnwrapPropagation",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "TestRefusError_ErrorMessage",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "TestCalibrationError_ErrorMessage",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "TestCalibrationError_UnwrapPropagation",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "TestSentinels_IdentifieesViaErrorsIs",
+          "line": 121,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 11
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Run",
+          "lineNumber": 13
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 14
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "stderrors.New",
+          "lineNumber": 15
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "e.Error",
+          "lineNumber": 17
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Fatalf",
+          "lineNumber": 20
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Run",
+          "lineNumber": 24
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 25
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "e.Error",
+          "lineNumber": 27
+        },
+        {
+          "caller": "TestDispatchError_ErrorMessage",
+          "callee": "t.Fatalf",
+          "lineNumber": 30
+        },
+        {
+          "caller": "TestDispatchError_UnwrapPropagation",
+          "callee": "t.Parallel",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TestDispatchError_UnwrapPropagation",
+          "callee": "stderrors.New",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TestDispatchError_UnwrapPropagation",
+          "callee": "stderrors.Is",
+          "lineNumber": 39
+        },
+        {
+          "caller": "TestDispatchError_UnwrapPropagation",
+          "callee": "t.Fatal",
+          "lineNumber": 40
+        },
+        {
+          "caller": "TestRefusError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TestRefusError_ErrorMessage",
+          "callee": "e.Error",
+          "lineNumber": 51
+        },
+        {
+          "caller": "TestRefusError_ErrorMessage",
+          "callee": "t.Fatalf",
+          "lineNumber": 54
+        },
+        {
+          "caller": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "callee": "t.Parallel",
+          "lineNumber": 59
+        },
+        {
+          "caller": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "callee": "t.Run",
+          "lineNumber": 76
+        },
+        {
+          "caller": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "callee": "t.Parallel",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "callee": "stderrors.Is",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TestRefusError_Is_MatchesDiagnosticSentinel",
+          "callee": "t.Fatalf",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 88
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Run",
+          "lineNumber": 90
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 91
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "stderrors.New",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "e.Error",
+          "lineNumber": 94
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Fatalf",
+          "lineNumber": 97
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Run",
+          "lineNumber": 101
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Parallel",
+          "lineNumber": 102
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "e.Error",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TestCalibrationError_ErrorMessage",
+          "callee": "t.Fatalf",
+          "lineNumber": 107
+        },
+        {
+          "caller": "TestCalibrationError_UnwrapPropagation",
+          "callee": "t.Parallel",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TestCalibrationError_UnwrapPropagation",
+          "callee": "stderrors.New",
+          "lineNumber": 114
+        },
+        {
+          "caller": "TestCalibrationError_UnwrapPropagation",
+          "callee": "stderrors.Is",
+          "lineNumber": 116
+        },
+        {
+          "caller": "TestCalibrationError_UnwrapPropagation",
+          "callee": "t.Fatal",
+          "lineNumber": 117
+        },
+        {
+          "caller": "TestSentinels_IdentifieesViaErrorsIs",
+          "callee": "t.Parallel",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TestSentinels_IdentifieesViaErrorsIs",
+          "callee": "t.Run",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TestSentinels_IdentifieesViaErrorsIs",
+          "callee": "t.Parallel",
+          "lineNumber": 136
+        },
+        {
+          "caller": "TestSentinels_IdentifieesViaErrorsIs",
+          "callee": "stderrors.Is",
+          "lineNumber": 138
+        },
+        {
+          "caller": "TestSentinels_IdentifieesViaErrorsIs",
+          "callee": "t.Fatalf",
+          "lineNumber": 139
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "internal/app/agentmesh.go",
+      "language": "go",
+      "fileCategory": "code",
+      "totalLines": 129,
+      "nonEmptyLines": 124,
+      "functions": [
+        {
+          "name": "ToTauExchange",
+          "startLine": 17,
+          "endLine": 44,
+          "params": [
+            "x"
+          ]
+        },
+        {
+          "name": "discoveryModeFromString",
+          "startLine": 50,
+          "endLine": 63,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "StreamAsTauExchanges",
+          "startLine": 81,
+          "endLine": 129,
+          "params": [
+            "ctx",
+            "adapter",
+            "topics"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ToTauExchange",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "StreamAsTauExchanges",
+          "line": 81,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ToTauExchange",
+          "callee": "discoveryModeFromString",
+          "lineNumber": 30
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "adapter.Stream",
+          "lineNumber": 86
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "make",
+          "lineNumber": 87
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "make",
+          "lineNumber": 88
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "func() {\n\t\tdefer close(out)\n\t\tdefer close(errOut)\n\t\tfor {\n\t\t\tselect {\n\t\t\tcase <-ctx.Done():\n\t\t\t\t// Drain adapter errors so the adapter goroutine can exit cleanly.\n\t\t\t\tfor range adapterErrs {\n\t\t\t\t}\n\t\t\t\treturn\n\t\t\tcase x, ok := <-src:\n\t\t\t\tif !ok {\n\t\t\t\t\t// Source closed: forward any remaining adapter errors then exit.\n\t\t\t\t\tfor e := range adapterErrs {\n\t\t\t\t\t\tselect {\n\t\t\t\t\t\tcase errOut <- e:\n\t\t\t\t\t\tdefault:\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\treturn\n\t\t\t\t}\n\t\t\t\tselect {\n\t\t\t\tcase out <- ToTauExchange(x):\n\t\t\t\tcase <-ctx.Done():\n\t\t\t\t\tfor range adapterErrs {\n\t\t\t\t\t}\n\t\t\t\t\treturn\n\t\t\t\t}\n\t\t\tcase e, ok := <-adapterErrs:\n\t\t\t\tif !ok {\n\t\t\t\t\tcontinue\n\t\t\t\t}\n\t\t\t\tselect {\n\t\t\t\tcase errOut <- e:\n\t\t\t\tdefault:\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}",
+          "lineNumber": 89
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "close",
+          "lineNumber": 90
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "close",
+          "lineNumber": 91
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "ctx.Done",
+          "lineNumber": 94
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "ToTauExchange",
+          "lineNumber": 111
+        },
+        {
+          "caller": "StreamAsTauExchanges",
+          "callee": "ctx.Done",
+          "lineNumber": 112
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    }
+  ]
+}
