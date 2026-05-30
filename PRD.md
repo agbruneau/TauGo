@@ -313,8 +313,8 @@ type Attestation struct {
 | Cas | Diagnostic | Renvoi |
 |---|---|---|
 | Hors frontière | `hors frontière τ` | §4.3 |
-| Verrou ontologique D-AUTORITÉ (I3) | `I3 — verrou ontologique` | §4.4 |
-| Incohérence I4 (`s < θ_sens ∧ i ≥ θ_inv`) | `I4 — incohérence détectée` | §6.1 |
+| Verrou ontologique D-AUTORITÉ (I3) | `I3 — verrou ontologique D-AUTORITÉ` | §4.4 |
+| Incohérence I4 (`s < θ_sens ∧ i ≥ θ_inv`) | `I4 — combinaison incohérente détectée` | §6.1 |
 | Profil périmé | `profil périmé — veille requise` | §11.4 |
 | Observation non modélisée à fort impact | `usage clos potentiel` | §7.2 #4 |
 
