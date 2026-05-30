@@ -6,6 +6,14 @@ Conforme à [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) et au [Vers
 
 **Décision structurelle** orchestrée selon [ADR-0010](docs/adr/0010-retrait-ci-cd-pure-local.md). Le projet devient *pure-local* : validation entièrement déléguée au poste développeur (`make test && make lint && make fuzz`), plus aucun gate automatisé bloquant.
 
+### Audit complet & alignement documentaire — 2026-05-30
+
+Audit complet, indépendant et vérifié du kernel τ (workflow multi-agents ; rapport [`docs/audits/2026-05-29-AUDIT-complet.md`](docs/audits/2026-05-29-AUDIT-complet.md), HEAD `b94e93f`). Verdict : kernel sain, **0 critique · 5 majeur · 34 mineur · 15 informatif** (54 retenus). Correctifs du lot 2026-05-29 (`7cb818a`, `e320e70`) vérifiés sans régression.
+
+- **Correctifs documentaires appliqués** : diagnostics PRD §7.3 alignés sur `diagnostics.go` (F-002) ; godoc `EvaluateI5` débit sourcé + retrait « CI window » (F-004) ; godoc `I3PerimptionLimite` dates réconciliées (F-007) ; hash golden `…40c1` → `…caa4` (F-015) ; compte de nœuds du graphe 303 → 325 (F-016) ; indexation ADR-0012 (F-017).
+- **Couverture re-mesurée** : **88,2 %** `-coverpkg=./...` au `b94e93f` *(2026-05-30 ; 89,2 % au `1948a7b` — l’écart suit les ajouts de code post-audit ; gate ≥ 80 % global et ≥ 90 % `tau/*` tenus)*.
+- **Différé (report-only → ADR)** : divergence calibration↔dispatcher (F-030/F-031), `Weights.Validate` inexistant (F-026), `CheckDrift` non câblé au runtime (F-033), garde `tau/dimensions → bridge` non effective (F-052). Registre complet dans le rapport.
+
 ### Corrigé — post-audit de régression 2026-05-29
 
 Lot de correctifs issus de l'audit multi-agents 2026-05-29 ([`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/)).

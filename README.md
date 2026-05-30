@@ -299,7 +299,7 @@ Consolidation post-audit orchestrée par Agent teams selon [`docs/archive/audits
 - **Profile.Weights injecté** au runtime à l'étape 6 du dispatcher.
 - **Packages ajoutés** : `internal/thresholds` ([ADR-0006](docs/adr/0006-types-valeur-transverses.md)), `internal/errors` peuplé ([ADR-0009](docs/adr/0009-types-erreurs-typees.md)), `internal/testutil.BuildExchange`.
 - **4 ADRs nouvelles** : 0006 thresholds transverses · 0007 hystérèse V1 · 0008 Trace ventilée · 0009 erreurs typées.
-- **Couverture** : 89,2 % en mesure `go test -coverpkg=./...` *(dénominateur global incluant `internal/thresholds` et `examples/quickstart` à 0 %)*. Le 92,1 % antérieur était une moyenne per-package pondérée *(méthode v0.1.1)*, pas une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu *(tau 100 % / dimensions 98,7 % / invariants 92,7 %)*. Anti-patrons §7.2 : 7/7 gardés *(était 6/7)*.
+- **Couverture** : 88,2 % en mesure `go test -coverpkg=./...` *(au `b94e93f`, 2026-05-30 ; 89,2 % au `1948a7b`)* *(dénominateur global incluant `internal/thresholds` et `examples/quickstart` à 0 %)*. Le 92,1 % antérieur était une moyenne per-package pondérée *(méthode v0.1.1)*, pas une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu *(tau 100 % / dimensions 98,7 % / invariants 92,7 %)*. Anti-patrons §7.2 : 7/7 gardés *(était 6/7)*.
 
 ### Refactor v0.1.2-pre *(2026-05-24, retrait CI/CD)*
 
@@ -383,6 +383,7 @@ I4 reste à statut **Hypothèse** : le corpus synthétique M4 n'injecte pas les 
 ### Archives
 
 - [`docs/archive/plans-m0-m6/`](docs/archive/plans-m0-m6/) — plans détaillés M1-M6 archivés v0.1.1 (9 824 LOC)
+- [`docs/audits/2026-05-29-AUDIT-complet.md`](docs/audits/2026-05-29-AUDIT-complet.md) — audit complet *(2026-05-29/30, HEAD `b94e93f`)* — 0 critique, 5 majeur, 34 mineur, 15 informatif ; 6 correctifs doc appliqués, reste report-only → ADR.
 - [`docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/) — audit de régression v0.1.2-pre (2026-05-29) ; rapport principal [`RAPPORT_FINAL.md`](docs/archive/audits/2026-05-29-AUDIT-v0.1.2-pre/RAPPORT_FINAL.md), 6 axes (01..06) + `00_bootstrap` + `CONVENTIONS`. Verdict : 0 critique, 10 majeur, 16 mineur, 15 informatif — kernel sain, fragilités épistémiques/documentaires corrigées dans ce lot.
 
 ---
@@ -431,3 +432,5 @@ Cette pratique est conforme à la politique éditoriale du projet (`CLAUDE.md §
 
 *TauGo v0.1.2-pre — 2026-05-24. Références canoniques : [`agbruneau/InteroperabiliteAgentique`](https://github.com/agbruneau/InteroperabiliteAgentique) v2.4.3 (chap. III.8) · Dashboard interactif [`agbruneau.github.io/TauGo`](https://agbruneau.github.io/TauGo/). Spec complète : [`PRD.md`](PRD.md). Refactor v0.1.1 archivé : [`docs/archive/audits/`](docs/archive/audits/).*
 *2026-05-29 — alignement post-audit de régression v0.1.2-pre (survente couverture/débits corrigée, arborescence resynchronisée, anti-patrons doc 4→7).*
+
+*2026-05-30 — alignement post-audit complet (couverture re-mesurée 88,2 % `-coverpkg` au `b94e93f` ; diagnostics §7.3, hash golden, godocs I3/I5, index ADR-0012 ; audit complet indexé en §Références).*

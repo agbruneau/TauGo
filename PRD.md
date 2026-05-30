@@ -318,6 +318,8 @@ type Attestation struct {
 | Profil périmé | `profil périmé — veille requise` | §11.4 |
 | Observation non modélisée à fort impact | `usage clos potentiel` | §7.2 #4 |
 
+> `À vérifier` — audit 2026-05-29 (F-001) : le 5ᵉ cas (« usage clos potentiel ») est actuellement consigné dans `Trace.UnmodeledObservations` sans positionner `Regime = Refus` ; sa promotion en Refus de premier rang (constante `DiagUsageClos`) est différée à un ADR.
+
 **Refus n'est pas un échec** : c'est une décision pleine, instrumentée, opposable. La trace expose le diagnostic, les scores qui l'ont produit, le profil en vigueur et le renvoi III.8.
 
 ---
@@ -776,7 +778,7 @@ Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
 | **Unit** | Chaque fonction publique, sonde, score | `go test` standard | ≥ 80 % / package |
 | **Property-based** | Pureté, monotonie, idempotence | `gopter` (calque FibGo) | Toutes les propriétés algébriques déclarées |
 | **Fuzz** | I1-I5, bordures de frontière | `go test -fuzz` | 30 s / cible en local (`make fuzz`) ; 24 h sur demande (`go test -fuzz=... -fuzztime=24h`) |
-| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` ; oracle `cmd/generate-corpus/` | Immuable sans ADR |
+| **Golden** *(V1.1)* | Traces de référence, non-régression de décision | `internal/testdata/golden/` *(prévu V1.1 ; golden de calibration actuel : `tests/calibration/golden-corpus.jsonl`, audit F-018)* ; oracle `cmd/generate-corpus/` | Immuable sans ADR |
 | **Architecture** | Étanchéité des couches *(§8.1)* | `internal/arch_test.go` | 100 % des règles |
 | **E2E** *(M4+)* | Via `AgentMeshKafka` | `test/e2e/` | ≥ 1 scénario par régime |
 | **Empirique I4** *(M4+)* | Détection combinaisons incohérentes sur traces réelles | `docs/empirical/I4-report.md` | Campagne dédiée |
@@ -846,7 +848,7 @@ Précédemment automatisés par GitHub Actions (`.github/workflows/{ci,coverage}
 
 ## 17. Critères de succès V1
 
-*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.2-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0010 présents, anti-patrons §7.2 #1-7 tous gardés par tests locaux — exécutés via `make test` depuis le retrait CI v0.1.2, build reproductible). **Couverture globale 89,2 %** (mesure `go test -coverpkg=./...`, dénominateur incluant `internal/thresholds` et `examples/quickstart` à 0 %) ; le 92,1 % antérieur était une moyenne per-package pondérée (méthode v0.1.1), non une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu (`tau` 100 % / `dimensions` 98,7 % / `invariants` 92,7 %).*
+*Checklist falsifiable — chaque item vérifiable par un test ou un artefact. **État v0.1.2-pre : 10/10 atteints** (Confirmé : tests verts 14 packages, ADRs 0001-0010 présents, anti-patrons §7.2 #1-7 tous gardés par tests locaux — exécutés via `make test` depuis le retrait CI v0.1.2, build reproductible). **Couverture globale 88,2 % *(re-mesurée 2026-05-30 au `b94e93f` ; 89,2 % au `1948a7b`)*** (mesure `go test -coverpkg=./...`, dénominateur incluant `internal/thresholds` et `examples/quickstart` à 0 %) ; le 92,1 % antérieur était une moyenne per-package pondérée (méthode v0.1.1), non une mesure `-coverpkg`. Le gate per-package `internal/tau/*` ≥ 90 % reste tenu (`tau` 100 % / `dimensions` 98,7 % / `invariants` 92,7 %).*
 
 | # | Critère | Vérification |
 |---|---|---|

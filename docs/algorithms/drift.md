@@ -118,6 +118,8 @@ désactive la vérification (usage programmatique sans corpus sur disque).
 
 ## §5 Intégration au dispatcher
 
+> `À vérifier` — audit 2026-05-29 (F-033/F-034) : en V1, le dispatcher **n’appelle pas** `CheckDrift` ; il réimplémente uniquement le test de date (`DateRevision`) en ligne à l’étape 3. `CheckDrift` (critères 1-3, 5) et le `slog.Warn` ci-dessous n’ont **aucun appelant de production** — ce pseudo-code décrit la cible d’intégration, non l’état câblé en V1.
+
 Étape 3 du pseudo-algorithme PRD §10 :
 
 ```
