@@ -15,8 +15,8 @@
     ],
     "frameworks": [],
     "description": "TauGo is an executable Go kernel for the τ operator (chap. III.8 of the InteroperabiliteAgentique monograph), exposing a single public API, Kernel.Decide(ctx, Exchange) → Decision, that selects a call regime (Deterministe | Probabiliste | Refus) at the agentic frontier. It is a pure-local, standard-library-only project built on strict 4-layer Clean Architecture (CI/CD removed in v0.1.2, ADR-0010). Note: this project has over 100 source files; consider scoping analysis to a subdirectory for faster results.",
-    "analyzedAt": "2026-05-30T00:34:07.443Z",
-    "gitCommitHash": "a34b247b2b279fa4d8e16f9aee2b0b4350788b97"
+    "analyzedAt": "2026-05-30T10:20:27.843Z",
+    "gitCommitHash": "bec26f21d4fe264dca4521c8a6493ca89b2ea396"
   },
   "nodes": [
     {
@@ -24,62 +24,222 @@
       "type": "document",
       "name": "CHANGELOG.md",
       "filePath": "CHANGELOG.md",
-      "summary": "Keep-a-Changelog history of the τ kernel from v0.0.1-alpha through the unreleased v0.1.2-pre, documenting the M0–M6 milestones, the v0.1.1 post-audit refactor, and the v0.1.2 full removal of CI/CD tooling for a pure-local project.",
+      "summary": "Historique de versions au format Keep-a-Changelog couvrant les jalons M0-M6 (tag v0.1.0), le refactor post-audit v0.1.1 et le retrait complet de l'outillage CI/CD en v0.1.2 (ADR-0010), jusqu'à l'alignement documentaire post-audit du 2026-05-30.",
       "tags": [
         "documentation",
         "changelog",
-        "release-notes",
-        "project-history"
+        "versioning",
+        "release-notes"
       ],
-      "complexity": "complex",
-      "languageNotes": "FR-CA Keep-a-Changelog format with 47 sections; versions in reverse-chronological order with Added/Changed/Removed/Fixed groupings."
+      "complexity": "complex"
     },
     {
       "id": "document:CLAUDE.md",
       "type": "document",
       "name": "CLAUDE.md",
       "filePath": "CLAUDE.md",
-      "summary": "Operational rulebook for the TauGo project: doctrine (what the τ kernel is and is not), the 7 forbidden anti-patterns guarded by tests, the strict 4-layer Clean Architecture, the I1–I5 invariants and three dimensions, the five Refus cases, essential commands, and coding/editorial conventions.",
+      "summary": "Règles opérationnelles du projet pour l'agent : doctrine de l'opérateur τ, sept anti-patrons gardés par test, architecture Clean en quatre couches, conventions de code et éditoriales, et exploitation obligatoire des sous-agents (agent teams).",
       "tags": [
         "documentation",
-        "configuration",
-        "conventions",
+        "project-guidelines",
         "architecture",
-        "agent-instructions"
+        "conventions"
       ],
       "complexity": "complex",
-      "languageNotes": "FR-CA project memory file driving agent-team orchestration; cross-references PRD.md and chap. III.8 of the InteroperabiliteAgentique monograph throughout."
+      "languageNotes": "Document directeur (FR-CA) qui surcharge le comportement par défaut de l'agent ; renvois croisés systématiques vers PRD.md et la monographie chap. III.8."
     },
     {
       "id": "document:PRD.md",
       "type": "document",
       "name": "PRD.md",
       "filePath": "PRD.md",
-      "summary": "Canonical V0.3 product requirements document for the τ kernel, organized in five blocks: strategic framing, operationalized theory (τ operator, three dimensions, five invariants), target architecture and data model, the 8-step dispatch algorithm and adaptive calibration, execution discipline, and the V1 roadmap with success criteria.",
+      "summary": "Spécification canonique (V0.3) du kernel τ organisée en cinq blocs : cadrage stratégique et anti-objectifs, théorie opérationnalisée (trois dimensions, cinq invariants I1-I5), architecture et modèle de données, pseudo-algorithme du dispatcher en 8 étapes, discipline d'exécution et roadmap.",
       "tags": [
         "documentation",
         "specification",
-        "prd",
+        "requirements",
         "architecture",
-        "data-model"
+        "entry-point"
       ],
-      "complexity": "complex",
-      "languageNotes": "FR-CA canonical spec with 75 sections; the single source of truth for theory, data model, and dispatch pseudo-algorithm that CLAUDE.md and README defer to."
+      "complexity": "complex"
     },
     {
       "id": "document:README.md",
       "type": "document",
       "name": "README.md",
       "filePath": "README.md",
-      "summary": "Project entry-point documentation presenting the τ kernel doctrine and anti-goals, quick-start commands, the 4-layer architecture, usage examples (tau decide, tau calibrate, Go embedding of Kernel.Decide, fuzz/E2E), the v0.1.0→v0.1.2-pre status, invariant statuses, and a documentation index.",
+      "summary": "Présentation d'entrée du dépôt : doctrine de l'opérateur τ, anti-objectifs, démarrage rapide (tau decide / tau calibrate), arborescence des couches, statut des invariants et liens vers le PRD, la théorie et les ADRs.",
       "tags": [
         "documentation",
         "entry-point",
         "overview",
         "getting-started"
       ],
-      "complexity": "complex",
-      "languageNotes": "FR-CA top-level README linking to an online interactive dashboard and indexing the spec, theory, ADRs, and archives."
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/algorithms/drift.md",
+      "type": "document",
+      "name": "drift.md",
+      "filePath": "docs/algorithms/drift.md",
+      "summary": "Spécification de l'algorithme V1 de détection de drift du profil de calibration : cinq critères PRD §11.4, logique de comparaison, fingerprints CPU/LLM/corpus et intégration au dispatcher, garde contre le profil silencieusement périmé (anti-patron #3).",
+      "tags": [
+        "documentation",
+        "algorithm",
+        "calibration",
+        "drift-detection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "type": "document",
+      "name": "2026-05-29-AUDIT-complet.md",
+      "filePath": "docs/audits/2026-05-29-AUDIT-complet.md",
+      "summary": "Rapport d'audit complet du kernel τ : verdict global, décompte par sévérité, 57 findings (majeurs, mineurs, informatifs) sur la conformité des invariants, l'étanchéité des couches, le dispatcher et la calibration, avec correctifs commités et faux positifs écartés par vérification adversariale.",
+      "tags": [
+        "documentation",
+        "audit",
+        "quality-assurance",
+        "regression"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "file",
+      "name": "i3_authority_asymmetry.go",
+      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
+      "summary": "Encode l'invariant I3 (asymétrie de D-AUTORITÉ, fait institutionnel — Searle 1995) : détecte le bypass du verrou ontologique sans attestation au-delà du seuil de blocage et la garde de péremption du profil (anti-patron #3).",
+      "tags": [
+        "invariant",
+        "validation",
+        "domain-core",
+        "authority",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "I3PerimptionLimite exposé en getter (anti-patron #7 : pas de global mutable dans tau/*) ; horloge injectable via EvaluateI3WithClock pour des tests temporels déterministes."
+    },
+    {
+      "id": "file:internal/tau/invariants/i5_composition.go",
+      "type": "file",
+      "name": "i5_composition.go",
+      "filePath": "internal/tau/invariants/i5_composition.go",
+      "summary": "Encode l'invariant I5 (composition conjonctive) : agrège les angles morts d'une pile agentique (union déduplicée triée) et vérifie la double borne max(|A_i|) <= M(π) <= Σ|A_i| ; BoundsHold est la cible de FuzzI5_CompositionConjonctive.",
+      "tags": [
+        "invariant",
+        "composition",
+        "validation",
+        "domain-core",
+        "tested"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Types Pile/AngleMort comme alias de slices ; BoundsHold co-calcule bornes et union en une seule passe pour éviter un second parcours."
+    },
+    {
+      "id": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
+      "type": "function",
+      "name": "IsProfileExpired",
+      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
+      "lineRange": [
+        34,
+        39
+      ],
+      "summary": "Indique si la date de révision de la décision est dépassée par rapport à l'horloge fournie ; une date de révision nulle est traitée comme jamais périmée. Brique testable de la garde anti-patron #3.",
+      "tags": [
+        "invariant",
+        "validation",
+        "expiry-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
+      "type": "function",
+      "name": "EvaluateI3WithClock",
+      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
+      "lineRange": [
+        54,
+        96
+      ],
+      "summary": "Rend le verdict I3 avec horloge injectable : détecte le bypass de la garde de péremption puis, sur régime Probabiliste sans attestation, le franchissement du seuil AuthBlock via le score D-AUTORITÉ ventilé (ADR-0008) avec repli sur le proxy TauScore.",
+      "tags": [
+        "invariant",
+        "evaluation",
+        "validation",
+        "authority"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3",
+      "type": "function",
+      "name": "EvaluateI3",
+      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
+      "lineRange": [
+        105,
+        107
+      ],
+      "summary": "Point d'entrée public de l'évaluation I3 : délègue à EvaluateI3WithClock en utilisant time.Now() comme horloge de référence.",
+      "tags": [
+        "invariant",
+        "evaluation",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tau/invariants/i5_composition.go:Aggregate",
+      "type": "function",
+      "name": "Aggregate",
+      "filePath": "internal/tau/invariants/i5_composition.go",
+      "lineRange": [
+        26,
+        39
+      ],
+      "summary": "Calcule M(π), l'union des angles morts à travers les couches d'une pile, en sortie déterministe (déduplication puis tri lexicographique).",
+      "tags": [
+        "invariant",
+        "composition",
+        "aggregation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
+      "type": "function",
+      "name": "BoundsHold",
+      "filePath": "internal/tau/invariants/i5_composition.go",
+      "lineRange": [
+        51,
+        72
+      ],
+      "summary": "Vérifie que l'agrégation respecte les deux bornes de l'invariant I5 — max(|A_i|) <= |M(π)| <= Σ|A_i| — en une seule passe co-calculant bornes et union ; cible de FuzzI5_CompositionConjonctive.",
+      "tags": [
+        "invariant",
+        "validation",
+        "bounds-check",
+        "property-based"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:internal/tau/invariants/i5_composition.go:EvaluateI5",
+      "type": "function",
+      "name": "EvaluateI5",
+      "filePath": "internal/tau/invariants/i5_composition.go",
+      "lineRange": [
+        94,
+        98
+      ],
+      "summary": "Rend le verdict I5 dans le pipeline du dispatcher ; renvoie Held par construction en V1 car la pile de couches n'est pas encore réifiée dans la Trace, BoundsHold étant fuzzé indépendamment.",
+      "tags": [
+        "invariant",
+        "evaluation",
+        "composition"
+      ],
+      "complexity": "simple"
     },
     {
       "id": "document:docs/adr/0009-types-erreurs-typees.md",
@@ -427,21 +587,6 @@
       ],
       "complexity": "complex",
       "languageNotes": "Per-step table linking each stage to its guard, canonical diagnostic, and Go source file."
-    },
-    {
-      "id": "document:docs/algorithms/drift.md",
-      "type": "document",
-      "name": "drift.md",
-      "filePath": "docs/algorithms/drift.md",
-      "summary": "Specification of the V1 drift detection algorithm: the five PRD criteria, comparison logic, return structure, and V1 fingerprints (CPU, LLM model, corpus) feeding the dispatcher's profile-staleness guard.",
-      "tags": [
-        "documentation",
-        "algorithm",
-        "drift-detection",
-        "calibration"
-      ],
-      "complexity": "moderate",
-      "languageNotes": "Documents fingerprint helpers (FingerprintCPU, FingerprintCorpus) and integration with the dispatcher."
     },
     {
       "id": "document:docs/archive/PRDPlanning-m0-m6.md",
@@ -2893,22 +3038,6 @@
       "complexity": "moderate"
     },
     {
-      "id": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "file",
-      "name": "i3_authority_asymmetry.go",
-      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
-      "summary": "Encodes invariant I3 (D-AUTORITE asymmetry, Searle 1995): IsProfileExpired and the clock-injectable EvaluateI3WithClock enforce ontological refus when authority is blocked without AttestationInstitutionnelle or the calibration profile is pÃ©rimÃ©.",
-      "tags": [
-        "invariant",
-        "i3",
-        "core",
-        "D-AUTORITÃ‰",
-        "tested"
-      ],
-      "complexity": "moderate",
-      "languageNotes": "I3PerimptionLimite is exposed as a getter (not a mutable global) to satisfy anti-patron #7; EvaluateI3WithClock takes an injected now for deterministic expiry testing."
-    },
-    {
       "id": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "type": "file",
       "name": "i3_authority_asymmetry_test.go",
@@ -2936,22 +3065,6 @@
         "tested"
       ],
       "complexity": "simple"
-    },
-    {
-      "id": "file:internal/tau/invariants/i5_composition.go",
-      "type": "file",
-      "name": "i5_composition.go",
-      "filePath": "internal/tau/invariants/i5_composition.go",
-      "summary": "Encodes invariant I5 (composed pile inherits the conjunction; M(Ï€) â‰¥ max(|Aáµ¢|)): Aggregate builds the sorted deduplicated union of blind spots and BoundsHold checks the magnitude bounds.",
-      "tags": [
-        "invariant",
-        "i5",
-        "core",
-        "composition",
-        "tested"
-      ],
-      "complexity": "moderate",
-      "languageNotes": "Aggregate uses sort.Strings on a preallocated slice for a stable sorted union; BoundsHold is performance-sensitive (benchmarked, optimized -46% ns/op in v0.1.1)."
     },
     {
       "id": "file:internal/tau/invariants/testdata/fuzz/FuzzI1_Conservation/seed-01",
@@ -3155,42 +3268,6 @@
       "complexity": "simple"
     },
     {
-      "id": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
-      "type": "function",
-      "name": "IsProfileExpired",
-      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
-      "lineRange": [
-        33,
-        38
-      ],
-      "summary": "Returns true when the Decision's calibration DateRevision is set and now is after it, signalling a pÃ©rimÃ© profile that must trigger refus.",
-      "tags": [
-        "invariant",
-        "i3",
-        "calibration",
-        "validation"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
-      "type": "function",
-      "name": "EvaluateI3WithClock",
-      "filePath": "internal/tau/invariants/i3_authority_asymmetry.go",
-      "lineRange": [
-        53,
-        95
-      ],
-      "summary": "Clock-injectable core of invariant I3: enforces D-AUTORITE asymmetry, requiring ontological refus when authority is blocked without AttestationInstitutionnelle or the profile is pÃ©rimÃ©.",
-      "tags": [
-        "invariant",
-        "i3",
-        "D-AUTORITÃ‰",
-        "core"
-      ],
-      "complexity": "moderate"
-    },
-    {
       "id": "function:internal/tau/invariants/i4_coherence.go:EvaluateI4",
       "type": "function",
       "name": "EvaluateI4",
@@ -3223,42 +3300,6 @@
         "validation"
       ],
       "complexity": "simple"
-    },
-    {
-      "id": "function:internal/tau/invariants/i5_composition.go:Aggregate",
-      "type": "function",
-      "name": "Aggregate",
-      "filePath": "internal/tau/invariants/i5_composition.go",
-      "lineRange": [
-        26,
-        39
-      ],
-      "summary": "Builds the stable sorted, deduplicated union of blind spots across a composed pile of layers, implementing the conjunctive composition of invariant I5.",
-      "tags": [
-        "invariant",
-        "i5",
-        "composition",
-        "core"
-      ],
-      "complexity": "simple"
-    },
-    {
-      "id": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
-      "type": "function",
-      "name": "BoundsHold",
-      "filePath": "internal/tau/invariants/i5_composition.go",
-      "lineRange": [
-        51,
-        72
-      ],
-      "summary": "Verifies the magnitude bounds M(Ï€) â‰¥ max(|Aáµ¢|) and â‰¤ Î£|Aáµ¢| for a composed pile; performance-critical and benchmarked.",
-      "tags": [
-        "invariant",
-        "i5",
-        "composition",
-        "validation"
-      ],
-      "complexity": "moderate"
     },
     {
       "id": "file:internal/tau/invariants/testdata/fuzz/FuzzI3_AsymetrieAutorite/seed-02",
@@ -5145,22 +5186,183 @@
   ],
   "edges": [
     {
-      "source": "document:README.md",
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
       "target": "file:internal/tau/operator.go",
-      "type": "documents",
+      "type": "imports",
       "direction": "forward",
-      "weight": 0.5
+      "weight": 0.7
     },
     {
-      "source": "document:PRD.md",
+      "source": "file:internal/tau/invariants/i5_composition.go",
       "target": "file:internal/tau/operator.go",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:Aggregate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:EvaluateI5",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:Aggregate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "function:internal/tau/invariants/i5_composition.go:EvaluateI5",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
+      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "document:README.md",
+      "target": "document:PRD.md",
       "type": "documents",
       "direction": "forward",
       "weight": 0.5
     },
     {
       "source": "document:CLAUDE.md",
-      "target": "file:internal/tau/operator.go",
+      "target": "document:PRD.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/algorithms/drift.md",
+      "target": "file:internal/calibration/drift.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "file:internal/orchestration/dispatcher.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "file:internal/calibration/drift.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "file:internal/calibration/profile.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "file:internal/tau/invariants/i5_composition.go",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "document:PRD.md",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:docs/audits/2026-05-29-AUDIT-complet.md",
+      "target": "document:CLAUDE.md",
       "type": "documents",
       "direction": "forward",
       "weight": 0.5
@@ -5327,27 +5529,6 @@
       "type": "deploys",
       "direction": "forward",
       "weight": 0.7
-    },
-    {
-      "source": "document:docs/adr/0001-clean-architecture-4-layers.md",
-      "target": "document:PRD.md",
-      "type": "related",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "document:docs/adr/0006-types-valeur-transverses.md",
-      "target": "document:PRD.md",
-      "type": "related",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "document:docs/adr/0008-trace-ventilee-scores-dimensions.md",
-      "target": "document:PRD.md",
-      "type": "related",
-      "direction": "forward",
-      "weight": 0.5
     },
     {
       "source": "document:docs/archive/README.md",
@@ -5518,13 +5699,6 @@
       "weight": 0.5
     },
     {
-      "source": "document:docs/algorithms/drift.md",
-      "target": "document:docs/algorithms/calibration.md",
-      "type": "related",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
       "source": "file:examples/quickstart/main.go",
       "target": "file:internal/app/agentmesh.go",
       "type": "imports",
@@ -5680,21 +5854,7 @@
     },
     {
       "source": "file:internal/anti_patterns_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/anti_patterns_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/anti_patterns_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -7501,21 +7661,7 @@
     },
     {
       "source": "file:internal/orchestration/dispatcher.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/orchestration/dispatcher.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/orchestration/dispatcher.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -7886,21 +8032,7 @@
     },
     {
       "source": "file:internal/orchestration/dispatcher_scores_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/orchestration/dispatcher_scores_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/orchestration/dispatcher_scores_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -8606,34 +8738,6 @@
       "weight": 0.8
     },
     {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:IsProfileExpired",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "function:internal/tau/invariants/i3_authority_asymmetry.go:EvaluateI3WithClock",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
       "source": "file:internal/tau/invariants/i4_coherence.go",
       "target": "function:internal/tau/invariants/i4_coherence.go:EvaluateI4",
       "type": "contains",
@@ -8662,34 +8766,6 @@
       "weight": 0.8
     },
     {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "function:internal/tau/invariants/i5_composition.go:Aggregate",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
-      "type": "contains",
-      "direction": "forward",
-      "weight": 1
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "function:internal/tau/invariants/i5_composition.go:Aggregate",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "function:internal/tau/invariants/i5_composition.go:BoundsHold",
-      "type": "exports",
-      "direction": "forward",
-      "weight": 0.8
-    },
-    {
       "source": "file:internal/tau/invariants/evaluator.go",
       "target": "file:internal/tau/diagnostics.go",
       "type": "imports",
@@ -8768,21 +8844,7 @@
     },
     {
       "source": "file:internal/tau/invariants/evaluator_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/evaluator_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/evaluator_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -8845,21 +8907,7 @@
     },
     {
       "source": "file:internal/tau/invariants/fuzz_targets_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/fuzz_targets_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/fuzz_targets_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -8922,21 +8970,7 @@
     },
     {
       "source": "file:internal/tau/invariants/i1_conservation_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i1_conservation_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i1_conservation_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -9006,13 +9040,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
       "type": "imports",
       "direction": "forward",
@@ -9020,41 +9047,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i2_irreductibility_test.go",
-      "target": "file:internal/tau/operator.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/diagnostics.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/doc.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/frontier.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
       "target": "file:internal/tau/operator.go",
       "type": "imports",
       "direction": "forward",
@@ -9111,13 +9103,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
       "type": "imports",
       "direction": "forward",
@@ -9125,13 +9110,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "target": "file:internal/tau/operator.go",
       "type": "imports",
       "direction": "forward",
@@ -9160,34 +9138,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i4_coherence.go",
-      "target": "file:internal/tau/operator.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "file:internal/tau/diagnostics.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "file:internal/tau/doc.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "file:internal/tau/frontier.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
       "target": "file:internal/tau/operator.go",
       "type": "imports",
       "direction": "forward",
@@ -9208,22 +9158,8 @@
       "weight": 0.5
     },
     {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
-      "type": "tested_by",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
       "source": "file:internal/tau/invariants/i4_coherence.go",
       "target": "file:internal/tau/invariants/i4_coherence_test.go",
-      "type": "tested_by",
-      "direction": "forward",
-      "weight": 0.5
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "file:internal/tau/invariants/i5_composition_test.go",
       "type": "tested_by",
       "direction": "forward",
       "weight": 0.5
@@ -11422,13 +11358,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i4_coherence_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i4_coherence_test.go",
       "target": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "type": "imports",
       "direction": "forward",
@@ -11437,13 +11366,6 @@
     {
       "source": "file:internal/tau/invariants/i4_coherence_test.go",
       "target": "file:internal/tau/invariants/i4_coherence.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i4_coherence_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -11590,13 +11512,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i5_composition_test.go",
-      "target": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition_test.go",
       "target": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "type": "imports",
       "direction": "forward",
@@ -11612,13 +11527,6 @@
     {
       "source": "file:internal/tau/invariants/i5_composition_test.go",
       "target": "file:internal/tau/invariants/i4_coherence_test.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition_test.go",
-      "target": "file:internal/tau/invariants/i5_composition.go",
       "type": "imports",
       "direction": "forward",
       "weight": 0.7
@@ -14506,22 +14414,6 @@
       "recoveredFromImportMap": true
     },
     {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/frontier_test.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7,
-      "recoveredFromImportMap": true
-    },
-    {
-      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
-      "target": "file:internal/tau/operator_test.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7,
-      "recoveredFromImportMap": true
-    },
-    {
       "source": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
       "target": "file:internal/tau/frontier_test.go",
       "type": "imports",
@@ -14595,22 +14487,6 @@
     },
     {
       "source": "file:internal/tau/invariants/i4_coherence.go",
-      "target": "file:internal/tau/operator_test.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7,
-      "recoveredFromImportMap": true
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
-      "target": "file:internal/tau/frontier_test.go",
-      "type": "imports",
-      "direction": "forward",
-      "weight": 0.7,
-      "recoveredFromImportMap": true
-    },
-    {
-      "source": "file:internal/tau/invariants/i5_composition.go",
       "target": "file:internal/tau/operator_test.go",
       "type": "imports",
       "direction": "forward",
@@ -14896,6 +14772,22 @@
       "direction": "forward",
       "weight": 0.7,
       "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:internal/tau/invariants/i3_authority_asymmetry.go",
+      "target": "file:internal/tau/invariants/i3_authority_asymmetry_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Path-based pairing (deterministic)"
+    },
+    {
+      "source": "file:internal/tau/invariants/i5_composition.go",
+      "target": "file:internal/tau/invariants/i5_composition_test.go",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5,
+      "description": "Path-based pairing (deterministic)"
     }
   ],
   "layers": [
@@ -15144,7 +15036,8 @@
         "document:docs/theory/04-dimensions.md",
         "document:docs/theory/05-invariants.md",
         "document:docs/theory/06-conditions-validite.md",
-        "document:docs/theory/07-anti-patrons.md"
+        "document:docs/theory/07-anti-patrons.md",
+        "document:docs/audits/2026-05-29-AUDIT-complet.md"
       ]
     },
     {
